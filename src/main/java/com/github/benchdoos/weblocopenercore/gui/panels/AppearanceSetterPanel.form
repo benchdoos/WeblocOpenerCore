@@ -132,12 +132,12 @@
                   <grid row="0" column="3" row-span="2" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
               </hspacer>
-              <nested-form id="d5832" form-file="com/github/benchdoos/weblocopener/gui/panels/SimpleTimePicker.form" binding="endingTimePicker">
+              <nested-form id="d5832" form-file="com/github/benchdoos/weblocopenercore/gui/panels/SimpleTimePicker.form" binding="endingTimePicker">
                 <constraints>
                   <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
               </nested-form>
-              <nested-form id="fced5" form-file="com/github/benchdoos/weblocopener/gui/panels/SimpleTimePicker.form" binding="beginningTimePicker">
+              <nested-form id="fced5" form-file="com/github/benchdoos/weblocopenercore/gui/panels/SimpleTimePicker.form" binding="beginningTimePicker">
                 <constraints>
                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
