@@ -1,7 +1,12 @@
 package com.github.benchdoos.weblocopenercore;
 
+import com.github.benchdoos.weblocopenercore.core.Application;
 import com.github.benchdoos.weblocopenercore.core.Logging;
 import com.github.benchdoos.weblocopenercore.core.Mode;
+import com.github.benchdoos.weblocopenercore.core.Translation;
+import com.github.benchdoos.weblocopenercore.utils.notification.NotificationManager;
+import com.github.benchdoos.weblocopenercore.utils.system.SystemUtils;
+import com.github.benchdoos.weblocopenercore.utils.system.UnsupportedSystemException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,13 +16,25 @@ import static com.github.benchdoos.weblocopenercore.core.constants.ApplicationCo
 import static com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME;
 
 public class Main {
-    private static Mode currentMode;
+    private static Mode currentMode = Mode.WEBLOCOPENER;
     private static Logger log;
 
     public static void main(String[] args) {
         System.out.println("WeblocOpener starting with args: " + Arrays.toString(args));
 
-        currentMode = Mode.getModeFromArgs(args);
+        try {
+            SystemUtils.checkIfSystemIsSupported();
+
+            new Application(args);
+        } catch (UnsupportedSystemException e) {
+            log.fatal("System not supported", e);
+            final String translatedString = Translation.getTranslatedString("CommonsBundle", "systemNotSupported");
+            final String message = translatedString + " " + SystemUtils.getCurrentOS().name();
+
+            NotificationManager.getForcedNotification(null).showErrorNotification(message, message);
+        } catch (Exception e) {
+            log.fatal("System exited with exception", e);
+        }
     }
 
     private void initLogging(Mode mode) {

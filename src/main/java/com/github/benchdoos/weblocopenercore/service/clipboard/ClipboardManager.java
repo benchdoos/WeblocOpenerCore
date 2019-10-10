@@ -13,17 +13,19 @@
  * Eugene Zrazhevsky <eugene.zrazhevsky@gmail.com>
  */
 
-package com.github.benchdoos.weblocopenercore.core.constants;
+package com.github.benchdoos.weblocopenercore.service.clipboard;
 
-import java.io.File;
+import com.github.benchdoos.weblocopenercore.utils.system.OperatingSystem;
 
-import static com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME;
+public class ClipboardManager {
+    private static final Clipboard DEFAULT_CLIPBOARD = new WindowsClipboard();
 
-
-public interface PathConstants {
-    String APP_LOG_FOLDER_PATH = System
-            .getProperty("java.io.tmpdir") + File.separator + WEBLOCOPENER_APPLICATION_NAME + File.separator + "Log";
-    String APP_LOG_PROPERTY = "com.github.benchdoos.weblocopenercore.log.folder";
-
-    String UPDATE_PATH_FILE = System.getProperty("java.io.tmpdir") + File.separator + WEBLOCOPENER_APPLICATION_NAME + File.separator;
+    public static Clipboard getClipboardForSystem() {
+        if (OperatingSystem.isWindows()) {
+            return new WindowsClipboard();
+        } else if (OperatingSystem.isUnix()) {
+            return new UnixClipboard();
+        }
+        return DEFAULT_CLIPBOARD;
+    }
 }

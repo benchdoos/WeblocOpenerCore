@@ -13,17 +13,20 @@
  * Eugene Zrazhevsky <eugene.zrazhevsky@gmail.com>
  */
 
-package com.github.benchdoos.weblocopenercore.core.constants;
+package com.github.benchdoos.weblocopenercore.service.gui.darkMode;
 
-import java.io.File;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-import static com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME;
+import java.util.Date;
 
+@AllArgsConstructor
+@Data
+public class TimeRange {
+    private Date start;
+    private Date end;
 
-public interface PathConstants {
-    String APP_LOG_FOLDER_PATH = System
-            .getProperty("java.io.tmpdir") + File.separator + WEBLOCOPENER_APPLICATION_NAME + File.separator + "Log";
-    String APP_LOG_PROPERTY = "com.github.benchdoos.weblocopenercore.log.folder";
-
-    String UPDATE_PATH_FILE = System.getProperty("java.io.tmpdir") + File.separator + WEBLOCOPENER_APPLICATION_NAME + File.separator;
+    boolean isInRange(Date date) {
+        return start.before(date) && end.after(date);
+    }
 }

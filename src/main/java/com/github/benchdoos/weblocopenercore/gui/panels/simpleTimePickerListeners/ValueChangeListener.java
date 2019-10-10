@@ -13,17 +13,8 @@
  * Eugene Zrazhevsky <eugene.zrazhevsky@gmail.com>
  */
 
-package com.github.benchdoos.weblocopenercore.core.constants;
+package com.github.benchdoos.weblocopenercore.gui.panels.simpleTimePickerListeners;
 
-import java.io.File;
-
-import static com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME;
-
-
-public interface PathConstants {
-    String APP_LOG_FOLDER_PATH = System
-            .getProperty("java.io.tmpdir") + File.separator + WEBLOCOPENER_APPLICATION_NAME + File.separator + "Log";
-    String APP_LOG_PROPERTY = "com.github.benchdoos.weblocopenercore.log.folder";
-
-    String UPDATE_PATH_FILE = System.getProperty("java.io.tmpdir") + File.separator + WEBLOCOPENER_APPLICATION_NAME + File.separator;
+public interface ValueChangeListener {
+    void valueChanged(ValueChangeEvent e);
 }

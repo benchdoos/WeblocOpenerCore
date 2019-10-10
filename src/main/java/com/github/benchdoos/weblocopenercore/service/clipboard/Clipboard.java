@@ -13,17 +13,12 @@
  * Eugene Zrazhevsky <eugene.zrazhevsky@gmail.com>
  */
 
-package com.github.benchdoos.weblocopenercore.core.constants;
+package com.github.benchdoos.weblocopenercore.service.clipboard;
 
-import java.io.File;
+import java.awt.image.BufferedImage;
 
-import static com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME;
+public interface Clipboard {
+    void copy(String string);
 
-
-public interface PathConstants {
-    String APP_LOG_FOLDER_PATH = System
-            .getProperty("java.io.tmpdir") + File.separator + WEBLOCOPENER_APPLICATION_NAME + File.separator + "Log";
-    String APP_LOG_PROPERTY = "com.github.benchdoos.weblocopenercore.log.folder";
-
-    String UPDATE_PATH_FILE = System.getProperty("java.io.tmpdir") + File.separator + WEBLOCOPENER_APPLICATION_NAME + File.separator;
+    void copy(BufferedImage image);
 }
