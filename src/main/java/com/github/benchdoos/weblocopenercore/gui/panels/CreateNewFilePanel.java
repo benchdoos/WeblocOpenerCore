@@ -102,7 +102,7 @@ public class CreateNewFilePanel extends JPanel implements Translatable {
                     path += suffix;
                 }
                 try {
-                    log.debug("Link with url: {} at location: {} will be created as: {}", url, path, link.getClass().getSimpleName());
+                    log.debug("Link with url: {} at location: {} will be created as: {}", url, path, link.getName());
 
                     link.getLinkProcessor().createLink(url, new FileOutputStream(new File(path)));
 
