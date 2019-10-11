@@ -30,6 +30,7 @@ import com.github.benchdoos.weblocopenercore.service.DefaultAnalyzer;
 import com.github.benchdoos.weblocopenercore.service.UrlsProceed;
 import com.github.benchdoos.weblocopenercore.service.clipboard.ClipboardManager;
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
+import com.github.benchdoos.weblocopenercore.utils.FileUtils;
 import com.github.benchdoos.weblocopenercore.utils.FrameUtils;
 import com.github.benchdoos.weblocopenercore.utils.browser.BrowserManager;
 import com.github.benchdoos.weblocopenercore.utils.notification.NotificationManager;
@@ -323,8 +324,17 @@ public class Application {
         try {
             log.debug("Launching application: {} with arguments: {}", applicationPath, args);
             final List<String> allArguments = new ArrayList<>();
+
+            final String fileExtension = FileUtils.getFileExtension(new File(applicationPath));
+            if ((fileExtension.equals("jar"))) {
+                allArguments.add("java");
+                allArguments.add("-jar");
+            }
+
             allArguments.add(applicationPath);
             allArguments.addAll(Arrays.asList(args.clone()));
+
+            Runtime.getRuntime().exec("chmod u+x " + applicationPath);
             final ProcessBuilder processBuilder = new ProcessBuilder(allArguments);
             processBuilder.start();
         } catch (IOException e) {
