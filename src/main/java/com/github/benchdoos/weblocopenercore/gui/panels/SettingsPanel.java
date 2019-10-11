@@ -23,4 +23,8 @@ public interface SettingsPanel {
     void setName(String name);
 
     String getName();
+
+    default void setLauncherLocationPath(String launcherLocationPath) {
+        /*NOP*/
+    }
 }

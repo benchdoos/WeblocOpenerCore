@@ -63,6 +63,7 @@ public class MainSetterPanel extends JPanel implements SettingsPanel, Translatab
     private JComboBox<Object> localeComboBox;
     private JLabel languageLabel;
     private JButton aboutButton;
+    private String launcherLocationPath;
 
     public MainSetterPanel() {
         initGui();
@@ -71,6 +72,12 @@ public class MainSetterPanel extends JPanel implements SettingsPanel, Translatab
     @Override
     public String getName() {
         return Translation.getTranslatedString("SettingsDialogBundle", "settingsMainPanelName");
+    }
+
+    @Override
+    public void setLauncherLocationPath(String launcherLocationPath) {
+        this.launcherLocationPath = launcherLocationPath;
+        initUpdateButton();
     }
 
     private void fillLocaleComboBox() {
@@ -246,12 +253,22 @@ public class MainSetterPanel extends JPanel implements SettingsPanel, Translatab
 
         aboutButton.addActionListener(e -> onAbout());
 
-//        checkUpdatesButton.addActionListener(e -> onUpdateNow());
         versionLabel.setText(CoreUtils.getApplicationVersionString());
 
         fillLocaleComboBox();
         initLocaleComboBox();
         translate();
+    }
+
+    private void initUpdateButton() {
+        if (launcherLocationPath != null) {
+            checkUpdatesButton.setVisible(true);
+            autoUpdateEnabledCheckBox.setVisible(true);
+            checkUpdatesButton.addActionListener(e -> onUpdateNow());
+        } else {
+            checkUpdatesButton.setVisible(false);
+            autoUpdateEnabledCheckBox.setVisible(false);
+        }
     }
 
     private void onAbout() {
@@ -341,5 +358,10 @@ public class MainSetterPanel extends JPanel implements SettingsPanel, Translatab
         final DefaultComboBoxModel<Object> model = (DefaultComboBoxModel<Object>) localeComboBox.getModel();
         model.removeElementAt(0);
         model.insertElementAt(translation.getTranslatedString("languageDefault"), 0);
+    }
+
+    private void onUpdateNow() {
+        FrameUtils.findWindow(this).dispose();
+        Application.launchApplication(launcherLocationPath, "-update");
     }
 }

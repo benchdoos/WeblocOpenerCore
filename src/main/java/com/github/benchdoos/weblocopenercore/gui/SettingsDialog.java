@@ -96,11 +96,14 @@ public class SettingsDialog extends JFrame implements Translatable {
     private MainSetterPanel mainSetterPanel;
     private AppearanceSetterPanel appearanceSetterPanel;
     private FileProcessingPanel fileProcessingPanel;
+    private final String launcherLocationPath;
 
 
-    public SettingsDialog() {
+    public SettingsDialog(String launcherLocationPath) {
+        this.launcherLocationPath = launcherLocationPath;
         $$$setupUI$$$();
         log.debug("Creating settings dialog.");
+        log.debug("Settings dialog launcher location: {}", launcherLocationPath);
         initGui();
         log.debug("Settings dialog created.");
     }
@@ -468,6 +471,8 @@ public class SettingsDialog extends JFrame implements Translatable {
         DefaultListModel<SettingsPanel> model = new DefaultListModel<>();
 
         mainSetterPanel = new MainSetterPanel();
+        mainSetterPanel.setLauncherLocationPath(launcherLocationPath);
+
         browserSetterPanel = new BrowserSetterPanel();
         appearanceSetterPanel = new AppearanceSetterPanel();
         fileProcessingPanel = new FileProcessingPanel();

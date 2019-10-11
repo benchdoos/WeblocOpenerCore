@@ -41,8 +41,11 @@ import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.OPENER_ABOUT_ARGUMENT;
 import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.OPENER_COPY_LINK_ARGUMENT;
@@ -62,9 +65,6 @@ import static java.awt.Frame.MAXIMIZED_HORIZ;
 public class Application {
     private static final String CORRECT_CREATION_SYNTAX = "-create <file path> <url>";
 
-    public static UPDATE_MODE updateMode = UPDATE_MODE.NORMAL;
-
-
     public Application(final String[] args) {
         log.info("{} starts in mode: {}", ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME, Main.getCurrentMode());
         log.info("{} starts with arguments: {}", ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME, Arrays.toString(args));
@@ -78,7 +78,7 @@ public class Application {
         } else if (args.length == 1) {
             manageSoloArgument(args);
         } else {
-            runSettingsDialog();
+            runSettingsDialog(null);
         }
 
     }
@@ -110,7 +110,11 @@ public class Application {
                         manageEditArgument(args);
                         break;
                     case OPENER_SETTINGS_ARGUMENT:
-                        runSettingsDialog();
+                        String launcherLocation = null;
+                        if (args.length > 1) {
+                            launcherLocation = args[1];
+                        }
+                        runSettingsDialog(launcherLocation);
                         break;
 
                     case OPENER_ABOUT_ARGUMENT:
@@ -157,7 +161,7 @@ public class Application {
             }
         } else {
             log.debug("No arguments found, launching settings");
-            runSettingsDialog();
+            runSettingsDialog(null);
         }
     }
 
@@ -300,56 +304,31 @@ public class Application {
         }
     }
 
-    public static void runSettingsDialog() {
+    public static void runSettingsDialog(String launcherLocationPath) {
         SettingsDialog settingsDialog;
         if (PreferencesManager.isDarkModeEnabledNow()) {
             JColorful colorful = new JColorful(ApplicationConstants.DARK_MODE_THEME);
             colorful.colorizeGlobal();
 
-            settingsDialog = new SettingsDialog();
+            settingsDialog = new SettingsDialog(launcherLocationPath);
 
             colorful.colorize(settingsDialog);
         } else {
-            settingsDialog = new SettingsDialog();
+            settingsDialog = new SettingsDialog(launcherLocationPath);
         }
         settingsDialog.setVisible(true);
     }
 
-    private void manageSoloArgument(String[] args) {
-        if (OperatingSystem.isWindows()) {
-            manageArguments(args);
-        } else if (OperatingSystem.isUnix()) {
-            final String arg = args[0];
-            switch (arg) {
-                case OPENER_CREATE_NEW_ARGUMENT:
-                    runCreateNewFileWindow();
-                    break;
-                case OPENER_SETTINGS_ARGUMENT:
-                    runSettingsDialog();
-                    break;
-                case OPENER_ABOUT_ARGUMENT:
-                    new AboutApplicationDialog().setVisible(true);
-                    break;
-                case OPENER_UPDATE_ARGUMENT:
-                case UPDATE_SILENT_ARGUMENT:
-                    log.warn("UPDATE IS NOT SUPPORTED BY CORE! Argument: {}", arg);
-                    break;
-                case OPENER_HELP_ARGUMENT_HYPHEN: {
-                    System.out.println(helpText());
-                    break;
-                }
-                case OPENER_EDIT_ARGUMENT:
-                    manageEditArgument(args);
-                    break;
-                case OPENER_OPEN_ARGUMENT:
-                    showIncorrectArgumentMessage(OPENER_OPEN_ARGUMENT);
-                    break;
-                default:
-                    manageArgumentsOnUnix(args);
-                    break;
-            }
-        } else {
-            log.warn("System is not supported yet: {}", SystemUtils.getCurrentOS());
+    public static void launchApplication(String applicationPath, String... args) {
+        try {
+            log.debug("Launching application: {} with arguments: {}", applicationPath, args);
+            final List<String> allArguments = new ArrayList<>();
+            allArguments.add(applicationPath);
+            allArguments.addAll(Arrays.asList(args.clone()));
+            final ProcessBuilder processBuilder = new ProcessBuilder(allArguments);
+            processBuilder.start();
+        } catch (IOException e) {
+            log.warn("Can not launch application: {}", applicationPath, e);
         }
     }
 
@@ -385,5 +364,41 @@ public class Application {
         modeSelectorDialog.setVisible(true);
     }
 
-    public enum UPDATE_MODE {NORMAL, SILENT}
+    private void manageSoloArgument(String[] args) {
+        if (OperatingSystem.isWindows()) {
+            manageArguments(args);
+        } else if (OperatingSystem.isUnix()) {
+            final String arg = args[0];
+            switch (arg) {
+                case OPENER_CREATE_NEW_ARGUMENT:
+                    runCreateNewFileWindow();
+                    break;
+                case OPENER_SETTINGS_ARGUMENT:
+                    runSettingsDialog(null);
+                    break;
+                case OPENER_ABOUT_ARGUMENT:
+                    new AboutApplicationDialog().setVisible(true);
+                    break;
+                case OPENER_UPDATE_ARGUMENT:
+                case UPDATE_SILENT_ARGUMENT:
+                    log.warn("UPDATE IS NOT SUPPORTED BY CORE! Argument: {}", arg);
+                    break;
+                case OPENER_HELP_ARGUMENT_HYPHEN: {
+                    System.out.println(helpText());
+                    break;
+                }
+                case OPENER_EDIT_ARGUMENT:
+                    manageEditArgument(args);
+                    break;
+                case OPENER_OPEN_ARGUMENT:
+                    showIncorrectArgumentMessage(OPENER_OPEN_ARGUMENT);
+                    break;
+                default:
+                    manageArgumentsOnUnix(args);
+                    break;
+            }
+        } else {
+            log.warn("System is not supported yet: {}", SystemUtils.getCurrentOS());
+        }
+    }
 }
