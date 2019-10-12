@@ -48,7 +48,7 @@ public class Translation {
             locale = PreferencesManager.getLocale();
 
 
-            log.debug("[TRANSLATION] Locale: {} {}; Bundle: {}:[{}]", locale.getCountry(),
+            log.trace("[TRANSLATION] Locale: {} {}; Bundle: {}:[{}]", locale.getCountry(),
                     locale.getLanguage(), stringBundleName, message);
 
             final ResourceBundle bundle = ResourceBundle.getBundle(bundlePath, locale);
@@ -88,7 +88,7 @@ public class Translation {
 
     public String getTranslatedString(String message) {
         try {
-            log.debug("[TRANSLATION] Translating message: {}", message);
+            log.trace("[TRANSLATION] Translating message: {}", message);
             return messages.getString(message);
         } catch (Exception e) {
             log.warn("Could not localize string: " + bundleName + ":[" + message + "]", e);

@@ -25,6 +25,8 @@ public class Main {
         try {
             SystemUtils.checkIfSystemIsSupported();
 
+            initLogging();
+
             new Application(args);
         } catch (UnsupportedSystemException e) {
             log.fatal("System not supported", e);
@@ -37,18 +39,10 @@ public class Main {
         }
     }
 
-    private void initLogging(Mode mode) {
-        switch (mode) {
-            case WEBLOCOPENER:
-                new Logging(WEBLOCOPENER_APPLICATION_NAME);
-                break;
-            case UPDATE:
-                new Logging(UPDATER_APPLICATION_NAME);
-                break;
-        }
+    private static void initLogging() {
+        new Logging(WEBLOCOPENER_APPLICATION_NAME);
         log = LogManager.getLogger(Logging.getCurrentClassName());
     }
-
     public static Mode getCurrentMode() {
         return currentMode;
     }

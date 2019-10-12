@@ -74,6 +74,7 @@ public class Application {
 
         CoreUtils.enableLookAndFeel();
 
+
         if (args.length > 1) {
             manageArguments(args);
         } else if (args.length == 1) {
