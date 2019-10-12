@@ -29,6 +29,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 /**
@@ -43,20 +44,30 @@ public class BrowserManager {
     }
 
     private static ArrayList<Browser> getDefaultBrowsersList() {
-        ArrayList<Browser> result = new ArrayList<>();
+        log.debug("Starting loading browser list");
 
-        GsonBuilder builder = new GsonBuilder();
+        final ArrayList<Browser> result = new ArrayList<>();
+
+        final GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Browser.class, new BrowserDeserializer());
-        Gson gson = builder.create();
+        final Gson gson = builder.create();
         final String browserListJsonPath = getBrowserListJson();
+
+        log.debug("Browser list path for current system is: {}", browserListJsonPath);
+
         try {
-            String content = IOUtils.toString(BrowserManager.class.getResourceAsStream(browserListJsonPath),
-                    "UTF-8");
-            JsonElement element = new JsonParser().parse(content);
+            final String content = IOUtils.toString(
+                    BrowserManager.class.getResourceAsStream(browserListJsonPath),
+                    StandardCharsets.UTF_8);
+
+            final JsonElement element = new JsonParser().parse(content);
             final JsonObject asJsonObject = element.getAsJsonObject();
-            final JsonArray browsers = asJsonObject.getAsJsonArray("browsers");
-            for (JsonElement el : browsers) {
-                final Browser browser = gson.fromJson(el, Browser.class);
+            final JsonArray browsersArray = asJsonObject.getAsJsonArray("browsers");
+
+            log.debug("Browsers were found: {}", browsersArray);
+
+            for (final JsonElement jsonBrowser : browsersArray) {
+                final Browser browser = gson.fromJson(jsonBrowser, Browser.class);
                 result.add(browser);
             }
         } catch (IOException e) {
@@ -64,6 +75,9 @@ public class BrowserManager {
         } catch (Exception e) {
             log.warn("Could not load browsers list: {}, ignoring it", browserListJsonPath, e);
         }
+
+        log.info("Loaded browser list: {}", result);
+
         return result;
     }
 
@@ -77,6 +91,7 @@ public class BrowserManager {
     }
 
     private static void loadBrowsersFromDefault(ArrayList<Browser> list) {
+        log.info("Loading browser list. Given list: {}", list);
         browserList = list;
         browserList.add(0, new Browser(
                 Translation.getTranslatedString("CommonsBundle", "defaultBrowserName"),
