@@ -20,7 +20,7 @@ import com.github.benchdoos.jcolorful.core.JColorful;
 
 public interface ApplicationConstants {
     String WEBLOCOPENER_APPLICATION_NAME = "WeblocOpener";
-    String UPDATER_APPLICATION_NAME = "WindowsUpdater";
+    String UPDATER_APPLICATION_NAME = "WeblocOpenerUpdater";
 
     String WEBLOC_FILE_EXTENSION = "webloc";
 
