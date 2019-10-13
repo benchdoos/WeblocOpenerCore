@@ -8,6 +8,6 @@
     </description>
     <icon type="local">./build/unix/installer/icons/WeblocOpener.png</icon>
     <launchable type="desktop-id">
-        com.github.benchdoos.weblocopener
+        com.github.benchdoos.weblocopener.desktop
     </launchable>
 </component>
