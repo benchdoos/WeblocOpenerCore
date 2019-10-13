@@ -83,7 +83,7 @@
               <toolTipText resource-bundle="translations/SettingsDialogBundle" key="createNewFile"/>
             </properties>
           </component>
-          <component id="6edbc" class="com.github.benchdoos.weblocopenercore.gui.buttons.DonationButton" binding="donationButton_">
+          <component id="6edbc" class="com.github.benchdoos.weblocopenercore.gui.buttons.DonationButton" binding="donationButton">
             <constraints>
               <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
