@@ -77,7 +77,7 @@ public class MainSetterPanel extends JPanel implements SettingsPanel, Translatab
     @Override
     public void setLauncherLocationPath(String launcherLocationPath) {
         this.launcherLocationPath = launcherLocationPath;
-        initUpdateButton();
+        initUpdateButtons();
     }
 
     private void fillLocaleComboBox() {
@@ -260,12 +260,14 @@ public class MainSetterPanel extends JPanel implements SettingsPanel, Translatab
         translate();
     }
 
-    private void initUpdateButton() {
+    private void initUpdateButtons() {
         if (launcherLocationPath != null) {
+            betaInstallCheckBox.setVisible(true);
             checkUpdatesButton.setVisible(true);
             autoUpdateEnabledCheckBox.setVisible(true);
             checkUpdatesButton.addActionListener(e -> onUpdateNow());
         } else {
+            betaInstallCheckBox.setVisible(false);
             checkUpdatesButton.setVisible(false);
             autoUpdateEnabledCheckBox.setVisible(false);
         }
