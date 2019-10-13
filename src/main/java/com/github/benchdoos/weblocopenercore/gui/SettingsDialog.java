@@ -16,7 +16,6 @@
 package com.github.benchdoos.weblocopenercore.gui;
 
 import com.github.benchdoos.jcolorful.core.JColorful;
-import com.github.benchdoos.linksupport.links.Link;
 import com.github.benchdoos.weblocopenercore.core.Translation;
 import com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants;
 import com.github.benchdoos.weblocopenercore.gui.buttons.DonationButton;
@@ -27,16 +26,13 @@ import com.github.benchdoos.weblocopenercore.gui.panels.MainSetterPanel;
 import com.github.benchdoos.weblocopenercore.gui.panels.SettingsPanel;
 import com.github.benchdoos.weblocopenercore.gui.wrappers.CreateNewFileDialogWrapper;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
-import com.github.benchdoos.weblocopenercore.service.links.LinkFactory;
-import com.github.benchdoos.weblocopenercore.utils.Converter;
 import com.github.benchdoos.weblocopenercore.utils.FrameUtils;
 import com.github.benchdoos.weblocopenercore.utils.notification.NotificationManager;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
@@ -61,6 +57,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
+import java.awt.Window;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
@@ -72,7 +69,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -239,8 +235,6 @@ public class SettingsDialog extends JFrame implements Translatable {
 
 
     private void initDragAndDropTarget() {
-        final ImageIcon rickAndMortyIcon = new ImageIcon(Toolkit.getDefaultToolkit()
-                .getImage(getClass().getResource("/images/easter/rickAndMorty.gif")));
         final DropTarget dropTarget = new DropTarget() {
             @Override
             public synchronized void drop(DropTargetDropEvent evt) {
@@ -253,65 +247,28 @@ public class SettingsDialog extends JFrame implements Translatable {
                     contentPane.setBorder(null);
                     evt.acceptDrop(DnDConstants.ACTION_COPY);
                     final Object transferData = evt.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
-                    List<?> list = (List<?>) transferData;
-                    ArrayList<File> files = new ArrayList<>(list.size());
+                    final List<?> list = (List<?>) transferData;
+                    final ArrayList<File> files = new ArrayList<>(list.size());
 
-                    int easterCounter = 0;
-
-                    for (Object o : list) {
-                        if (o instanceof File) {
-                            File file = (File) o;
-                            try {
-                                if (FilenameUtils.removeExtension(file.getName()).toLowerCase().contains("rick and morty")) {
-                                    if (easterCounter == 0) {
-                                        showRickAndMortyEaster();
-                                        easterCounter++;
-                                    }
-                                }
-                            } catch (Exception e) {
-                                log.warn("Rick and Morty easter egg is broken", e);
-                            }
-
-                            final String fileExtension = com.github.benchdoos.weblocopenercore.utils.FileUtils.getFileExtension(file);
-                            if (fileExtension.equalsIgnoreCase(ApplicationConstants.URL_FILE_EXTENSION)
-                                    || fileExtension.equalsIgnoreCase(ApplicationConstants.DESKTOP_FILE_EXTENSION)) {
-                                try {
-                                    files.add(Converter.convert(file, Link.WEBLOC_LINK));
-                                    try {
-                                        FileUtils.forceDelete(file);
-                                    } catch (IOException e) {
-                                        log.warn("Could not delete file: {}", file, e);
-                                    }
-                                } catch (IOException e) {
-                                    log.warn("Could not convert *.{} to *.webloc file: {}", fileExtension, file, e);
-                                }
-
-                            } else if (fileExtension.equalsIgnoreCase(ApplicationConstants.WEBLOC_FILE_EXTENSION)) {
-                                try {
-                                    files.add(Converter.convert(file, LinkFactory.getLinkByName(PreferencesManager.getConverterExportExtension())));
-                                    try {
-                                        FileUtils.forceDelete(file);
-                                    } catch (IOException e) {
-                                        log.warn("Could not delete file: {}", file, e);
-                                    }
-                                } catch (IOException e) {
-                                    log.warn("Could not convert *.webloc to *.{} file: {}", PreferencesManager.getConverterExportExtension(), file, e);
-                                }
-                            }
+                    for (final Object object : list) {
+                        if (object instanceof File) {
+                            files.add((File) object);
                         }
                     }
 
-                    if (files.size() == list.size()) {
-                        NotificationManager.getNotificationForCurrentOS().showInfoNotification(
-                                ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME,
-                                translation.getTranslatedString("allFilesSuccessfullyConverted")
-                                        + files.size() + "/" + list.size());
+                    final ConverterDialog converterDialog;
+                    if (PreferencesManager.isDarkModeEnabledNow()) {
+                        JColorful colorful = new JColorful(ApplicationConstants.DARK_MODE_THEME);
+                        colorful.colorizeGlobal();
+
+                        converterDialog = new ConverterDialog(files);
+
+                        colorful.colorize(converterDialog);
                     } else {
-                        NotificationManager.getNotificationForCurrentOS().showWarningNotification(
-                                ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME,
-                                translation.getTranslatedString("someFilesFailedToConvert")
-                                        + files.size() + "/" + list.size());
+                        converterDialog = new ConverterDialog(files);
                     }
+                    converterDialog.setLocation(FrameUtils.getFrameOnCenterOfParentFrame(getCurrentWindow(), converterDialog));
+                    converterDialog.setVisible(true);
                 } catch (Exception ex) {
                     log.warn("Can not open files from drop", ex);
                     NotificationManager.getNotificationForCurrentOS().showErrorNotification(
@@ -319,25 +276,6 @@ public class SettingsDialog extends JFrame implements Translatable {
                             translation.getTranslatedString("couldNotConvertFiles"));
                 }
             }
-
-            private void showRickAndMortyEaster() {
-                log.info("Look! This user has found an easter egg (Rick and Morty). Good job!");
-
-                JFrame frame = new JFrame(ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME);
-                frame.setLayout(new GridLayout());
-                JLabel label = new JLabel();
-                label.setIcon(rickAndMortyIcon);
-                frame.add(label);
-                frame.setUndecorated(true);
-                frame.setSize(500, 281);
-                frame.setResizable(false);
-                frame.setLocation(FrameUtils.getFrameOnCenterLocationPoint(frame));
-                Timer timer = new Timer(5000, e -> frame.dispose());
-                timer.setRepeats(false);
-                timer.start();
-                frame.setVisible(true);
-            }
-
         };
         contentPane.setDropTarget(dropTarget);
 
@@ -363,6 +301,11 @@ public class SettingsDialog extends JFrame implements Translatable {
         } catch (TooManyListenersException e) {
             log.warn("Can not init drag and drop dropTarget", e);
         }
+    }
+
+    @NotNull
+    private Window getCurrentWindow() {
+        return (Window) this;
     }
 
     private void initGui() {
