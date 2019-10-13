@@ -56,8 +56,6 @@ public class Converter {
     }
 
     private static void validateFile(final File originalUrlFile, final Link link) throws FileNotFoundException {
-        final String extension = link.getExtension();
-
         if (originalUrlFile == null) {
             throw new IllegalArgumentException("Original file can not be null");
         }
