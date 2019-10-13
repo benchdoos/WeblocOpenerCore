@@ -15,6 +15,8 @@
 
 package com.github.benchdoos.weblocopenercore.service.clipboard;
 
+import com.github.benchdoos.weblocopenercore.service.clipboard.impl.UnixClipboard;
+import com.github.benchdoos.weblocopenercore.service.clipboard.impl.WindowsClipboard;
 import com.github.benchdoos.weblocopenercore.utils.system.OperatingSystem;
 
 public class ClipboardManager {
