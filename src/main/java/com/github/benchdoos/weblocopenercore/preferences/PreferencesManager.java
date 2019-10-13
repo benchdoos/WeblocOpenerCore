@@ -48,7 +48,6 @@ public class PreferencesManager {
     private static final String KEY_NOTIFICATIONS = "notifications";
     private static final String DEV_MODE_KEY = "dev_mode";
     private static final String KEY_DARK_MODE = "dark_mode";
-    private static final String KEY_CONVERTER_EXPORT_EXTENSION = "converter_export_extension";
     private static final String KEY_LOCALE = "locale";
     private static final String KEY_UNIX_OPENING_MODE = "unix_open_mode";
     private static final String KEY_LATEST_UPDATE_CHECK = "last_update_check";
@@ -81,18 +80,6 @@ public class PreferencesManager {
         } catch (BackingStoreException e) {
             log.warn("Could not flush preferences immediately", e);
         }
-    }
-
-    public static String getConverterExportExtension() {
-        final String s = PREFERENCES.get(KEY_CONVERTER_EXPORT_EXTENSION, SettingsConstants.CONVERTER_DEFAULT_EXTENSION);
-        if (s.equalsIgnoreCase(ApplicationConstants.WEBLOC_FILE_EXTENSION)) {
-            return SettingsConstants.CONVERTER_DEFAULT_EXTENSION;
-        }
-        return s;
-    }
-
-    public static void setConverterExportExtension(String value) {
-        PREFERENCES.put(KEY_CONVERTER_EXPORT_EXTENSION, value);
     }
 
     private static String getDarkMode() {

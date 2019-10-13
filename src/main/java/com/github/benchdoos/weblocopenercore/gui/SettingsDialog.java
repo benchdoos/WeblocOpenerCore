@@ -322,8 +322,6 @@ public class SettingsDialog extends JFrame implements Translatable {
 
         loadSettings();
 
-        updateDragAndDropNotice();
-
         buttonApply.addActionListener(e -> onApply());
 
         buttonOK.addActionListener(e -> onSave());
@@ -439,7 +437,6 @@ public class SettingsDialog extends JFrame implements Translatable {
     private void onApply() {
         saveSettings();
         SwingUtilities.invokeLater(this::updateUIDarkMode);
-        updateDragAndDropNotice();
         updateLocale();
 
         showOnApplyMessage();
@@ -447,7 +444,6 @@ public class SettingsDialog extends JFrame implements Translatable {
 
     @Override
     public void translate() {
-        updateDragAndDropNotice();
         Translation translation = new Translation("SettingsDialogBundle");
         setTitle(translation.getTranslatedString("windowTitle"));
         settingsSavedLabel.setText(translation.getTranslatedString("settingsSaved"));
@@ -456,6 +452,8 @@ public class SettingsDialog extends JFrame implements Translatable {
         buttonCancel.setText(translation.getTranslatedString("buttonCancel"));
 
         createNewFileButton.setToolTipText(translation.getTranslatedString("createNewFile"));
+
+        dragAndDropNotice.setText(translation.getTranslatedString( "dragAndDropNotice"));
 
         refreshSettingsList();
         settingsList.updateUI();
@@ -510,11 +508,6 @@ public class SettingsDialog extends JFrame implements Translatable {
             settingsSavedTimer.setRepeats(false);
         }
         settingsSavedTimer.restart();
-    }
-
-    private void updateDragAndDropNotice() {
-        final String translatedString = Translation.getTranslatedString("SettingsDialogBundle", "dragAndDropNotice");
-        dragAndDropNotice.setText(translatedString.replace("{}", PreferencesManager.getConverterExportExtension()));
     }
 
     private void saveSettings() {
