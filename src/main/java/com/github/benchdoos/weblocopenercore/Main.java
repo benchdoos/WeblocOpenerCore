@@ -4,6 +4,7 @@ import com.github.benchdoos.weblocopenercore.core.Application;
 import com.github.benchdoos.weblocopenercore.core.Logging;
 import com.github.benchdoos.weblocopenercore.core.Mode;
 import com.github.benchdoos.weblocopenercore.core.Translation;
+import com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants;
 import com.github.benchdoos.weblocopenercore.utils.notification.NotificationManager;
 import com.github.benchdoos.weblocopenercore.utils.system.SystemUtils;
 import com.github.benchdoos.weblocopenercore.utils.system.UnsupportedSystemException;
@@ -20,7 +21,7 @@ public class Main {
     private static Logger log;
 
     public static void main(String[] args) {
-        System.out.println("WeblocOpener starting with args: " + Arrays.toString(args));
+        System.out.println(WEBLOCOPENER_APPLICATION_NAME + " starting with args: " + Arrays.toString(args));
 
         try {
             SystemUtils.checkIfSystemIsSupported();
