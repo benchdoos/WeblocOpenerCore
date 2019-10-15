@@ -197,7 +197,7 @@ public class Application {
             converterDialog.setVisible(true);
             converterDialog.setLocationRelativeTo(null);
         } else {
-            log.warn("Converter need some files! Args: {}", args);
+            log.warn("Converter need some files! Args: {}", Arrays.asList(args));
             final String notificationString = Translation.getTranslatedString("ConvertDialogBundle", "convertError");
             NotificationManager.getNotificationForCurrentOS()
                     .showErrorNotification(ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME, notificationString);
