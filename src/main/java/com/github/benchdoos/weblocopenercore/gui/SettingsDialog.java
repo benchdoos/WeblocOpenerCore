@@ -494,9 +494,7 @@ public class SettingsDialog extends JFrame implements Translatable {
     private void showInsideSettingsWindowApplyMessage() {
         settingsSavedLabel.setVisible(true);
         if (settingsSavedTimer == null) {
-            settingsSavedTimer = new Timer(5000, e -> {
-                settingsSavedLabel.setVisible(false);
-            });
+            settingsSavedTimer = new Timer(5000, e -> settingsSavedLabel.setVisible(false));
             settingsSavedTimer.setRepeats(false);
         }
         settingsSavedTimer.restart();
