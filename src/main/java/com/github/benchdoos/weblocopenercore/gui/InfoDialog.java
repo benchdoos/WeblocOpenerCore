@@ -40,13 +40,13 @@ import java.util.ResourceBundle;
 
 import static com.github.benchdoos.weblocopenercore.utils.system.SystemUtils.IS_WINDOWS_XP;
 
-class InfoDialog extends JDialog {
+public class InfoDialog extends JDialog {
     private String content;
     private JPanel contentPane;
     private JButton buttonOK;
     private JTextPane textPane;
 
-    InfoDialog() {
+    public InfoDialog() {
         initGui();
     }
 
@@ -171,7 +171,7 @@ class InfoDialog extends JDialog {
         dispose();
     }
 
-    void setContent(String content) {
+    public void setContent(String content) {
         this.content = content;
     }
 
