@@ -20,6 +20,7 @@ import com.github.benchdoos.weblocopenercore.Main;
 import com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants;
 import com.github.benchdoos.weblocopenercore.core.constants.SettingsConstants;
 import com.github.benchdoos.weblocopenercore.gui.AboutApplicationDialog;
+import com.github.benchdoos.weblocopenercore.gui.ConverterDialog;
 import com.github.benchdoos.weblocopenercore.gui.EditDialog;
 import com.github.benchdoos.weblocopenercore.gui.SettingsDialog;
 import com.github.benchdoos.weblocopenercore.gui.ShowQrDialog;
@@ -49,6 +50,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.OPENER_ABOUT_ARGUMENT;
+import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.OPENER_CONVERT_ARGUMENT;
 import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.OPENER_COPY_LINK_ARGUMENT;
 import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.OPENER_COPY_QR_ARGUMENT;
 import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.OPENER_CREATE_ARGUMENT;
@@ -154,6 +156,9 @@ public class Application {
                     case UPDATE_SILENT_ARGUMENT:
                         log.warn("UPDATE IS NOT SUPPORTED BY CORE! Argument: {}", arg);
                         break;
+                    case OPENER_CONVERT_ARGUMENT:
+                        runConverterDialog(args);
+                        break;
                     default:
                         runAnalyzer(arg);
                         break;
@@ -164,6 +169,38 @@ public class Application {
         } else {
             log.debug("No arguments found, launching settings");
             runSettingsDialog(null);
+        }
+    }
+
+    private static void runConverterDialog(String[] args) {
+        if (args.length > 1) {
+
+            final List<File> files = new ArrayList<>();
+            Arrays.stream(args).forEach(c -> {
+                final File file = new File(c);
+                final boolean exists = file.exists();
+                if (exists) {
+                    files.add(file);
+                }
+            });
+
+            final ConverterDialog converterDialog;
+            if (PreferencesManager.isDarkModeEnabledNow()) {
+                JColorful colorful = new JColorful(ApplicationConstants.DARK_MODE_THEME);
+                colorful.colorizeGlobal();
+                converterDialog = new ConverterDialog(files);
+                colorful.colorize(converterDialog);
+            } else {
+                converterDialog = new ConverterDialog(files);
+            }
+
+            converterDialog.setVisible(true);
+            converterDialog.setLocationRelativeTo(null);
+        } else {
+            log.warn("Converter need some files! Args: {}", args);
+            final String notificationString = Translation.getTranslatedString("ConvertDialogBundle", "convertError");
+            NotificationManager.getNotificationForCurrentOS()
+                    .showErrorNotification(ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME, notificationString);
         }
     }
 
@@ -403,6 +440,9 @@ public class Application {
                     break;
                 case OPENER_OPEN_ARGUMENT:
                     showIncorrectArgumentMessage(OPENER_OPEN_ARGUMENT);
+                    break;
+                case OPENER_CONVERT_ARGUMENT:
+                    runConverterDialog(args);
                     break;
                 default:
                     manageArgumentsOnUnix(args);

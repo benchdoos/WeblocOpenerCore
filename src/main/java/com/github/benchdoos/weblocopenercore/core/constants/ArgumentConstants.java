@@ -28,6 +28,7 @@ public interface ArgumentConstants {
     String OPENER_QR_ARGUMENT = "-qr";
     String OPENER_COPY_LINK_ARGUMENT = "-copy";
     String OPENER_COPY_QR_ARGUMENT = "-copy-qr";
+    String OPENER_CONVERT_ARGUMENT = "-convert";
 
     String UPDATE_SILENT_ARGUMENT = "-update-silent";
 
