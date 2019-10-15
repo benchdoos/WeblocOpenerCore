@@ -212,6 +212,8 @@ public class CreateNewFilePanel extends JPanel implements Translatable {
     private void createUIComponents() {
         urlTextField = new PlaceholderTextField();
         ((PlaceholderTextField) urlTextField).setPlaceholder("URL");
+
+        linkComboBox = new JComboBox<>();
     }
 
     /**
