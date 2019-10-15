@@ -23,6 +23,7 @@ import com.github.benchdoos.weblocopenercore.core.constants.SettingsConstants;
 import com.github.benchdoos.weblocopenercore.gui.AboutApplicationDialog;
 import com.github.benchdoos.weblocopenercore.gui.Translatable;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
+import com.github.benchdoos.weblocopenercore.service.WindowLauncher;
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import com.github.benchdoos.weblocopenercore.utils.FrameUtils;
 import com.intellij.uiDesigner.core.GridConstraints;
@@ -44,6 +45,7 @@ import javax.swing.JSeparator;
 import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.awt.Window;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -274,16 +276,12 @@ public class MainSetterPanel extends JPanel implements SettingsPanel, Translatab
     }
 
     private void onAbout() {
-        AboutApplicationDialog dialog;
-        if (PreferencesManager.isDarkModeEnabledNow()) {
-            JColorful colorful = new JColorful(ApplicationConstants.DARK_MODE_THEME);
-            colorful.colorizeGlobal();
-            dialog = new AboutApplicationDialog();
-            colorful.colorize(dialog);
-        } else {
-            dialog = new AboutApplicationDialog();
-        }
-        dialog.setVisible(true);
+        new WindowLauncher() {
+            @Override
+            public Window initWindow() {
+                return new AboutApplicationDialog();
+            }
+        }.getWindow().setVisible(true);
     }
 
     @Override

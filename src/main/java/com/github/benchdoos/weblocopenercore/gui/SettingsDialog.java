@@ -26,6 +26,7 @@ import com.github.benchdoos.weblocopenercore.gui.panels.MainSetterPanel;
 import com.github.benchdoos.weblocopenercore.gui.panels.SettingsPanel;
 import com.github.benchdoos.weblocopenercore.gui.wrappers.CreateNewFileDialogWrapper;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
+import com.github.benchdoos.weblocopenercore.service.WindowLauncher;
 import com.github.benchdoos.weblocopenercore.utils.FrameUtils;
 import com.github.benchdoos.weblocopenercore.utils.notification.NotificationManager;
 import com.intellij.uiDesigner.core.GridConstraints;
@@ -255,17 +256,12 @@ public class SettingsDialog extends JFrame implements Translatable {
                         }
                     }
 
-                    final ConverterDialog converterDialog;
-                    if (PreferencesManager.isDarkModeEnabledNow()) {
-                        JColorful colorful = new JColorful(ApplicationConstants.DARK_MODE_THEME);
-                        colorful.colorizeGlobal();
-
-                        converterDialog = new ConverterDialog(files);
-
-                        colorful.colorize(converterDialog);
-                    } else {
-                        converterDialog = new ConverterDialog(files);
-                    }
+                    ConverterDialog converterDialog = new WindowLauncher<ConverterDialog>() {
+                        @Override
+                        public ConverterDialog initWindow() {
+                            return new ConverterDialog(files);
+                        }
+                    }.getWindow();
                     converterDialog.setLocation(FrameUtils.getFrameOnCenterOfParentFrame(getCurrentWindow(), converterDialog));
                     converterDialog.setVisible(true);
                 } catch (Exception ex) {
@@ -362,16 +358,13 @@ public class SettingsDialog extends JFrame implements Translatable {
     }
 
     private void createNewFile() {
-        CreateNewFileDialogWrapper jFrameWrapper;
-        if (PreferencesManager.isDarkModeEnabledNow()) {
-            JColorful colorful = new JColorful(ApplicationConstants.DARK_MODE_THEME);
-            colorful.colorizeGlobal();
-            jFrameWrapper = new CreateNewFileDialogWrapper();
+        final CreateNewFileDialogWrapper jFrameWrapper = new WindowLauncher<CreateNewFileDialogWrapper>() {
+            @Override
+            public CreateNewFileDialogWrapper initWindow() {
+                return new CreateNewFileDialogWrapper();
+            }
+        }.getWindow();
 
-            colorful.colorize(jFrameWrapper);
-        } else {
-            jFrameWrapper = new CreateNewFileDialogWrapper();
-        }
         jFrameWrapper.setModal(true);
         jFrameWrapper.setLocation(FrameUtils.getFrameOnCenterOfParentFrame(this, jFrameWrapper));
         jFrameWrapper.setVisible(true);

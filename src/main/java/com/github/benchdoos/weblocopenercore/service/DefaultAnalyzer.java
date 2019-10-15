@@ -43,15 +43,19 @@ public class DefaultAnalyzer {
     private String url = "";
     private File selectedFile = null;
 
-    public DefaultAnalyzer(final String filePath) throws Exception {
-        log.debug("Starting analyze");
-        log.debug("Got argument: " + filePath);
+    public DefaultAnalyzer(final String filePath) {
+        try {
+            log.debug("Starting analyze");
+            log.debug("Got argument: " + filePath);
 
-        if (filePath == null) {
-            throw new IllegalArgumentException("Filepath can not be null.");
+            if (filePath == null) {
+                throw new IllegalArgumentException("Filepath can not be null.");
+            }
+
+            analyzeFile(filePath);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-
-        analyzeFile(filePath);
     }
 
     private void analyzeFile(final String filePath) throws Exception {
@@ -67,6 +71,7 @@ public class DefaultAnalyzer {
             if (weblocFiles != null) {
                 if (weblocFiles.size() > 1) {
                     final FileChooser fileChooser;
+                    //todo check if can be moved to WindowLauncher
                     if (PreferencesManager.isDarkModeEnabledNow()) {
                         final JColorful colorful = new JColorful(ApplicationConstants.DARK_MODE_THEME);
                         colorful.colorizeGlobal();

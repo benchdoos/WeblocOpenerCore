@@ -64,15 +64,18 @@ public class ShowQrDialog extends JFrame implements Translatable {
     private JButton copyImageButton;
 
 
-    public ShowQrDialog(File weblocFile) throws Exception {
+    public ShowQrDialog(File weblocFile)  {
         this.weblocFile = weblocFile;
+        try {
 
         url = new DefaultAnalyzer(weblocFile.getAbsolutePath()).getUrl();
 
-        this.qrCodeImage = UrlsProceed.generateQrCode(url);
-        $$$setupUI$$$();
-        initGui();
-
+            this.qrCodeImage = UrlsProceed.generateQrCode(url);
+            $$$setupUI$$$();
+            initGui();
+        } catch (IOException | WriterException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**

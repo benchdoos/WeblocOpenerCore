@@ -29,6 +29,7 @@ import com.github.benchdoos.weblocopenercore.gui.wrappers.CreateNewFileFrameWrap
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import com.github.benchdoos.weblocopenercore.service.DefaultAnalyzer;
 import com.github.benchdoos.weblocopenercore.service.UrlsProceed;
+import com.github.benchdoos.weblocopenercore.service.WindowLauncher;
 import com.github.benchdoos.weblocopenercore.service.clipboard.ClipboardManager;
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import com.github.benchdoos.weblocopenercore.utils.FileUtils;
@@ -184,16 +185,14 @@ public class Application {
                 }
             });
 
-            final ConverterDialog converterDialog;
-            if (PreferencesManager.isDarkModeEnabledNow()) {
-                JColorful colorful = new JColorful(ApplicationConstants.DARK_MODE_THEME);
-                colorful.colorizeGlobal();
-                converterDialog = new ConverterDialog(files);
-                colorful.colorize(converterDialog);
-            } else {
-                converterDialog = new ConverterDialog(files);
-            }
+            final WindowLauncher<ConverterDialog> windowLauncher = new WindowLauncher<ConverterDialog>() {
+                @Override
+                public ConverterDialog initWindow() {
+                    return new ConverterDialog(files);
+                }
+            };
 
+            final ConverterDialog converterDialog = windowLauncher.getWindow();
             converterDialog.setVisible(true);
             converterDialog.setLocationRelativeTo(null);
         } else {
@@ -309,16 +308,14 @@ public class Application {
      * @param filepath file path
      */
     private static void runEditDialog(String filepath) {
-        EditDialog dialog;
-        if (PreferencesManager.isDarkModeEnabledNow()) {
-            JColorful colorful = new JColorful(ApplicationConstants.DARK_MODE_THEME);
-            colorful.colorizeGlobal();
-            dialog = new EditDialog(filepath);
-            colorful.colorize(dialog);
-            dialog.updateTextFont();
-        } else {
-            dialog = new EditDialog(filepath);
-        }
+        final EditDialog dialog = new WindowLauncher<EditDialog>() {
+            @Override
+            public EditDialog initWindow() {
+                final EditDialog editDialog = new EditDialog(filepath);
+                editDialog.updateTextFont();
+                return editDialog;
+            }
+        }.getWindow();
 
         dialog.setVisible(true);
         dialog.setMaximumSize(new Dimension(MAXIMIZED_HORIZ, dialog.getHeight()));
@@ -328,15 +325,12 @@ public class Application {
     private static void runQrDialog(String arg) {
         try {
             final File file = new DefaultAnalyzer(arg).getFile();
-            ShowQrDialog qrDialog;
-            if (PreferencesManager.isDarkModeEnabledNow()) {
-                JColorful colorful = new JColorful(ApplicationConstants.DARK_MODE_THEME);
-                colorful.colorizeGlobal();
-                qrDialog = new ShowQrDialog(file);
-                colorful.colorize(qrDialog);
-            } else {
-                qrDialog = new ShowQrDialog(file);
-            }
+            final ShowQrDialog qrDialog = new WindowLauncher<ShowQrDialog>() {
+                @Override
+                public ShowQrDialog initWindow() {
+                    return new ShowQrDialog(file);
+                }
+            }.getWindow();
             qrDialog.setVisible(true);
         } catch (Exception e) {
             log.warn("Can not create a qr-code from url: [" + arg + "]", e);
@@ -344,18 +338,12 @@ public class Application {
     }
 
     public static void runSettingsDialog(String launcherLocationPath) {
-        SettingsDialog settingsDialog;
-        if (PreferencesManager.isDarkModeEnabledNow()) {
-            JColorful colorful = new JColorful(ApplicationConstants.DARK_MODE_THEME);
-            colorful.colorizeGlobal();
-
-            settingsDialog = new SettingsDialog(launcherLocationPath);
-
-            colorful.colorize(settingsDialog);
-        } else {
-            settingsDialog = new SettingsDialog(launcherLocationPath);
-        }
-        settingsDialog.setVisible(true);
+        new WindowLauncher<SettingsDialog>() {
+            @Override
+            public SettingsDialog initWindow() {
+                return new SettingsDialog(launcherLocationPath);
+            }
+        }.getWindow().setVisible(true);
     }
 
     public static void launchApplication(String applicationPath, String... args) {
@@ -381,16 +369,12 @@ public class Application {
     }
 
     private void runCreateNewFileWindow() {
-        CreateNewFileFrameWrapper createNewFileFrameWrapper;
-        if (PreferencesManager.isDarkModeEnabledNow()) {
-            JColorful colorful = new JColorful(ApplicationConstants.DARK_MODE_THEME);
-            colorful.colorizeGlobal();
-            createNewFileFrameWrapper = new CreateNewFileFrameWrapper();
-
-            colorful.colorize(createNewFileFrameWrapper);
-        } else {
-            createNewFileFrameWrapper = new CreateNewFileFrameWrapper();
-        }
+        final CreateNewFileFrameWrapper createNewFileFrameWrapper = new WindowLauncher<CreateNewFileFrameWrapper>() {
+            @Override
+            public CreateNewFileFrameWrapper initWindow() {
+                return new CreateNewFileFrameWrapper();
+            }
+        }.getWindow();
         createNewFileFrameWrapper.setLocation(FrameUtils.getFrameOnCenterLocationPoint(createNewFileFrameWrapper));
         createNewFileFrameWrapper.setVisible(true);
     }
