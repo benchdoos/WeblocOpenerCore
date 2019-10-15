@@ -452,7 +452,7 @@ public class SettingsDialog extends JFrame implements Translatable {
 
         createNewFileButton.setToolTipText(translation.getTranslatedString("createNewFile"));
 
-        dragAndDropNotice.setText(translation.getTranslatedString( "dragAndDropNotice"));
+        dragAndDropNotice.setText(translation.getTranslatedString("dragAndDropNotice"));
 
         refreshSettingsList();
         settingsList.updateUI();
