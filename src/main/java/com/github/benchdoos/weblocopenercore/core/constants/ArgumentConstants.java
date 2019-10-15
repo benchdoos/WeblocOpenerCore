@@ -15,6 +15,7 @@
 
 package com.github.benchdoos.weblocopenercore.core.constants;
 
+//todo change to enum
 public interface ArgumentConstants {
     String OPENER_OPEN_ARGUMENT = "-open"; //don't use it, this is for unix
 
