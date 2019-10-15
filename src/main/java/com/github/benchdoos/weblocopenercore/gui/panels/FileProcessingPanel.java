@@ -43,11 +43,13 @@ import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.util.List;
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.StringJoiner;
 
 @Log4j2
 public class FileProcessingPanel extends JPanel implements SettingsPanel, Translatable {
+    private Translation translation = new Translation("MainSetterPanelBundle");
     private JPanel contentPane;
     private String mode;
 
@@ -78,10 +80,11 @@ public class FileProcessingPanel extends JPanel implements SettingsPanel, Transl
 
     private void initCreateFileExtensionComboBox() {
         createFileExtensionComboBox.setRenderer(new DefaultListCellRenderer() {
-            final String linkName = Translation.getTranslatedString("CommonsBundle", "linkName");
 
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                final String linkName = Translation.getTranslatedString("CommonsBundle", "linkName");
+
                 if (value instanceof Link) {
                     final Link link = (Link) value;
 
@@ -108,7 +111,6 @@ public class FileProcessingPanel extends JPanel implements SettingsPanel, Transl
 
     @Override
     public void translate() {
-        Translation translation = new Translation("MainSetterPanelBundle");
         unixOpenModeLabel.setText(translation.getTranslatedString("unixOpenModeLabel"));
         createFileByDefaultLabel.setText(translation.getTranslatedString("createFileLabel"));
         openInBrowser.setText(translation.getTranslatedString("openInFileBrowser"));
@@ -158,8 +160,14 @@ public class FileProcessingPanel extends JPanel implements SettingsPanel, Transl
 
     private void initUnixOpenModeComboBox() {
         unixOpenModeComboBox.setRenderer(new DefaultListCellRenderer() {
+            private Locale currentLocale = null;
+
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                if (!PreferencesManager.getLocale().equals(currentLocale)) {
+                    fillUnixOpenModeComboBox();
+                }
+
                 if (value instanceof UnixOpenMode) {
                     final UnixOpenMode mode = (UnixOpenMode) value;
                     return super.getListCellRendererComponent(list, mode.getModeName(), index, isSelected, cellHasFocus);
@@ -170,7 +178,9 @@ public class FileProcessingPanel extends JPanel implements SettingsPanel, Transl
 
         unixOpenModeComboBox.addActionListener(e -> {
             final UnixOpenMode selectedItem = ((UnixOpenMode) unixOpenModeComboBox.getSelectedItem());
-            mode = selectedItem.getMode();
+            if (selectedItem != null) {
+                mode = selectedItem.getMode();
+            }
         });
     }
 
@@ -187,17 +197,17 @@ public class FileProcessingPanel extends JPanel implements SettingsPanel, Transl
     }
 
     private void fillUnixOpenModeComboBox() {
-        UnixOpenMode defaultMode = new UnixOpenMode(SettingsConstants.OPENER_UNIX_DEFAULT_SELECTOR_MODE,
+        final UnixOpenMode defaultMode = new UnixOpenMode(SettingsConstants.OPENER_UNIX_DEFAULT_SELECTOR_MODE,
                 Translation.getTranslatedString("MainSetterPanelBundle", "unixModeAsk"));
-        UnixOpenMode openMode = new UnixOpenMode(ArgumentConstants.OPENER_OPEN_ARGUMENT,
+        final UnixOpenMode openMode = new UnixOpenMode(ArgumentConstants.OPENER_OPEN_ARGUMENT,
                 Translation.getTranslatedString("MainSetterPanelBundle", "unixModeOpen"));
-        UnixOpenMode editMode = new UnixOpenMode(ArgumentConstants.OPENER_EDIT_ARGUMENT,
+        final UnixOpenMode editMode = new UnixOpenMode(ArgumentConstants.OPENER_EDIT_ARGUMENT,
                 Translation.getTranslatedString("MainSetterPanelBundle", "unixModeEdit"));
-        UnixOpenMode copyMode = new UnixOpenMode(ArgumentConstants.OPENER_COPY_LINK_ARGUMENT,
+        final UnixOpenMode copyMode = new UnixOpenMode(ArgumentConstants.OPENER_COPY_LINK_ARGUMENT,
                 Translation.getTranslatedString("MainSetterPanelBundle", "unixModeCopy"));
-        UnixOpenMode generateQrMode = new UnixOpenMode(ArgumentConstants.OPENER_QR_ARGUMENT,
+        final UnixOpenMode generateQrMode = new UnixOpenMode(ArgumentConstants.OPENER_QR_ARGUMENT,
                 Translation.getTranslatedString("MainSetterPanelBundle", "unixModeGenerateQR"));
-        UnixOpenMode copyQr = new UnixOpenMode(ArgumentConstants.OPENER_COPY_QR_ARGUMENT,
+        final UnixOpenMode copyQr = new UnixOpenMode(ArgumentConstants.OPENER_COPY_QR_ARGUMENT,
                 Translation.getTranslatedString("MainSetterPanelBundle", "unixModeCopyQR"));
 
 
