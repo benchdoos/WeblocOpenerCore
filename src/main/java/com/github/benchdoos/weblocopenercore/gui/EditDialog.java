@@ -37,6 +37,8 @@ import com.intellij.uiDesigner.core.Spacer;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileExistsException;
 import org.apache.commons.validator.routines.UrlValidator;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import javax.imageio.ImageIO;
 import javax.net.ssl.HttpsURLConnection;
@@ -419,9 +421,33 @@ public class EditDialog extends JFrame implements Translatable {
                             final BufferedImage read = ImageIO.read(new URL(faviconUrl));
                             urlPageTitle.setIcon(new ImageIcon(CoreUtils.resize(read, 16, 16)));
                         }
+
                     } catch (Exception e) {
-                        urlPageTitle.setIcon(null);
-                        log.warn("Could not load favicon for page: {}", pageUrl, e);
+                        log.warn("Could not load favicon for page: {} by basti-icon", pageUrl, e);
+                        log.info("Trying to get url icon by Jsoup");
+
+                        try {
+                            final Document document = Jsoup.connect(pageUrl).get();
+                            final String content = document.head()
+                                    .getElementsByAttributeValueMatching("rel", ".*icon.*")
+                                    .first().attributes().get("href");
+                            try {
+                                final BufferedImage read = ImageIO.read(new URL(content));
+                                urlPageTitle.setIcon(new ImageIcon(CoreUtils.resize(read, 16, 16)));
+                            } catch (Exception ex) {
+                                final URL url = new URL(pageUrl);
+                                final String base = url.getProtocol() + "://" + url.getHost();
+                                final String s1 = base + content;
+                                final URL url1 = new URL(s1);
+
+                                final BufferedImage read = ImageIO.read(url1);
+                                urlPageTitle.setIcon(new ImageIcon(CoreUtils.resize(read, 16, 16)));
+
+                            }
+                        } catch (Exception ex) {
+                            urlPageTitle.setIcon(null);
+                            log.warn("Could not load favicon for page: {} by myself", pageUrl, e);
+                        }
                     }
                 } else {
                     urlPageTitle.setIcon(null);
