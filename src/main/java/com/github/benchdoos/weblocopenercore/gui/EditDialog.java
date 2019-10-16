@@ -77,7 +77,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
@@ -85,6 +84,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ResourceBundle;
 
+import static com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME;
 import static com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants.WEBLOC_FILE_EXTENSION;
 import static com.github.benchdoos.weblocopenercore.core.constants.StringConstants.FAVICON_GETTER_URL;
 
@@ -605,12 +605,11 @@ public class EditDialog extends JFrame implements Translatable {
         }
     }
 
-
-    private void manageFileName() {
+    private void manageFileName(Link link) {
         try {
-            renameFileIfAsked(pathToEditingFile);
+            renameFileIfAsked(pathToEditingFile, link);
         } catch (Exception e) {
-            final String fileName = urlPageTitle.getToolTipText() + "." + WEBLOC_FILE_EXTENSION;
+            final String fileName = urlPageTitle.getToolTipText() + "." + link.getExtension();
 
             log.warn("Could not rename file {} to {}", pathToEditingFile, fileName, e);
             NotificationManager.getNotificationForCurrentOS().showWarningNotification(
@@ -634,18 +633,25 @@ public class EditDialog extends JFrame implements Translatable {
     private void onOK() {
         final String urlText = textField.getText();
         try {
-            URL url = new URL(urlText);
-            UrlValidator urlValidator = new UrlValidator();
+            final URL url = new URL(urlText);
+            final UrlValidator urlValidator = new UrlValidator();
             if (urlValidator.isValid(urlText)) {
-                //todo add some checks and logic to select needed link to process file
-                // * create new file from default link processor
-                // * update existing links by already used processor, like it is now:
                 final File file = new File(pathToEditingFile);
-                Link.getByExtension(FileUtils.getFileExtension(file))
-                        .getLinkProcessor()
-                        .createLink(url, new FileOutputStream(file));
+                final Link link = Link.getByExtension(FileUtils.getFileExtension(file));
+                if (link != null) {
+                    link.getLinkProcessor().createLink(url, file);
 
-                manageFileName();
+                    manageFileName(link);
+                } else {
+                    log.warn("Could not get Link for file: {}", pathToEditingFile);
+
+                    final String message = Translation.getTranslatedString("EditDialogBundle", "canNotSaveFile")
+                            + file.getName();
+                    NotificationManager.getNotificationForCurrentOS().showErrorNotification(
+                            WEBLOCOPENER_APPLICATION_NAME,
+                            message
+                    );
+                }
 
                 dispose();
             } else {
@@ -679,9 +685,9 @@ public class EditDialog extends JFrame implements Translatable {
 
     }
 
-    private void renameFileIfAsked(String pathToEditingFile) throws FileNotFoundException, FileExistsException {
+    private void renameFileIfAsked(String pathToEditingFile, Link link) throws FileNotFoundException, FileExistsException {
         final String toolTip = urlPageTitle.getToolTipText();
-        final String fileName = toolTip + "." + WEBLOC_FILE_EXTENSION;
+        final String fileName = toolTip + "." + link.getExtension();
         if (autoRenameFileCheckBox.isSelected()) {
 
             final File file = CoreUtils.renameFile(new File(pathToEditingFile), fileName);
