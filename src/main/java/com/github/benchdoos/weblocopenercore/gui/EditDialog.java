@@ -272,13 +272,13 @@ public class EditDialog extends JFrame implements Translatable {
     }
 
     private void createTitle() {
-        String path = "";
         try {
-            path = new File(pathToEditingFile).getName();
+            final String path = new File(pathToEditingFile).getName();
+            setTitle(path + " — " + WEBLOCOPENER_APPLICATION_NAME);
         } catch (Exception e) {
             log.warn("Could not get file name for: " + pathToEditingFile, e);
+            setTitle(WEBLOCOPENER_APPLICATION_NAME);
         }
-        setTitle(path + " — WeblocOpener");
     }
 
     private void createUIComponents() {
@@ -645,9 +645,11 @@ public class EditDialog extends JFrame implements Translatable {
                 final File file = new File(pathToEditingFile);
                 final Link link = Link.getLinkForFile(file);
                 if (link != null) {
+                    log.info("Saving link: {} with url: {} to: {}", link, url, file);
                     link.getLinkProcessor().createLink(url, file);
 
                     manageFileName(link);
+                    log.info("Successfully saved url: {} to file: {}", url,  file);
                 } else {
                     log.warn("Could not get Link for file: {}", pathToEditingFile);
 
