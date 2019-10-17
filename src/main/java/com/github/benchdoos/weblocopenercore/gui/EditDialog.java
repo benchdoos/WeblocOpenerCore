@@ -180,7 +180,7 @@ public class EditDialog extends JFrame implements Translatable {
         if (editLinkLabelFont != null) editLinkLabel.setFont(editLinkLabelFont);
         editLinkLabel.setOpaque(false);
         editLinkLabel.setRequestFocusEnabled(true);
-        this.$$$loadLabelText$$$(editLinkLabel, ResourceBundle.getBundle("translations/EditDialogBundle").getString("EditWeblocLink"));
+        this.$$$loadLabelText$$$(editLinkLabel, ResourceBundle.getBundle("translations/EditDialogBundle").getString("editLink"));
         editLinkLabel.setVerifyInputWhenFocusTarget(false);
         editLinkLabel.setVisible(true);
         panel3.add(editLinkLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_VERTICAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
@@ -560,7 +560,13 @@ public class EditDialog extends JFrame implements Translatable {
     @Override
     public void translate() {
         Translation translation = new Translation("EditDialogBundle");
-        editLinkLabel.setText(translation.getTranslatedString("EditWeblocLink"));
+        try {
+            final Link linkForFile = Link.getLinkForFile(new File(pathToEditingFile));
+            editLinkLabel.setText(String.format(translation.getTranslatedString("editLink"), linkForFile.getExtension()));
+        } catch (Exception e) {
+            log.warn("Could not load link for file: {} to translate editLinkLabel.", pathToEditingFile);
+            editLinkLabel.setText(String.format(translation.getTranslatedString("editLink"), ""));
+        }
         clearTextButton.setToolTipText(translation.getTranslatedString("clearTextToolTip"));
         autoRenameFileCheckBox.setText(translation.getTranslatedString("autoRenameFile"));
         autoRenameFileCheckBox.setToolTipText(translation.getTranslatedString("canNotRenameToolTip"));
@@ -637,7 +643,7 @@ public class EditDialog extends JFrame implements Translatable {
             final UrlValidator urlValidator = new UrlValidator();
             if (urlValidator.isValid(urlText)) {
                 final File file = new File(pathToEditingFile);
-                final Link link = Link.getByExtension(FileUtils.getFileExtension(file));
+                final Link link = Link.getLinkForFile(file);
                 if (link != null) {
                     link.getLinkProcessor().createLink(url, file);
 
