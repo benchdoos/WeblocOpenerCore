@@ -26,9 +26,9 @@ public class Main {
         System.out.println(WEBLOCOPENER_APPLICATION_NAME + " starting with args: " + Arrays.toString(args));
 
         try {
-            SystemUtils.checkIfSystemIsSupported();
-
             initLogging();
+
+            SystemUtils.checkIfSystemIsSupported();
 
             new Application(args);
         } catch (UnsupportedSystemException e) {
