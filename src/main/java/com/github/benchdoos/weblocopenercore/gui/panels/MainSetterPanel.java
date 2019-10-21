@@ -15,10 +15,8 @@
 
 package com.github.benchdoos.weblocopenercore.gui.panels;
 
-import com.github.benchdoos.jcolorful.core.JColorful;
 import com.github.benchdoos.weblocopenercore.core.Application;
 import com.github.benchdoos.weblocopenercore.core.Translation;
-import com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants;
 import com.github.benchdoos.weblocopenercore.core.constants.SettingsConstants;
 import com.github.benchdoos.weblocopenercore.gui.AboutApplicationDialog;
 import com.github.benchdoos.weblocopenercore.gui.Translatable;
@@ -45,7 +43,6 @@ import javax.swing.JSeparator;
 import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.Insets;
-import java.awt.Window;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -276,12 +273,14 @@ public class MainSetterPanel extends JPanel implements SettingsPanel, Translatab
     }
 
     private void onAbout() {
-        new WindowLauncher() {
+        final AboutApplicationDialog aboutWindow = new WindowLauncher<AboutApplicationDialog>() {
             @Override
-            public Window initWindow() {
+            public AboutApplicationDialog initWindow() {
                 return new AboutApplicationDialog();
             }
-        }.getWindow().setVisible(true);
+        }.getWindow();
+        FrameUtils.setWindowOnParentWindowCenter(FrameUtils.findWindow(this), aboutWindow);
+        aboutWindow.setVisible(true);
     }
 
     @Override

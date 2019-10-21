@@ -319,7 +319,7 @@ public class AboutApplicationDialog extends JDialog {
         setModal(true);
         setSize(550, 300);
         setResizable(false);
-        setLocation(FrameUtils.getFrameOnCenterLocationPoint(this));
+        FrameUtils.setWindowOnScreenCenter(this);
         log.debug("GUI created");
     }
 
