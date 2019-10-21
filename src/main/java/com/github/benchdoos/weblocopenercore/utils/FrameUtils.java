@@ -56,22 +56,33 @@ import java.util.Map;
 public class FrameUtils {
     private static final Timer timer = new Timer(60, null);
 
+    /**
+     * Sets window on center of the screen on default screen graphics device
+     *
+     * @param window to set on center
+     * @see java.awt.GraphicsDevice
+     */
     public static void setWindowOnScreenCenter(Window window) {
         if (window != null) {
 
             final GraphicsDevice defaultScreenDevice = GraphicsEnvironment.
                     getLocalGraphicsEnvironment().
                     getDefaultScreenDevice();
+
             final GraphicsConfiguration defaultConfiguration = defaultScreenDevice.getDefaultConfiguration();
 
             final Rectangle screenBounds = defaultConfiguration.getBounds();
 
-            final Dimension windowSize = window.getSize();
-
             final Dimension screenSize = screenBounds.getSize();
             final Point initialScreenLocationPoint = screenBounds.getLocation();
-            int width = (int) ((screenSize.width + initialScreenLocationPoint.x / (double) 2) - (windowSize.getWidth() / (double) 2));
-            int height = (int) ((screenSize.height + screenBounds.getLocation().y / (double) 2) - (windowSize.getHeight() / (double) 2));
+
+            final Dimension windowSize = window.getSize();
+
+            final double centerOfScreenWidth = (screenSize.getWidth()) / (double) 2;
+            final double centerOfScreenHeight = (screenSize.getHeight()) / (double) 2;
+
+            int width = (int) (initialScreenLocationPoint.getX() + centerOfScreenWidth - (windowSize.getWidth() / (double) 2));
+            int height = (int) (initialScreenLocationPoint.getY() + centerOfScreenHeight - (windowSize.getHeight() / (double) 2));
 
             final Point point = new Point(width, height);
 
@@ -84,6 +95,7 @@ public class FrameUtils {
      *
      * @return Point of <code>Window</code> that is moved to center of the screen.
      * @see Component#getLocation
+     * @deprecated use {@link com.github.benchdoos.weblocopenercore.utils.FrameUtils#setWindowOnScreenCenter(java.awt.Window)}
      */
     @Deprecated
     public static Point getFrameOnCenterLocationPoint(Window window) {
@@ -101,7 +113,6 @@ public class FrameUtils {
      * @return Point of <code>Window</code> that is moved to center of the screen.
      * @see Component#getLocation()
      */
-    @Deprecated
     public static Point getFrameOnCenterOfParentFrame(Window parent, Window window) {
         final Dimension size = window.getSize();
         int width = (int) ((parent.getSize().width / (double) 2) - (size.getWidth() / (double) 2));

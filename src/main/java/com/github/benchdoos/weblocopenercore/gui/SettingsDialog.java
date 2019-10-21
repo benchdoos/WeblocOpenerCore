@@ -74,6 +74,8 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.TooManyListenersException;
 
+import static com.github.benchdoos.weblocopenercore.utils.FrameUtils.setWindowOnScreenCenter;
+
 @Log4j2
 public class SettingsDialog extends JFrame implements Translatable {
     private Timer settingsSavedTimer = null;
@@ -353,7 +355,7 @@ public class SettingsDialog extends JFrame implements Translatable {
 
         pack();
         setMinimumSize(new Dimension(640, 300));
-        setLocation(FrameUtils.getFrameOnCenterLocationPoint(this));
+        setWindowOnScreenCenter(this);
         translate();
     }
 
