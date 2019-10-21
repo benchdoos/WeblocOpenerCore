@@ -375,7 +375,8 @@ public class Application {
                 return new CreateNewFileFrameWrapper();
             }
         }.getWindow();
-        createNewFileFrameWrapper.setLocation(FrameUtils.getFrameOnCenterLocationPoint(createNewFileFrameWrapper));
+//        createNewFileFrameWrapper.setLocation(FrameUtils.getFrameOnCenterLocationPoint(createNewFileFrameWrapper));
+        FrameUtils.setWindowOnScreenCenter(createNewFileFrameWrapper);
         createNewFileFrameWrapper.setVisible(true);
     }
 

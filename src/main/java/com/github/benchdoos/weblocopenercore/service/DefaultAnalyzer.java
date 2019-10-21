@@ -80,7 +80,7 @@ public class DefaultAnalyzer {
                     } else {
                         fileChooser = new FileChooser(weblocFiles);
                     }
-                    fileChooser.setLocation(FrameUtils.getFrameOnCenterLocationPoint(fileChooser));
+                    FrameUtils.setWindowOnScreenCenter(fileChooser);
                     fileChooser.setVisible(true);
                     chosen = fileChooser.getChosenFile();
                 } else if (weblocFiles.size() == 1) {

@@ -258,13 +258,13 @@ public class SettingsDialog extends JFrame implements Translatable {
                         }
                     }
 
-                    ConverterDialog converterDialog = new WindowLauncher<ConverterDialog>() {
+                    final ConverterDialog converterDialog = new WindowLauncher<ConverterDialog>() {
                         @Override
                         public ConverterDialog initWindow() {
                             return new ConverterDialog(files);
                         }
                     }.getWindow();
-                    converterDialog.setLocation(FrameUtils.getFrameOnCenterOfParentFrame(getCurrentWindow(), converterDialog));
+                    FrameUtils.setWindowOnParentWindowCenter(getCurrentWindow(), converterDialog);
                     converterDialog.setVisible(true);
                 } catch (Exception ex) {
                     log.warn("Can not open files from drop", ex);
@@ -368,7 +368,7 @@ public class SettingsDialog extends JFrame implements Translatable {
         }.getWindow();
 
         jFrameWrapper.setModal(true);
-        jFrameWrapper.setLocation(FrameUtils.getFrameOnCenterOfParentFrame(this, jFrameWrapper));
+        FrameUtils.setWindowOnParentWindowCenter(this, jFrameWrapper);
         jFrameWrapper.setVisible(true);
     }
 

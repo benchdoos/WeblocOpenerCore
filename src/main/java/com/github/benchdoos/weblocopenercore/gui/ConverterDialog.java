@@ -201,7 +201,7 @@ public class ConverterDialog extends JDialog implements Translatable {
         frame.setUndecorated(true);
         frame.setSize(500, 281);
         frame.setResizable(false);
-        frame.setLocation(FrameUtils.getFrameOnCenterLocationPoint(frame));
+        FrameUtils.setWindowOnScreenCenter(frame);
         Timer timer = new Timer(5000, e -> frame.dispose());
         timer.setRepeats(false);
         timer.start();

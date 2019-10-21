@@ -164,7 +164,7 @@ public class InfoDialog extends JDialog {
 
         setSize(550, 300);
         setResizable(false);
-        setLocation(FrameUtils.getFrameOnCenterLocationPoint(this));
+        FrameUtils.setWindowOnScreenCenter(this);
     }
 
     private void onOK() {

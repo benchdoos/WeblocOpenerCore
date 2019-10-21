@@ -350,7 +350,7 @@ public class EditDialog extends JFrame implements Translatable {
 
         setResizable(false);
 
-        setLocation(FrameUtils.getFrameOnCenterLocationPoint(this));
+        FrameUtils.setWindowOnScreenCenter(this);
         translate();
     }
 

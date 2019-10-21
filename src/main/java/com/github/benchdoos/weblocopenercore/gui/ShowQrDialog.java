@@ -233,7 +233,7 @@ public class ShowQrDialog extends JFrame implements Translatable {
         pack();
         setResizable(false);
 
-        setLocation(FrameUtils.getFrameOnCenterLocationPoint(this));
+        FrameUtils.setWindowOnScreenCenter(this);
         translate();
     }
 
