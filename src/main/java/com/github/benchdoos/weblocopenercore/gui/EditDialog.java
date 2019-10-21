@@ -672,10 +672,7 @@ public class EditDialog extends JFrame implements Translatable {
             String message = Translation.getTranslatedString(
                     "EditDialogBundle", "incorrectUrlMessage") + ": [";
 
-            String incorrectUrl = urlText
-                    .substring(0, Math.min(urlText.length(), 50));
-            //Fixes EditDialog long url message showing issue
-            message += urlText.length() > incorrectUrl.length() ? incorrectUrl + "...]" : incorrectUrl + "]";
+            message += (urlText.length() > 0 ? urlText : "&laquo;empty&raquo;") + "]";
 
 
             NotificationManager.getForcedNotification(this).showErrorNotification(
