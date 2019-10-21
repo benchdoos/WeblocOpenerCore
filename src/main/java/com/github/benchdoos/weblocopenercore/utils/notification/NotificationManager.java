@@ -15,7 +15,7 @@
 
 package com.github.benchdoos.weblocopenercore.utils.notification;
 
-import com.github.benchdoos.weblocopenercore.utils.notification.impl.ForcedNotification;
+import com.github.benchdoos.weblocopenercore.gui.ForcedNotificationDialog;
 import com.github.benchdoos.weblocopenercore.utils.notification.impl.UnixNotification;
 import com.github.benchdoos.weblocopenercore.utils.notification.impl.WindowsNotification;
 import com.github.benchdoos.weblocopenercore.utils.system.OperatingSystem;
@@ -34,6 +34,6 @@ public class NotificationManager {
     }
 
     public static Notification getForcedNotification(Component component) {
-        return new ForcedNotification(component);
+        return new ForcedNotificationDialog(component);
     }
 }

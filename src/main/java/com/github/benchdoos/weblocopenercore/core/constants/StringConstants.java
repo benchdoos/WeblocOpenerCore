@@ -18,6 +18,8 @@ package com.github.benchdoos.weblocopenercore.core.constants;
 public interface StringConstants {
     String UPDATE_WEB_URL = "https://benchdoos.github.io/";
     String GITHUB_WEB_URL = "https://github.com/benchdoos/WeblocOpener/";
+    String GITHUB_REPORT_ISSUE = "https://github.com/benchdoos/WeblocOpener/issues/new/choose";
+    String GITHUB_NAME = "Github";
 
     String BENCH_DOOS_TELEGRAM_URL = "https://vk.cc/74nB3D"; //for stats
     String WEBLOCOPENER_TWITTER_URL = "https://vk.cc/8YubRk"; //for stats
