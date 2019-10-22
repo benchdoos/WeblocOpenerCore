@@ -22,7 +22,6 @@ import javax.swing.Timer;
 import java.awt.image.BufferedImage;
 
 @Log4j2
-//todo fix this, use gnome libs
 public class UnixClipboard implements Clipboard {
     private static final int TIMER_ALIVE = 60_000; //60 secs
 
