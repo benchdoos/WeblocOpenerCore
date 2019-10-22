@@ -22,14 +22,13 @@ import javax.swing.JScrollPane;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.event.HyperlinkEvent;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.net.URL;
 import java.util.ResourceBundle;
 
 public class ForcedNotificationDialog extends JDialog implements Notification {
@@ -105,27 +104,30 @@ public class ForcedNotificationDialog extends JDialog implements Notification {
     private void showDefaultSystemErrorMessage(String title, String message, int messageLevel) {
         notificationEditorPane.setText(message);
 
-        Image image;
+        final URL imageUrl;
+
         switch (messageLevel) {
             case JOptionPane.PLAIN_MESSAGE:
             case JOptionPane.INFORMATION_MESSAGE:
-                image = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/notificationIcons/info48.png"));
+                imageUrl = getClass().getResource("/images/notificationIcons/info48.png");
                 break;
             case JOptionPane.ERROR_MESSAGE:
-                image = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/notificationIcons/warning48.png"));
+                imageUrl = getClass().getResource("/images/notificationIcons/warning48.png");
                 break;
             default:
-                image = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/notificationIcons/error48.png"));
+                imageUrl = getClass().getResource("/images/notificationIcons/error48.png");
                 break;
         }
 
+        final Image image = Toolkit.getDefaultToolkit().getImage(imageUrl);
+        setIconImage(image);
+        iconLabel.setIcon(new ImageIcon(image));
 
         if (title == null) {
             title = "";
         }
         setTitle(title);
 
-        iconLabel.setIcon(new ImageIcon(image));
 
         buttonOK.requestFocus();
 
