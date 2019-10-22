@@ -55,12 +55,31 @@ public class Logging {
      */
     private void startLogging() {
         final String path = PathConstants.APP_LOG_FOLDER_PATH + File.separator + collingApp + File.separator;
+
+        initPath(path);
+
         System.setProperty("log4j.configurationFile", "log4j2.xml");
         System.out.println("Logging starts at: " + path);
         System.setProperty(PathConstants.APP_LOG_PROPERTY, path);
         final Logger log = LogManager.getLogger(Logging.getCurrentClassName());
         log.info("Logging successfully started. Welcome to {}", CoreUtils.getApplicationVersionFullInformationString());
 
+    }
+
+    /**
+     * Make dirs if path does not exits
+     *
+     * @param path path to log folder
+     */
+    private void initPath(String path) {
+        final File file = new File(path);
+        if (file.exists()) {
+            System.out.println("Logging path is ok: " + path);
+        } else {
+            System.out.println("Logging path does not exist. Creating folder: " + path);
+            final boolean mkdirs = file.mkdirs();
+            System.out.println("Logging path created: " + mkdirs);
+        }
     }
 
 }

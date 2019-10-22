@@ -56,16 +56,11 @@ public class Converter {
     }
 
     private static void validateFile(final File originalUrlFile, final Link link) throws FileNotFoundException {
-        final String extension = link.getExtension();
-
         if (originalUrlFile == null) {
             throw new IllegalArgumentException("Original file can not be null");
         }
         if (!originalUrlFile.exists()) {
             throw new FileNotFoundException("File does not exist: " + originalUrlFile);
-        }
-        if (FileUtils.getFileExtension(originalUrlFile).equalsIgnoreCase(extension)) {
-            throw new IllegalArgumentException("File extension " + originalUrlFile + " equals to new extension " + extension);
         }
     }
 }

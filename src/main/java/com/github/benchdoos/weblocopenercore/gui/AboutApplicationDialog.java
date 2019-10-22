@@ -22,7 +22,6 @@ import com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants
 import com.github.benchdoos.weblocopenercore.core.constants.StringConstants;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import com.github.benchdoos.weblocopenercore.service.UrlsProceed;
-import com.github.benchdoos.weblocopenercore.service.gui.MousePickListener;
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import com.github.benchdoos.weblocopenercore.utils.FrameUtils;
 import com.github.benchdoos.weblocopenercore.utils.version.ApplicationVersion;
@@ -89,7 +88,6 @@ public class AboutApplicationDialog extends JDialog {
 
     public AboutApplicationDialog() {
         $$$setupUI$$$();
-        addWindowMoveListeners();
         translateDialog();
         initGui();
 
@@ -279,18 +277,6 @@ public class AboutApplicationDialog extends JDialog {
         return contentPane;
     }
 
-
-    private void addWindowMoveListeners() {
-        MousePickListener mousePickListener = new MousePickListener(this);
-
-        imagePanel.addMouseListener(mousePickListener.getMouseAdapter);
-        imagePanel.addMouseMotionListener(mousePickListener.getMouseMotionAdapter);
-
-        descriptionTextPane.addMouseListener(mousePickListener.getMouseAdapter);
-
-        descriptionTextPane.addMouseMotionListener(mousePickListener.getMouseMotionAdapter);
-    }
-
     private void createUIComponents() {
         ImageIcon image = null;
         if (!PreferencesManager.isDarkModeEnabledNow()) {
@@ -333,7 +319,7 @@ public class AboutApplicationDialog extends JDialog {
         setModal(true);
         setSize(550, 300);
         setResizable(false);
-        setLocation(FrameUtils.getFrameOnCenterLocationPoint(this));
+        FrameUtils.setWindowOnScreenCenter(this);
         log.debug("GUI created");
     }
 

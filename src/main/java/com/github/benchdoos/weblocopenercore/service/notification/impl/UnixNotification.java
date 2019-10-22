@@ -13,10 +13,10 @@
  * Eugene Zrazhevsky <eugene.zrazhevsky@gmail.com>
  */
 
-package com.github.benchdoos.weblocopenercore.utils.notification.impl;
+package com.github.benchdoos.weblocopenercore.service.notification.impl;
 
 import com.github.benchdoos.weblocopenercore.core.Logging;
-import com.github.benchdoos.weblocopenercore.utils.notification.Notification;
+import com.github.benchdoos.weblocopenercore.service.notification.Notification;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

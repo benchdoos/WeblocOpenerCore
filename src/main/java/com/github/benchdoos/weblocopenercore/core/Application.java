@@ -15,11 +15,11 @@
 
 package com.github.benchdoos.weblocopenercore.core;
 
-import com.github.benchdoos.jcolorful.core.JColorful;
 import com.github.benchdoos.weblocopenercore.Main;
 import com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants;
 import com.github.benchdoos.weblocopenercore.core.constants.SettingsConstants;
 import com.github.benchdoos.weblocopenercore.gui.AboutApplicationDialog;
+import com.github.benchdoos.weblocopenercore.gui.ConverterDialog;
 import com.github.benchdoos.weblocopenercore.gui.EditDialog;
 import com.github.benchdoos.weblocopenercore.gui.SettingsDialog;
 import com.github.benchdoos.weblocopenercore.gui.ShowQrDialog;
@@ -28,12 +28,13 @@ import com.github.benchdoos.weblocopenercore.gui.wrappers.CreateNewFileFrameWrap
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import com.github.benchdoos.weblocopenercore.service.DefaultAnalyzer;
 import com.github.benchdoos.weblocopenercore.service.UrlsProceed;
+import com.github.benchdoos.weblocopenercore.service.WindowLauncher;
 import com.github.benchdoos.weblocopenercore.service.clipboard.ClipboardManager;
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import com.github.benchdoos.weblocopenercore.utils.FileUtils;
 import com.github.benchdoos.weblocopenercore.utils.FrameUtils;
 import com.github.benchdoos.weblocopenercore.utils.browser.BrowserManager;
-import com.github.benchdoos.weblocopenercore.utils.notification.NotificationManager;
+import com.github.benchdoos.weblocopenercore.service.notification.NotificationManager;
 import com.github.benchdoos.weblocopenercore.utils.system.OperatingSystem;
 import com.github.benchdoos.weblocopenercore.utils.system.SystemUtils;
 import lombok.extern.log4j.Log4j2;
@@ -49,6 +50,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.OPENER_ABOUT_ARGUMENT;
+import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.OPENER_CONVERT_ARGUMENT;
 import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.OPENER_COPY_LINK_ARGUMENT;
 import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.OPENER_COPY_QR_ARGUMENT;
 import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.OPENER_CREATE_ARGUMENT;
@@ -154,6 +156,9 @@ public class Application {
                     case UPDATE_SILENT_ARGUMENT:
                         log.warn("UPDATE IS NOT SUPPORTED BY CORE! Argument: {}", arg);
                         break;
+                    case OPENER_CONVERT_ARGUMENT:
+                        runConverterDialog(args);
+                        break;
                     default:
                         runAnalyzer(arg);
                         break;
@@ -164,6 +169,36 @@ public class Application {
         } else {
             log.debug("No arguments found, launching settings");
             runSettingsDialog(null);
+        }
+    }
+
+    private static void runConverterDialog(String[] args) {
+        if (args.length > 1) {
+
+            final List<File> files = new ArrayList<>();
+            Arrays.stream(args).forEach(c -> {
+                final File file = new File(c);
+                final boolean exists = file.exists();
+                if (exists) {
+                    files.add(file);
+                }
+            });
+
+            final WindowLauncher<ConverterDialog> windowLauncher = new WindowLauncher<ConverterDialog>() {
+                @Override
+                public ConverterDialog initWindow() {
+                    return new ConverterDialog(files);
+                }
+            };
+
+            final ConverterDialog converterDialog = windowLauncher.getWindow();
+            converterDialog.setVisible(true);
+            converterDialog.setLocationRelativeTo(null);
+        } else {
+            log.warn("Converter need some files! Args: {}", Arrays.asList(args));
+            final String notificationString = Translation.getTranslatedString("ConvertDialogBundle", "convertError");
+            NotificationManager.getNotificationForCurrentOS()
+                    .showErrorNotification(ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME, notificationString);
         }
     }
 
@@ -272,16 +307,14 @@ public class Application {
      * @param filepath file path
      */
     private static void runEditDialog(String filepath) {
-        EditDialog dialog;
-        if (PreferencesManager.isDarkModeEnabledNow()) {
-            JColorful colorful = new JColorful(ApplicationConstants.DARK_MODE_THEME);
-            colorful.colorizeGlobal();
-            dialog = new EditDialog(filepath);
-            colorful.colorize(dialog);
-            dialog.updateTextFont();
-        } else {
-            dialog = new EditDialog(filepath);
-        }
+        final EditDialog dialog = new WindowLauncher<EditDialog>() {
+            @Override
+            public EditDialog initWindow() {
+                final EditDialog editDialog = new EditDialog(filepath);
+                editDialog.updateTextFont();
+                return editDialog;
+            }
+        }.getWindow();
 
         dialog.setVisible(true);
         dialog.setMaximumSize(new Dimension(MAXIMIZED_HORIZ, dialog.getHeight()));
@@ -291,15 +324,12 @@ public class Application {
     private static void runQrDialog(String arg) {
         try {
             final File file = new DefaultAnalyzer(arg).getFile();
-            ShowQrDialog qrDialog;
-            if (PreferencesManager.isDarkModeEnabledNow()) {
-                JColorful colorful = new JColorful(ApplicationConstants.DARK_MODE_THEME);
-                colorful.colorizeGlobal();
-                qrDialog = new ShowQrDialog(file);
-                colorful.colorize(qrDialog);
-            } else {
-                qrDialog = new ShowQrDialog(file);
-            }
+            final ShowQrDialog qrDialog = new WindowLauncher<ShowQrDialog>() {
+                @Override
+                public ShowQrDialog initWindow() {
+                    return new ShowQrDialog(file);
+                }
+            }.getWindow();
             qrDialog.setVisible(true);
         } catch (Exception e) {
             log.warn("Can not create a qr-code from url: [" + arg + "]", e);
@@ -307,18 +337,12 @@ public class Application {
     }
 
     public static void runSettingsDialog(String launcherLocationPath) {
-        SettingsDialog settingsDialog;
-        if (PreferencesManager.isDarkModeEnabledNow()) {
-            JColorful colorful = new JColorful(ApplicationConstants.DARK_MODE_THEME);
-            colorful.colorizeGlobal();
-
-            settingsDialog = new SettingsDialog(launcherLocationPath);
-
-            colorful.colorize(settingsDialog);
-        } else {
-            settingsDialog = new SettingsDialog(launcherLocationPath);
-        }
-        settingsDialog.setVisible(true);
+        new WindowLauncher<SettingsDialog>() {
+            @Override
+            public SettingsDialog initWindow() {
+                return new SettingsDialog(launcherLocationPath);
+            }
+        }.getWindow().setVisible(true);
     }
 
     public static void launchApplication(String applicationPath, String... args) {
@@ -344,17 +368,14 @@ public class Application {
     }
 
     private void runCreateNewFileWindow() {
-        CreateNewFileFrameWrapper createNewFileFrameWrapper;
-        if (PreferencesManager.isDarkModeEnabledNow()) {
-            JColorful colorful = new JColorful(ApplicationConstants.DARK_MODE_THEME);
-            colorful.colorizeGlobal();
-            createNewFileFrameWrapper = new CreateNewFileFrameWrapper();
-
-            colorful.colorize(createNewFileFrameWrapper);
-        } else {
-            createNewFileFrameWrapper = new CreateNewFileFrameWrapper();
-        }
-        createNewFileFrameWrapper.setLocation(FrameUtils.getFrameOnCenterLocationPoint(createNewFileFrameWrapper));
+        final CreateNewFileFrameWrapper createNewFileFrameWrapper = new WindowLauncher<CreateNewFileFrameWrapper>() {
+            @Override
+            public CreateNewFileFrameWrapper initWindow() {
+                return new CreateNewFileFrameWrapper();
+            }
+        }.getWindow();
+//        createNewFileFrameWrapper.setLocation(FrameUtils.getFrameOnCenterLocationPoint(createNewFileFrameWrapper));
+        FrameUtils.setWindowOnScreenCenter(createNewFileFrameWrapper);
         createNewFileFrameWrapper.setVisible(true);
     }
 
@@ -403,6 +424,9 @@ public class Application {
                     break;
                 case OPENER_OPEN_ARGUMENT:
                     showIncorrectArgumentMessage(OPENER_OPEN_ARGUMENT);
+                    break;
+                case OPENER_CONVERT_ARGUMENT:
+                    runConverterDialog(args);
                     break;
                 default:
                     manageArgumentsOnUnix(args);

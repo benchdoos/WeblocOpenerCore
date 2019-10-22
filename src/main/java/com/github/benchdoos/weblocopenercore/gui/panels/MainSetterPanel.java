@@ -15,14 +15,13 @@
 
 package com.github.benchdoos.weblocopenercore.gui.panels;
 
-import com.github.benchdoos.jcolorful.core.JColorful;
 import com.github.benchdoos.weblocopenercore.core.Application;
 import com.github.benchdoos.weblocopenercore.core.Translation;
-import com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants;
 import com.github.benchdoos.weblocopenercore.core.constants.SettingsConstants;
 import com.github.benchdoos.weblocopenercore.gui.AboutApplicationDialog;
 import com.github.benchdoos.weblocopenercore.gui.Translatable;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
+import com.github.benchdoos.weblocopenercore.service.WindowLauncher;
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import com.github.benchdoos.weblocopenercore.utils.FrameUtils;
 import com.intellij.uiDesigner.core.GridConstraints;
@@ -77,7 +76,7 @@ public class MainSetterPanel extends JPanel implements SettingsPanel, Translatab
     @Override
     public void setLauncherLocationPath(String launcherLocationPath) {
         this.launcherLocationPath = launcherLocationPath;
-        initUpdateButton();
+        initUpdateButtons();
     }
 
     private void fillLocaleComboBox() {
@@ -260,28 +259,28 @@ public class MainSetterPanel extends JPanel implements SettingsPanel, Translatab
         translate();
     }
 
-    private void initUpdateButton() {
+    private void initUpdateButtons() {
         if (launcherLocationPath != null) {
+            betaInstallCheckBox.setVisible(true);
             checkUpdatesButton.setVisible(true);
             autoUpdateEnabledCheckBox.setVisible(true);
             checkUpdatesButton.addActionListener(e -> onUpdateNow());
         } else {
+            betaInstallCheckBox.setVisible(false);
             checkUpdatesButton.setVisible(false);
             autoUpdateEnabledCheckBox.setVisible(false);
         }
     }
 
     private void onAbout() {
-        AboutApplicationDialog dialog;
-        if (PreferencesManager.isDarkModeEnabledNow()) {
-            JColorful colorful = new JColorful(ApplicationConstants.DARK_MODE_THEME);
-            colorful.colorizeGlobal();
-            dialog = new AboutApplicationDialog();
-            colorful.colorize(dialog);
-        } else {
-            dialog = new AboutApplicationDialog();
-        }
-        dialog.setVisible(true);
+        final AboutApplicationDialog aboutWindow = new WindowLauncher<AboutApplicationDialog>() {
+            @Override
+            public AboutApplicationDialog initWindow() {
+                return new AboutApplicationDialog();
+            }
+        }.getWindow();
+        FrameUtils.setWindowOnParentWindowCenter(FrameUtils.findWindow(this), aboutWindow);
+        aboutWindow.setVisible(true);
     }
 
     @Override

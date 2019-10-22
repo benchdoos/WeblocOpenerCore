@@ -16,14 +16,21 @@
 package com.github.benchdoos.weblocopenercore.core;
 
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 @Log4j2
 public class Translation {
+    private static Map<MessageInformation, Integer> deadLockProtection = new HashMap<>();
+
     public static final Locale[] SUPPORTED_LOCALES = {
             new Locale("en", "EN"), new Locale("de", "DE"),
             new Locale("fr", "FR"), new Locale("it", "IT"),
@@ -57,6 +64,9 @@ public class Translation {
         } catch (MissingResourceException e) {
             log.warn("Could not find bundle {}:[{}] for locale: {}, trying to get necessary locale",
                     stringBundleName, message, locale);
+
+            protectFromDeadLock(new MessageInformation(locale, stringBundleName, message));
+
             final Locale supportedLocale = getSupportedLocale(locale);
 
             log.info("For old locale: {} was found locale: {}", locale, supportedLocale);
@@ -96,7 +106,37 @@ public class Translation {
         }
     }
 
+    private static void protectFromDeadLock(MessageInformation messageInformation) {
+        if (deadLockProtection.containsKey(messageInformation)) {
+            final Integer current = deadLockProtection.get(messageInformation);
+            if (current <= 3) {
+                deadLockProtection.put(messageInformation, current + 1);
+            } else {
+                log.warn("[DEADLOCK PROTECTION] Could not translate string: {}:[{}] for locale: {}",
+                        messageInformation.getBundleName(),
+                        messageInformation.getMessage(),
+                        messageInformation.getLocale());
+
+                throw new RuntimeException("[DEADLOCK PROTECTION] Could not localize string: "
+                        + messageInformation.getBundleName()
+                        + ":[" + messageInformation.getMessage()
+                        + "] for locale:[" + messageInformation.getLocale()+"]");
+            }
+        } else {
+            deadLockProtection.put(messageInformation, 0);
+        }
+    }
+
     private ResourceBundle getTranslation() {
         return ResourceBundle.getBundle(bundlePath, locale);
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    private static class MessageInformation {
+        private Locale locale;
+        private String bundleName;
+        private String message;
     }
 }

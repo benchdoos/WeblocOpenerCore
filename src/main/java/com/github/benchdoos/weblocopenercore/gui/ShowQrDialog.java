@@ -26,7 +26,7 @@ import com.github.benchdoos.weblocopenercore.service.gui.MousePickListener;
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import com.github.benchdoos.weblocopenercore.utils.FileUtils;
 import com.github.benchdoos.weblocopenercore.utils.FrameUtils;
-import com.github.benchdoos.weblocopenercore.utils.notification.NotificationManager;
+import com.github.benchdoos.weblocopenercore.service.notification.NotificationManager;
 import com.google.zxing.WriterException;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
@@ -64,15 +64,18 @@ public class ShowQrDialog extends JFrame implements Translatable {
     private JButton copyImageButton;
 
 
-    public ShowQrDialog(File weblocFile) throws Exception {
+    public ShowQrDialog(File weblocFile)  {
         this.weblocFile = weblocFile;
+        try {
 
         url = new DefaultAnalyzer(weblocFile.getAbsolutePath()).getUrl();
 
-        this.qrCodeImage = UrlsProceed.generateQrCode(url);
-        $$$setupUI$$$();
-        initGui();
-
+            this.qrCodeImage = UrlsProceed.generateQrCode(url);
+            $$$setupUI$$$();
+            initGui();
+        } catch (IOException | WriterException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -230,7 +233,7 @@ public class ShowQrDialog extends JFrame implements Translatable {
         pack();
         setResizable(false);
 
-        setLocation(FrameUtils.getFrameOnCenterLocationPoint(this));
+        FrameUtils.setWindowOnScreenCenter(this);
         translate();
     }
 

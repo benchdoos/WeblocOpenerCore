@@ -98,7 +98,7 @@ public class ModeSelectorDialog extends JFrame implements Translatable {
         translate();
 
         pack();
-        setLocation(FrameUtils.getFrameOnCenterLocationPoint(this));
+        FrameUtils.setWindowOnScreenCenter(this);
         setResizable(false);
     }
 

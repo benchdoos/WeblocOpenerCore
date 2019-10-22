@@ -128,7 +128,7 @@
               <font size="14"/>
               <opaque value="false"/>
               <requestFocusEnabled value="true"/>
-              <text resource-bundle="translations/EditDialogBundle" key="EditWeblocLink"/>
+              <text resource-bundle="translations/EditDialogBundle" key="editLink"/>
               <verifyInputWhenFocusTarget value="false"/>
               <visible value="true"/>
             </properties>

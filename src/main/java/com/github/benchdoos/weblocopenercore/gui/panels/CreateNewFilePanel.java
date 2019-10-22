@@ -23,23 +23,29 @@ import com.github.benchdoos.weblocopenercore.gui.Translatable;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import com.github.benchdoos.weblocopenercore.utils.FileUtils;
 import com.github.benchdoos.weblocopenercore.utils.FrameUtils;
-import com.github.benchdoos.weblocopenercore.utils.notification.NotificationManager;
+import com.github.benchdoos.weblocopenercore.service.notification.NotificationManager;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import lombok.extern.log4j.Log4j2;
 
 import javax.swing.AbstractButton;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.Window;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -57,6 +63,7 @@ public class CreateNewFilePanel extends JPanel implements Translatable {
     private JButton buttonSave;
     private JButton buttonCancel;
     private JTextField urlTextField;
+    private JComboBox<Link> linkComboBox;
 
     public CreateNewFilePanel() {
         $$$setupUI$$$();
@@ -68,7 +75,27 @@ public class CreateNewFilePanel extends JPanel implements Translatable {
 
         initWindowGui();
 
+        initLinkComboBox();
+
+        loadLinkComboBox();
+
         translate();
+    }
+
+    private void loadLinkComboBox() {
+        linkComboBox.setModel(new DefaultComboBoxModel<>(Link.values()));
+    }
+
+    private void initLinkComboBox() {
+        linkComboBox.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> jList, Object o, int i, boolean b, boolean b1) {
+
+                final Link link = (Link) o;
+
+                return super.getListCellRendererComponent(jList, link.getExtension(), i, b, b1);
+            }
+        });
     }
 
     public void setParentWindow(Window parentWindow) {
@@ -79,7 +106,36 @@ public class CreateNewFilePanel extends JPanel implements Translatable {
         buttonSave.addActionListener(e -> onOK());
 
         buttonCancel.addActionListener(e -> onCancel());
+
+        urlTextField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent keyEvent) {
+                urlKeyListener(keyEvent);
+                super.keyPressed(keyEvent);
+            }
+
+            private void urlKeyListener(KeyEvent e) {
+                final int selectedIndex = linkComboBox.getSelectedIndex();
+
+                if (e.getKeyCode() == KeyEvent.VK_UP) {
+                    final int next = selectedIndex - 1;
+                    if (next >= 0) {
+                        linkComboBox.setSelectedIndex(next);
+                    } else {
+                        linkComboBox.setSelectedIndex(linkComboBox.getModel().getSize() - 1);
+                    }
+                } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+                    final int next = selectedIndex + 1;
+                    if (next < linkComboBox.getModel().getSize()) {
+                        linkComboBox.setSelectedIndex(next);
+                    } else {
+                        linkComboBox.setSelectedIndex(0);
+                    }
+                }
+            }
+        });
     }
+
 
     private void initWindowGui() {
         contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
@@ -94,9 +150,9 @@ public class CreateNewFilePanel extends JPanel implements Translatable {
         try {
             final URL url = new URL(text);
             String path = saveFileBrowser();
-            final Link link = PreferencesManager.getLink();
+            final Link link = ((Link) linkComboBox.getSelectedItem());
 
-            if (path != null) {
+            if (path != null && link != null) {
                 final String suffix = "." + link.getExtension();
                 if (!path.endsWith(suffix)) {
                     path += suffix;
@@ -114,13 +170,15 @@ public class CreateNewFilePanel extends JPanel implements Translatable {
 
                     parentWindow.dispose();
                 } catch (IOException e) {
-                    log.warn("Could not create .webloc link at: {} with url: {}", path, url, e);
+                    log.warn("Could not create .{} link at: {} with url: {}", link.getExtension(), path, url, e);
                     NotificationManager.getNotificationForCurrentOS().showErrorNotification(
                             ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME,
                             Translation.getTranslatedString("CreateNewFileBundle", "errorSave")
                                     + " " + new File(path).getName() + " \n" + e.getLocalizedMessage()
                     );
                 }
+            } else {
+                log.warn("Will not create file, because path is null or link is not selected. path: {}, link: {}", path, link);
             }
         } catch (MalformedURLException e) {
             log.warn("Could not create url from text: {}, cause: {}", text, e.getMessage());
@@ -154,6 +212,8 @@ public class CreateNewFilePanel extends JPanel implements Translatable {
     private void createUIComponents() {
         urlTextField = new PlaceholderTextField();
         ((PlaceholderTextField) urlTextField).setPlaceholder("URL");
+
+        linkComboBox = new JComboBox<>();
     }
 
     /**
@@ -187,9 +247,11 @@ public class CreateNewFilePanel extends JPanel implements Translatable {
         final Spacer spacer2 = new Spacer();
         panel3.add(spacer2, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         final JPanel panel4 = new JPanel();
-        panel4.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        panel4.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
         panel3.add(panel4, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         panel4.add(urlTextField, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(400, -1), new Dimension(400, -1), new Dimension(400, -1), 0, false));
+        linkComboBox = new JComboBox();
+        panel4.add(linkComboBox, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**

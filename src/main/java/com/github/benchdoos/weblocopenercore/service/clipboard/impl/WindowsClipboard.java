@@ -13,43 +13,29 @@
  * Eugene Zrazhevsky <eugene.zrazhevsky@gmail.com>
  */
 
-package com.github.benchdoos.weblocopenercore.service.clipboard;
+package com.github.benchdoos.weblocopenercore.service.clipboard.impl;
 
-import lombok.extern.log4j.Log4j2;
+import com.github.benchdoos.weblocopenercore.service.clipboard.Clipboard;
 
-import javax.swing.Timer;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
 import java.awt.image.BufferedImage;
 
-@Log4j2
-public class UnixClipboard implements Clipboard {
-    private static final int TIMER_ALIVE = 60_000; //60 secs
-
+public class WindowsClipboard implements Clipboard {
     @Override
     public void copy(String string) {
         if (string != null) {
-            UnixClipboardHelper thread = new UnixClipboardHelper(string);
-            thread.start();
-            interrupt(thread);
+            StringSelection stringSelection = new StringSelection(string);
+            java.awt.datatransfer.Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(stringSelection, null);
         }
-    }
-
-    private void interrupt(UnixClipboardHelper thread) {
-        log.info("Copy thread {} will be interrupted in {} sec.", thread.getName(), TIMER_ALIVE / 1000);
-        Timer timer = new Timer(TIMER_ALIVE, e -> {
-            log.debug("Closing copy thread: {}", thread.getName());
-            thread.interrupt();
-        });
-        timer.setRepeats(false);
-        timer.start();
     }
 
     @Override
     public void copy(BufferedImage image) {
         if (image != null) {
-            UnixClipboardHelper thread = new UnixClipboardHelper(image);
-            thread.start();
-
-            interrupt(thread);
+            CopyImageToClipBoard ci = new CopyImageToClipBoard();
+            ci.copyImage(image);
         }
     }
 }

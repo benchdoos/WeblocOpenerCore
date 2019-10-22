@@ -13,7 +13,7 @@
  * Eugene Zrazhevsky <eugene.zrazhevsky@gmail.com>
  */
 
-package com.github.benchdoos.weblocopenercore.utils.notification;
+package com.github.benchdoos.weblocopenercore.service.notification;
 
 public interface Notification {
     void showInfoNotification(String title, String message);

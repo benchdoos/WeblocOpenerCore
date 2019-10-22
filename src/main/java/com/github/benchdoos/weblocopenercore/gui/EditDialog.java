@@ -23,9 +23,8 @@ import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import com.github.benchdoos.weblocopenercore.service.gui.ClickListener;
 import com.github.benchdoos.weblocopenercore.service.links.LinkUtilities;
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
-import com.github.benchdoos.weblocopenercore.utils.FileUtils;
 import com.github.benchdoos.weblocopenercore.utils.FrameUtils;
-import com.github.benchdoos.weblocopenercore.utils.notification.NotificationManager;
+import com.github.benchdoos.weblocopenercore.service.notification.NotificationManager;
 import com.github.benchdoos.weblocopenercore.utils.system.OperatingSystem;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -37,6 +36,8 @@ import com.intellij.uiDesigner.core.Spacer;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileExistsException;
 import org.apache.commons.validator.routines.UrlValidator;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import javax.imageio.ImageIO;
 import javax.net.ssl.HttpsURLConnection;
@@ -75,7 +76,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
@@ -83,6 +83,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ResourceBundle;
 
+import static com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME;
 import static com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants.WEBLOC_FILE_EXTENSION;
 import static com.github.benchdoos.weblocopenercore.core.constants.StringConstants.FAVICON_GETTER_URL;
 
@@ -178,7 +179,7 @@ public class EditDialog extends JFrame implements Translatable {
         if (editLinkLabelFont != null) editLinkLabel.setFont(editLinkLabelFont);
         editLinkLabel.setOpaque(false);
         editLinkLabel.setRequestFocusEnabled(true);
-        this.$$$loadLabelText$$$(editLinkLabel, ResourceBundle.getBundle("translations/EditDialogBundle").getString("EditWeblocLink"));
+        this.$$$loadLabelText$$$(editLinkLabel, ResourceBundle.getBundle("translations/EditDialogBundle").getString("editLink"));
         editLinkLabel.setVerifyInputWhenFocusTarget(false);
         editLinkLabel.setVisible(true);
         panel3.add(editLinkLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_VERTICAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
@@ -270,13 +271,13 @@ public class EditDialog extends JFrame implements Translatable {
     }
 
     private void createTitle() {
-        String path = "";
         try {
-            path = new File(pathToEditingFile).getName();
+            final String path = new File(pathToEditingFile).getName();
+            setTitle(path + " — " + WEBLOCOPENER_APPLICATION_NAME);
         } catch (Exception e) {
             log.warn("Could not get file name for: " + pathToEditingFile, e);
+            setTitle(WEBLOCOPENER_APPLICATION_NAME);
         }
-        setTitle(path + " — WeblocOpener");
     }
 
     private void createUIComponents() {
@@ -348,7 +349,7 @@ public class EditDialog extends JFrame implements Translatable {
 
         setResizable(false);
 
-        setLocation(FrameUtils.getFrameOnCenterLocationPoint(this));
+        FrameUtils.setWindowOnScreenCenter(this);
         translate();
     }
 
@@ -419,9 +420,33 @@ public class EditDialog extends JFrame implements Translatable {
                             final BufferedImage read = ImageIO.read(new URL(faviconUrl));
                             urlPageTitle.setIcon(new ImageIcon(CoreUtils.resize(read, 16, 16)));
                         }
+
                     } catch (Exception e) {
-                        urlPageTitle.setIcon(null);
-                        log.warn("Could not load favicon for page: {}", pageUrl, e);
+                        log.warn("Could not load favicon for page: {} by basti-icon", pageUrl, e);
+                        log.info("Trying to get url icon by Jsoup");
+
+                        try {
+                            final Document document = Jsoup.connect(pageUrl).get();
+                            final String content = document.head()
+                                    .getElementsByAttributeValueMatching("rel", ".*icon.*")
+                                    .first().attributes().get("href");
+                            try {
+                                final BufferedImage read = ImageIO.read(new URL(content));
+                                urlPageTitle.setIcon(new ImageIcon(CoreUtils.resize(read, 16, 16)));
+                            } catch (Exception ex) {
+                                final URL url = new URL(pageUrl);
+                                final String base = url.getProtocol() + "://" + url.getHost();
+                                final String s1 = base + content;
+                                final URL url1 = new URL(s1);
+
+                                final BufferedImage read = ImageIO.read(url1);
+                                urlPageTitle.setIcon(new ImageIcon(CoreUtils.resize(read, 16, 16)));
+
+                            }
+                        } catch (Exception ex) {
+                            urlPageTitle.setIcon(null);
+                            log.warn("Could not load favicon for page: {} by myself", pageUrl, e);
+                        }
                     }
                 } else {
                     urlPageTitle.setIcon(null);
@@ -534,7 +559,13 @@ public class EditDialog extends JFrame implements Translatable {
     @Override
     public void translate() {
         Translation translation = new Translation("EditDialogBundle");
-        editLinkLabel.setText(translation.getTranslatedString("EditWeblocLink"));
+        try {
+            final Link linkForFile = Link.getLinkForFile(new File(pathToEditingFile));
+            editLinkLabel.setText(String.format(translation.getTranslatedString("editLink"), linkForFile.getExtension()));
+        } catch (Exception e) {
+            log.warn("Could not load link for file: {} to translate editLinkLabel.", pathToEditingFile);
+            editLinkLabel.setText(String.format(translation.getTranslatedString("editLink"), ""));
+        }
         clearTextButton.setToolTipText(translation.getTranslatedString("clearTextToolTip"));
         autoRenameFileCheckBox.setText(translation.getTranslatedString("autoRenameFile"));
         autoRenameFileCheckBox.setToolTipText(translation.getTranslatedString("canNotRenameToolTip"));
@@ -579,12 +610,11 @@ public class EditDialog extends JFrame implements Translatable {
         }
     }
 
-
-    private void manageFileName() {
+    private void manageFileName(Link link) {
         try {
-            renameFileIfAsked(pathToEditingFile);
+            renameFileIfAsked(pathToEditingFile, link);
         } catch (Exception e) {
-            final String fileName = urlPageTitle.getToolTipText() + "." + WEBLOC_FILE_EXTENSION;
+            final String fileName = urlPageTitle.getToolTipText() + "." + link.getExtension();
 
             log.warn("Could not rename file {} to {}", pathToEditingFile, fileName, e);
             NotificationManager.getNotificationForCurrentOS().showWarningNotification(
@@ -608,18 +638,27 @@ public class EditDialog extends JFrame implements Translatable {
     private void onOK() {
         final String urlText = textField.getText();
         try {
-            URL url = new URL(urlText);
-            UrlValidator urlValidator = new UrlValidator();
+            final URL url = new URL(urlText);
+            final UrlValidator urlValidator = new UrlValidator();
             if (urlValidator.isValid(urlText)) {
-                //todo add some checks and logic to select needed link to process file
-                // * create new file from default link processor
-                // * update existing links by already used processor, like it is now:
                 final File file = new File(pathToEditingFile);
-                Link.getByExtension(FileUtils.getFileExtension(file))
-                        .getLinkProcessor()
-                        .createLink(url, new FileOutputStream(file));
+                final Link link = Link.getLinkForFile(file);
+                if (link != null) {
+                    log.info("Saving link: {} with url: {} to: {}", link, url, file);
+                    link.getLinkProcessor().createLink(url, file);
 
-                manageFileName();
+                    manageFileName(link);
+                    log.info("Successfully saved url: {} to file: {}", url,  file);
+                } else {
+                    log.warn("Could not get Link for file: {}", pathToEditingFile);
+
+                    final String message = Translation.getTranslatedString("EditDialogBundle", "canNotSaveFile")
+                            + file.getName();
+                    NotificationManager.getNotificationForCurrentOS().showErrorNotification(
+                            WEBLOCOPENER_APPLICATION_NAME,
+                            message
+                    );
+                }
 
                 dispose();
             } else {
@@ -632,10 +671,7 @@ public class EditDialog extends JFrame implements Translatable {
             String message = Translation.getTranslatedString(
                     "EditDialogBundle", "incorrectUrlMessage") + ": [";
 
-            String incorrectUrl = urlText
-                    .substring(0, Math.min(urlText.length(), 50));
-            //Fixes EditDialog long url message showing issue
-            message += urlText.length() > incorrectUrl.length() ? incorrectUrl + "...]" : incorrectUrl + "]";
+            message += (urlText.length() > 0 ? urlText : "&laquo;empty&raquo;") + "]";
 
 
             NotificationManager.getForcedNotification(this).showErrorNotification(
@@ -653,9 +689,9 @@ public class EditDialog extends JFrame implements Translatable {
 
     }
 
-    private void renameFileIfAsked(String pathToEditingFile) throws FileNotFoundException, FileExistsException {
+    private void renameFileIfAsked(String pathToEditingFile, Link link) throws FileNotFoundException, FileExistsException {
         final String toolTip = urlPageTitle.getToolTipText();
-        final String fileName = toolTip + "." + WEBLOC_FILE_EXTENSION;
+        final String fileName = toolTip + "." + link.getExtension();
         if (autoRenameFileCheckBox.isSelected()) {
 
             final File file = CoreUtils.renameFile(new File(pathToEditingFile), fileName);

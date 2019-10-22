@@ -13,11 +13,11 @@
  * Eugene Zrazhevsky <eugene.zrazhevsky@gmail.com>
  */
 
-package com.github.benchdoos.weblocopenercore.utils.notification;
+package com.github.benchdoos.weblocopenercore.service.notification;
 
-import com.github.benchdoos.weblocopenercore.utils.notification.impl.ForcedNotification;
-import com.github.benchdoos.weblocopenercore.utils.notification.impl.UnixNotification;
-import com.github.benchdoos.weblocopenercore.utils.notification.impl.WindowsNotification;
+import com.github.benchdoos.weblocopenercore.gui.ForcedNotificationDialog;
+import com.github.benchdoos.weblocopenercore.service.notification.impl.UnixNotification;
+import com.github.benchdoos.weblocopenercore.service.notification.impl.WindowsNotification;
 import com.github.benchdoos.weblocopenercore.utils.system.OperatingSystem;
 
 import java.awt.Component;
@@ -34,6 +34,6 @@ public class NotificationManager {
     }
 
     public static Notification getForcedNotification(Component component) {
-        return new ForcedNotification(component);
+        return new ForcedNotificationDialog(component);
     }
 }

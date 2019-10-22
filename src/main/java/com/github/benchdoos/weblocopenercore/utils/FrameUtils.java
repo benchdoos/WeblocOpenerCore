@@ -28,8 +28,12 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FileDialog;
 import java.awt.Font;
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.HeadlessException;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.datatransfer.DataFlavor;
@@ -53,32 +57,63 @@ public class FrameUtils {
     private static final Timer timer = new Timer(60, null);
 
     /**
-     * Returns the location of point of window, when it should be on center of the screen.
+     * Sets window on center of the screen on default screen graphics device
      *
-     * @return Point of <code>Window</code> that is moved to center of the screen.
-     * @see Component#getLocation
+     * @param window to set on center
+     * @see java.awt.GraphicsDevice
      */
-    public static Point getFrameOnCenterLocationPoint(Window window) {
-        final Dimension size = window.getSize();
-        int width = (int) ((Toolkit.getDefaultToolkit().getScreenSize().width / (double) 2) - (size.getWidth() / (double) 2));
-        int height = (int) ((Toolkit.getDefaultToolkit().getScreenSize().height / (double) 2) - (size.getHeight() / (double) 2));
-        return new Point(width, height);
+    public static void setWindowOnScreenCenter(Window window) {
+        if (window != null) {
+
+            final GraphicsDevice defaultScreenDevice = GraphicsEnvironment.
+                    getLocalGraphicsEnvironment().
+                    getDefaultScreenDevice();
+
+            final GraphicsConfiguration defaultConfiguration = defaultScreenDevice.getDefaultConfiguration();
+
+            final Rectangle screenBounds = defaultConfiguration.getBounds();
+
+            final Dimension screenSize = screenBounds.getSize();
+            final Point initialScreenLocationPoint = screenBounds.getLocation();
+
+            final Dimension windowSize = window.getSize();
+
+            final double centerOfScreenWidth = (screenSize.getWidth()) / (double) 2;
+            final double centerOfScreenHeight = (screenSize.getHeight()) / (double) 2;
+
+            int width = (int) (initialScreenLocationPoint.getX() + centerOfScreenWidth - (windowSize.getWidth() / (double) 2));
+            int height = (int) (initialScreenLocationPoint.getY() + centerOfScreenHeight - (windowSize.getHeight() / (double) 2));
+
+            final Point point = new Point(width, height);
+
+            window.setLocation(point);
+        }
     }
 
     /**
-     * Returns the location of point of window, when it should be on center of the parent window.
+     * Sets window on center of parent window
      *
-     * @param parent window
+     * @param parent parent window
      * @param window that should be in center of the parent window
-     * @return Point of <code>Window</code> that is moved to center of the screen.
-     * @see Component#getLocation()
      */
-    public static Point getFrameOnCenterOfParentFrame(Window parent, Window window) {
-        final Dimension size = window.getSize();
-        int width = (int) ((parent.getSize().width / (double) 2) - (size.getWidth() / (double) 2));
-        int height = (int) ((parent.getSize().height / (double) 2) - (size.getHeight() / (double) 2));
+    public static void setWindowOnParentWindowCenter(Window parent, Window window) {
+        if (parent != null) {
+            if (window != null) {
+                final Dimension windowSize = window.getSize();
 
-        return new Point(width + parent.getLocation().x, height + parent.getLocation().y);
+                final double centerOfParentWidth = parent.getLocationOnScreen().getX() + (parent.getWidth()) / (double) 2;
+                final double centerOfParentHeight = parent.getLocationOnScreen().getY() + (parent.getHeight()) / (double) 2;
+
+                int width = (int) (centerOfParentWidth - (windowSize.getWidth() / (double) 2));
+                int height = (int) (centerOfParentHeight - (windowSize.getHeight() / (double) 2));
+
+                final Point point = new Point(width, height);
+
+                window.setLocation(point);
+            }
+        } else {
+            setWindowOnScreenCenter(window);
+        }
     }
 
     /**
@@ -143,7 +178,7 @@ public class FrameUtils {
                             counter++;
 
                             if (location.x < 0 || location.y < 0) {
-                                window.setLocation(getFrameOnCenterLocationPoint(window));
+                                FrameUtils.setWindowOnScreenCenter(window);
                                 location = window.getLocation();
                             }
                             if (counter % 2 != 0) {

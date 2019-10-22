@@ -13,7 +13,7 @@
  * Eugene Zrazhevsky <eugene.zrazhevsky@gmail.com>
  */
 
-package com.github.benchdoos.weblocopenercore.service.clipboard;
+package com.github.benchdoos.weblocopenercore.service.clipboard.impl;
 
 import com.github.benchdoos.weblocopenercore.core.Logging;
 import org.apache.logging.log4j.LogManager;
