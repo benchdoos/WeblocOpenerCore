@@ -28,7 +28,7 @@ import com.github.benchdoos.weblocopenercore.gui.wrappers.CreateNewFileDialogWra
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import com.github.benchdoos.weblocopenercore.service.WindowLauncher;
 import com.github.benchdoos.weblocopenercore.utils.FrameUtils;
-import com.github.benchdoos.weblocopenercore.utils.notification.NotificationManager;
+import com.github.benchdoos.weblocopenercore.service.notification.NotificationManager;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;

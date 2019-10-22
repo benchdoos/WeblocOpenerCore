@@ -13,11 +13,11 @@
  * Eugene Zrazhevsky <eugene.zrazhevsky@gmail.com>
  */
 
-package com.github.benchdoos.weblocopenercore.utils.notification.impl;
+package com.github.benchdoos.weblocopenercore.service.notification.impl;
 
 import com.github.benchdoos.weblocopenercore.core.Translation;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
-import com.github.benchdoos.weblocopenercore.utils.notification.Notification;
+import com.github.benchdoos.weblocopenercore.service.notification.Notification;
 import lombok.extern.log4j.Log4j2;
 
 import javax.swing.Timer;

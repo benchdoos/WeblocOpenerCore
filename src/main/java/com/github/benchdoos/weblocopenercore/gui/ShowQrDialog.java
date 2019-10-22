@@ -26,7 +26,7 @@ import com.github.benchdoos.weblocopenercore.service.gui.MousePickListener;
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import com.github.benchdoos.weblocopenercore.utils.FileUtils;
 import com.github.benchdoos.weblocopenercore.utils.FrameUtils;
-import com.github.benchdoos.weblocopenercore.utils.notification.NotificationManager;
+import com.github.benchdoos.weblocopenercore.service.notification.NotificationManager;
 import com.google.zxing.WriterException;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;

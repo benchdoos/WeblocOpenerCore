@@ -15,7 +15,6 @@
 
 package com.github.benchdoos.weblocopenercore.core;
 
-import com.github.benchdoos.jcolorful.core.JColorful;
 import com.github.benchdoos.weblocopenercore.Main;
 import com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants;
 import com.github.benchdoos.weblocopenercore.core.constants.SettingsConstants;
@@ -35,7 +34,7 @@ import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import com.github.benchdoos.weblocopenercore.utils.FileUtils;
 import com.github.benchdoos.weblocopenercore.utils.FrameUtils;
 import com.github.benchdoos.weblocopenercore.utils.browser.BrowserManager;
-import com.github.benchdoos.weblocopenercore.utils.notification.NotificationManager;
+import com.github.benchdoos.weblocopenercore.service.notification.NotificationManager;
 import com.github.benchdoos.weblocopenercore.utils.system.OperatingSystem;
 import com.github.benchdoos.weblocopenercore.utils.system.SystemUtils;
 import lombok.extern.log4j.Log4j2;

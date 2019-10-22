@@ -5,7 +5,7 @@ import com.github.benchdoos.weblocopenercore.core.constants.StringConstants;
 import com.github.benchdoos.weblocopenercore.service.UrlsProceed;
 import com.github.benchdoos.weblocopenercore.service.clipboard.ClipboardManager;
 import com.github.benchdoos.weblocopenercore.utils.FrameUtils;
-import com.github.benchdoos.weblocopenercore.utils.notification.Notification;
+import com.github.benchdoos.weblocopenercore.service.notification.Notification;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
