@@ -19,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.KeyStroke;
 import javax.swing.UIManager;
 import javax.swing.event.HyperlinkEvent;
 import java.awt.Color;
@@ -28,6 +29,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
 import java.util.ResourceBundle;
 
 public class ForcedNotificationDialog extends JDialog implements Notification {
@@ -53,6 +55,11 @@ public class ForcedNotificationDialog extends JDialog implements Notification {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
+        getRootPane().registerKeyboardAction(e -> dispose(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+                JComponent.WHEN_IN_FOCUSED_WINDOW);
+
 
         notificationEditorPane.setHighlighter(null);
         notificationEditorPane.setEditable(false);
@@ -119,6 +126,8 @@ public class ForcedNotificationDialog extends JDialog implements Notification {
         setTitle(title);
 
         iconLabel.setIcon(new ImageIcon(image));
+
+        buttonOK.requestFocus();
 
         setVisible(true);
     }
