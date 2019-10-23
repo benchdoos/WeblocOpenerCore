@@ -18,6 +18,8 @@ package com.github.benchdoos.weblocopenercore.core.constants;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import com.github.benchdoos.weblocopenercore.service.gui.darkMode.SimpleTime;
 import com.github.benchdoos.weblocopenercore.service.links.LinkFactory;
+import com.github.benchdoos.weblocopenercore.utils.system.OperatingSystem;
+import com.github.benchdoos.weblocopenercore.utils.system.SystemUtils;
 
 public interface SettingsConstants {
     boolean IS_APP_AUTO_UPDATE_DEFAULT_VALUE = true;
@@ -25,7 +27,12 @@ public interface SettingsConstants {
     boolean OPEN_FOLDER_FOR_QR_CODE = true;
     boolean OPEN_FOLDER_FOR_NEW_FILE = false;
     boolean SHOW_NOTIFICATIONS_TO_USER = true;
-    LinkFactory.LinkType URL_PROCESSOR = LinkFactory.LinkType.binary_webloc;
+    LinkFactory.LinkType URL_PROCESSOR = OperatingSystem.OS.WINDOWS
+            .equals(SystemUtils.getCurrentOS()) ?
+            LinkFactory.LinkType.url : (OperatingSystem.OS.UNIX
+            .equals(SystemUtils.getCurrentOS()) ?
+            LinkFactory.LinkType.desktop
+            : LinkFactory.LinkType.binary_webloc);
     String BROWSER_DEFAULT_VALUE = "default";
     String CONVERTER_DEFAULT_EXTENSION = ApplicationConstants.URL_FILE_EXTENSION;
     PreferencesManager.DARK_MODE DARK_MODE_DEFAULT_VALUE = PreferencesManager.DARK_MODE.DISABLED;
