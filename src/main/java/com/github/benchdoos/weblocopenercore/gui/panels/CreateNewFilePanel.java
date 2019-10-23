@@ -84,6 +84,7 @@ public class CreateNewFilePanel extends JPanel implements Translatable {
 
     private void loadLinkComboBox() {
         linkComboBox.setModel(new DefaultComboBoxModel<>(Link.values()));
+        linkComboBox.setSelectedItem(PreferencesManager.getLink());
     }
 
     private void initLinkComboBox() {
