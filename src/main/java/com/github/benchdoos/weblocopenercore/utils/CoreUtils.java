@@ -35,10 +35,13 @@ import java.util.Scanner;
 
 @Log4j2
 public class CoreUtils {
+
+    private static final String APPLICATION_PROPERTIES_PATH = "/application.properties";
+
     public static String getApplicationVersionFullInformationString() {
         final Properties properties = new Properties();
         try {
-            properties.load(Main.class.getResourceAsStream("/application.properties"));
+            properties.load(Main.class.getResourceAsStream(APPLICATION_PROPERTIES_PATH));
             final String name = properties.getProperty("application.name");
             final String version = properties.getProperty("application.version");
             final String build = properties.getProperty("application.build");
@@ -58,7 +61,7 @@ public class CoreUtils {
     public static String getApplicationVersionString() {
         final Properties properties = new Properties();
         try {
-            properties.load(Main.class.getResourceAsStream("/application.properties"));
+            properties.load(Main.class.getResourceAsStream(APPLICATION_PROPERTIES_PATH));
             final String version = properties.getProperty("application.version");
             final String build = properties.getProperty("application.build");
 
@@ -212,7 +215,7 @@ public class CoreUtils {
         applicationVersion.setVersion(getApplicationVersionString());
         try {
             Properties properties = new Properties();
-            properties.load(Main.class.getResourceAsStream("/application.properties"));
+            properties.load(Main.class.getResourceAsStream(APPLICATION_PROPERTIES_PATH));
             String betaString = properties.getProperty("application.beta", "0");
             final int i = Integer.parseInt(betaString);
 
