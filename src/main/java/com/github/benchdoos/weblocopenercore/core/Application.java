@@ -24,6 +24,7 @@ import com.github.benchdoos.weblocopenercore.gui.EditDialog;
 import com.github.benchdoos.weblocopenercore.gui.SettingsDialog;
 import com.github.benchdoos.weblocopenercore.gui.ShowQrDialog;
 import com.github.benchdoos.weblocopenercore.gui.unix.ModeSelectorDialog;
+import com.github.benchdoos.weblocopenercore.gui.wrappers.CreateNewFileDialogWrapper;
 import com.github.benchdoos.weblocopenercore.gui.wrappers.CreateNewFileFrameWrapper;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import com.github.benchdoos.weblocopenercore.service.DefaultAnalyzer;
@@ -125,6 +126,10 @@ public class Application {
                         new AboutApplicationDialog().setVisible(true);
                         break;
 
+                    case OPENER_CREATE_NEW_ARGUMENT:
+                        manageCreateNewArgument();
+                        break;
+
                     case OPENER_CREATE_ARGUMENT:
                         try {
                             manageCreateArgument(args);
@@ -213,6 +218,17 @@ public class Application {
         } catch (Exception e) {
             log.warn("Could not open file: {}", arg, e);
         }
+    }
+
+    private static void manageCreateNewArgument() {
+        final CreateNewFileDialogWrapper createNewFileDialogWrapper = new WindowLauncher<CreateNewFileDialogWrapper>() {
+            @Override
+            public CreateNewFileDialogWrapper initWindow() {
+                return new CreateNewFileDialogWrapper();
+            }
+        }.getWindow();
+        FrameUtils.setWindowOnScreenCenter(createNewFileDialogWrapper);
+        createNewFileDialogWrapper.setVisible(true);
     }
 
     private static void manageCreateArgument(String[] args) throws Exception {
@@ -374,7 +390,6 @@ public class Application {
                 return new CreateNewFileFrameWrapper();
             }
         }.getWindow();
-//        createNewFileFrameWrapper.setLocation(FrameUtils.getFrameOnCenterLocationPoint(createNewFileFrameWrapper));
         FrameUtils.setWindowOnScreenCenter(createNewFileFrameWrapper);
         createNewFileFrameWrapper.setVisible(true);
     }
