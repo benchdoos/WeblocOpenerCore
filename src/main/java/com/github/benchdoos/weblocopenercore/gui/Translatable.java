@@ -15,6 +15,13 @@
 
 package com.github.benchdoos.weblocopenercore.gui;
 
+/**
+ * Gives ability for component to translate included components
+ */
 public interface Translatable {
+    /**
+     * All needed translations can be implemented in this method.
+     * Call this method.
+     */
     void translate();
 }
