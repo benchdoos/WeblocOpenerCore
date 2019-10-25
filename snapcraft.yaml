@@ -12,7 +12,7 @@ parts:
   weblocopener:
     # See 'snapcraft plugins'
     plugin: maven
-    source: .
+    source: ./
     parse-info:
       - weblocopener.metainfo.xml
 
