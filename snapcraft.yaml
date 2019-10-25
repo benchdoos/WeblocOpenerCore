@@ -15,11 +15,12 @@ parts:
     source: ./
     parse-info:
       - weblocopener.metainfo.xml
-    filesets:
-      library-shared:
-        - '**/lib/*.jar*'
-    prime:
-      - $library-shared
+
+  libraries-weblocopener:
+    source: ./target/lib/
+    organize:
+      '*.jar*': jar/lib/
+    plugin: dump
 
 #apps:
 #  weblocopener:
@@ -30,7 +31,7 @@ parts:
 
 apps:
   weblocopener:
-    command: java -jar $SNAP/jar/WeblocOpenerCore.jar
+    command: java -Djava.util.prefs.userRoot="$SNAP_USER_DATA" -jar $SNAP/jar/WeblocOpenerCore.jar
 
 #    desktop: build/WeblocOpener.desktop
 #    common-id: com.github.benchdoos.weblocopener
