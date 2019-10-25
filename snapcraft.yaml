@@ -6,6 +6,13 @@ version: '2.0.0'
 license: Apache-2.0
 
 #todo add here parts, see: https://snapcraft.io/docs/java-applications
+
+# snapcraft clean
+# snapcraft snap --debug
+# if error... file exists - rm file
+# snap install weblocopener_2.0.0_amd64.snap --dangerous
+# weblocopener
+# snap remove weblocopener
 adopt-info: weblocopener
 base: core18
 parts:
