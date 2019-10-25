@@ -160,14 +160,9 @@ public class FileProcessingPanel extends JPanel implements SettingsPanel, Transl
 
     private void initUnixOpenModeComboBox() {
         unixOpenModeComboBox.setRenderer(new DefaultListCellRenderer() {
-            private Locale currentLocale = null;
 
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                if (!PreferencesManager.getLocale().equals(currentLocale)) {
-                    fillUnixOpenModeComboBox();
-                }
-
                 if (value instanceof UnixOpenMode) {
                     final UnixOpenMode mode = (UnixOpenMode) value;
                     return super.getListCellRendererComponent(list, mode.getModeName(), index, isSelected, cellHasFocus);

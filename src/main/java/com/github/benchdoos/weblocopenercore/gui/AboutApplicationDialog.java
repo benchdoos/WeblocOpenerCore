@@ -64,6 +64,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ResourceBundle;
 
+import static javax.swing.BorderFactory.createEmptyBorder;
+
 @Log4j2
 public class AboutApplicationDialog extends JDialog {
 
@@ -290,7 +292,7 @@ public class AboutApplicationDialog extends JDialog {
         scrollPane = new JScrollPane();
         scrollPane.setOpaque(false);
         scrollPane.getViewport().setOpaque(false);
-        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+        scrollPane.setBorder(createEmptyBorder());
 
     }
 
@@ -315,6 +317,8 @@ public class AboutApplicationDialog extends JDialog {
         }
 
         initLinks();
+
+        scrollPane.setViewportBorder(null);
 
         setModal(true);
         setSize(550, 300);

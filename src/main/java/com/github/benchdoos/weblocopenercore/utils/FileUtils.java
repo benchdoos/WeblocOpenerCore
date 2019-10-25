@@ -74,7 +74,9 @@ public class FileUtils {
             throw new IOException("Path contains spaces, so...");
         }
         log.debug("Opening {} in nautilus", file);
-        Runtime.getRuntime().exec("nautilus \'" + file + "\'");
+        final String exec = "nautilus " + file + "";
+        log.debug("Starting process: [{}]", exec);
+        Runtime.getRuntime().exec(exec);
     }
 
     private static void openFileInWindowsExplorer(File file) throws IOException {
