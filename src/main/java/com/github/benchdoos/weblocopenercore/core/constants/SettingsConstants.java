@@ -27,6 +27,7 @@ public interface SettingsConstants {
     boolean OPEN_FOLDER_FOR_QR_CODE = true;
     boolean OPEN_FOLDER_FOR_NEW_FILE = false;
     boolean SHOW_NOTIFICATIONS_TO_USER = true;
+    boolean OPENED_PREVIOUSLY_FILES_HISTORY_ENABLED = true;
     LinkFactory.LinkType URL_PROCESSOR = OperatingSystem.OS.WINDOWS
             .equals(SystemUtils.getCurrentOS()) ?
             LinkFactory.LinkType.url : (OperatingSystem.OS.UNIX

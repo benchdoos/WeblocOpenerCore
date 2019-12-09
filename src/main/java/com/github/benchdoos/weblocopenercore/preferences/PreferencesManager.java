@@ -53,6 +53,7 @@ public class PreferencesManager {
     private static final String KEY_LATEST_UPDATE_CHECK = "last_update_check";
     private static final String KEY_URL_PROCESSOR = "url_processor";
     private static final String KEY_OPEN_FOR_NEW_FILE = "open_folder_for_new_file";
+    private static final String KEY_OPENED_PREVIOUSLY_FILES_HISTORY = "opened_previously_files_history";
 
     private static final Preferences PREFERENCES = Preferences.userRoot().node(ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME.toLowerCase());
 
@@ -261,6 +262,14 @@ public class PreferencesManager {
 
     public static void setLink(Link link) {
         PREFERENCES.put(KEY_URL_PROCESSOR, LinkFactory.getNameByLink(link));
+    }
+
+    public static void setOpenedPreviouslyFilesHistoryEnable(boolean enabled) {
+        PREFERENCES.putBoolean(KEY_OPENED_PREVIOUSLY_FILES_HISTORY, enabled);
+    }
+
+    public static boolean getOpenedPreviouslyFilesHistoryEnabled() {
+        return PREFERENCES.getBoolean(KEY_OPENED_PREVIOUSLY_FILES_HISTORY, SettingsConstants.OPENED_PREVIOUSLY_FILES_HISTORY_ENABLED);
     }
 
     public enum DARK_MODE {ALWAYS, DISABLED}
