@@ -99,7 +99,7 @@
             </constraints>
             <properties>
               <selected value="true"/>
-              <text value="Save previously opened files"/>
+              <text resource-bundle="translations/SettingsDialogBundle" key="savePrevFileHistory"/>
             </properties>
           </component>
         </children>
