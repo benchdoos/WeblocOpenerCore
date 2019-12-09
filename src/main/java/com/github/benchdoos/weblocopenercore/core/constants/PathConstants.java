@@ -26,4 +26,7 @@ public interface PathConstants {
     String APP_LOG_PROPERTY = "com.github.benchdoos.weblocopenercore.log.folder";
 
     String UPDATE_PATH_FILE = System.getProperty("java.io.tmpdir") + File.separator + WEBLOCOPENER_APPLICATION_NAME + File.separator;
+
+    String PREVIOUS_OPENED_FILES_FILE_PATH = System
+            .getProperty("java.io.tmpdir") + File.separator + WEBLOCOPENER_APPLICATION_NAME + "previous.json";
 }
