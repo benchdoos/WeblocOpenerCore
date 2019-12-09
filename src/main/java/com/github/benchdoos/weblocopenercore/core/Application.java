@@ -15,6 +15,7 @@
 
 package com.github.benchdoos.weblocopenercore.core;
 
+import com.github.benchdoos.linksupport.links.Link;
 import com.github.benchdoos.weblocopenercore.Main;
 import com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants;
 import com.github.benchdoos.weblocopenercore.core.constants.SettingsConstants;
@@ -31,11 +32,11 @@ import com.github.benchdoos.weblocopenercore.service.DefaultAnalyzer;
 import com.github.benchdoos.weblocopenercore.service.UrlsProceed;
 import com.github.benchdoos.weblocopenercore.service.WindowLauncher;
 import com.github.benchdoos.weblocopenercore.service.clipboard.ClipboardManager;
+import com.github.benchdoos.weblocopenercore.service.notification.NotificationManager;
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import com.github.benchdoos.weblocopenercore.utils.FileUtils;
 import com.github.benchdoos.weblocopenercore.utils.FrameUtils;
 import com.github.benchdoos.weblocopenercore.utils.browser.BrowserManager;
-import com.github.benchdoos.weblocopenercore.service.notification.NotificationManager;
 import com.github.benchdoos.weblocopenercore.utils.system.OperatingSystem;
 import com.github.benchdoos.weblocopenercore.utils.system.SystemUtils;
 import lombok.extern.log4j.Log4j2;
@@ -217,6 +218,21 @@ public class Application {
             }
         } catch (Exception e) {
             log.warn("Could not open file: {}", arg, e);
+            final File file = new File(arg);
+            final Link linkByName = Link.getLinkForFile(file);
+
+            if (SystemUtils.getCurrentOS().equals(OperatingSystem.OS.UNIX)) {
+                if (Link.DESKTOP_LINK.getExtension().equals(org.apache.logging.log4j.core.util.FileUtils.getFileExtension(file))) {
+                    NotificationManager.getNotificationForCurrentOS()
+                            .showWarningNotification("Can not open file: " + file.getName(),
+                                    "Opening in nautilus");
+                    try {
+                        FileUtils.openFileInNautilusUnix(file);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
         }
     }
 

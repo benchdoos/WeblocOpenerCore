@@ -69,7 +69,7 @@ public class FileUtils {
         }
     }
 
-    private static void openFileInNautilusUnix(File file) throws IOException {
+    public static void openFileInNautilusUnix(File file) throws IOException {
         if (file.getAbsolutePath().contains(" ")) {
             throw new IOException("Path contains spaces, so...");
         }
