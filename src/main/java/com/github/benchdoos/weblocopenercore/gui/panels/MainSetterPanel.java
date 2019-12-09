@@ -124,7 +124,7 @@ public class MainSetterPanel extends JPanel implements SettingsPanel, Translatab
         contentPane = new JPanel();
         contentPane.setLayout(new GridLayoutManager(5, 1, new Insets(10, 10, 10, 10), -1, -1));
         final JPanel panel1 = new JPanel();
-        panel1.setLayout(new GridLayoutManager(6, 3, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.setLayout(new GridLayoutManager(7, 3, new Insets(0, 0, 0, 0), -1, -1));
         contentPane.add(panel1, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final Spacer spacer1 = new Spacer();
         panel1.add(spacer1, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
@@ -138,7 +138,7 @@ public class MainSetterPanel extends JPanel implements SettingsPanel, Translatab
         panel1.add(showNotificationsToUserCheckBox, new GridConstraints(3, 0, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel2 = new JPanel();
         panel2.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        panel1.add(panel2, new GridConstraints(5, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        panel1.add(panel2, new GridConstraints(6, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final Spacer spacer2 = new Spacer();
         panel2.add(spacer2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         final JPanel panel3 = new JPanel();
@@ -158,6 +158,10 @@ public class MainSetterPanel extends JPanel implements SettingsPanel, Translatab
         this.$$$loadButtonText$$$(betaInstallCheckBox, ResourceBundle.getBundle("translations/MainSetterPanelBundle").getString("betaUpdateInstallCheckBox"));
         betaInstallCheckBox.setToolTipText(ResourceBundle.getBundle("translations/MainSetterPanelBundle").getString("betaUpdateTooltip"));
         panel3.add(betaInstallCheckBox, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        savePreviouslyOpenedFilesCheckBox = new JCheckBox();
+        savePreviouslyOpenedFilesCheckBox.setSelected(true);
+        this.$$$loadButtonText$$$(savePreviouslyOpenedFilesCheckBox, ResourceBundle.getBundle("translations/MainSetterPanelBundle").getString("savePreviouslyOpenedFilesCheckBox"));
+        panel1.add(savePreviouslyOpenedFilesCheckBox, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel4 = new JPanel();
         panel4.setLayout(new GridLayoutManager(1, 4, new Insets(0, 0, 0, 0), -1, -1));
         contentPane.add(panel4, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
@@ -345,6 +349,7 @@ public class MainSetterPanel extends JPanel implements SettingsPanel, Translatab
         checkUpdatesButton.setText(translation.getTranslatedString("checkUpdatesButton"));
         openFolderForQRCheckBox.setText(translation.getTranslatedString("openFolderForQRCheckBox"));
         showNotificationsToUserCheckBox.setText(translation.getTranslatedString("showNotificationsCheckBox"));
+        savePreviouslyOpenedFilesCheckBox.setText(translation.getTranslatedString("savePreviouslyOpenedFilesCheckBox"));
 
         betaInstallCheckBox.setText(translation.getTranslatedString("betaUpdateInstallCheckBox"));
         betaInstallCheckBox.setToolTipText(translation.getTranslatedString("betaUpdateTooltip"));
