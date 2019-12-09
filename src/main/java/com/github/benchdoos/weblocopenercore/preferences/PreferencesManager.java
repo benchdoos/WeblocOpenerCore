@@ -268,7 +268,7 @@ public class PreferencesManager {
         PREFERENCES.putBoolean(KEY_OPENED_PREVIOUSLY_FILES_HISTORY, enabled);
     }
 
-    public static boolean getOpenedPreviouslyFilesHistoryEnabled() {
+    public static boolean isOpenedPreviouslyFilesHistoryEnabled() {
         return PREFERENCES.getBoolean(KEY_OPENED_PREVIOUSLY_FILES_HISTORY, SettingsConstants.OPENED_PREVIOUSLY_FILES_HISTORY_ENABLED);
     }
 

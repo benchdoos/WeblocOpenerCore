@@ -62,6 +62,7 @@ public class MainSetterPanel extends JPanel implements SettingsPanel, Translatab
     private JComboBox<Object> localeComboBox;
     private JLabel languageLabel;
     private JButton aboutButton;
+    private JCheckBox savePreviouslyOpenedFilesCheckBox;
     private String launcherLocationPath;
 
     public MainSetterPanel() {
@@ -290,6 +291,7 @@ public class MainSetterPanel extends JPanel implements SettingsPanel, Translatab
         openFolderForQRCheckBox.setSelected(PreferencesManager.openFolderForQrCode());
         showNotificationsToUserCheckBox.setSelected(PreferencesManager.isNotificationsShown());
         localeComboBox.setSelectedItem(PreferencesManager.getLocale());
+        savePreviouslyOpenedFilesCheckBox.setSelected(PreferencesManager.isOpenedPreviouslyFilesHistoryEnabled());
     }
 
     @Override
@@ -298,6 +300,7 @@ public class MainSetterPanel extends JPanel implements SettingsPanel, Translatab
         final boolean beta = betaInstallCheckBox.isSelected();
         final boolean folder = openFolderForQRCheckBox.isSelected();
         final boolean notification = showNotificationsToUserCheckBox.isSelected();
+        final boolean saveOpenedFiles = savePreviouslyOpenedFilesCheckBox.isSelected();
 
         saveLocale();
 
@@ -305,13 +308,15 @@ public class MainSetterPanel extends JPanel implements SettingsPanel, Translatab
                         "auto-update: {}, " +
                         "beta installing: {}, " +
                         "open folder for qr-code: {}, " +
-                        "notifications available: {} ",
-                update, beta, folder, notification);
+                        "notifications available: {}," +
+                        "save previously opened files enabled: {}",
+                update, beta, folder, notification, saveOpenedFiles);
 
         PreferencesManager.setAutoUpdateActive(update);
         PreferencesManager.setBetaUpdateInstalling(beta);
         PreferencesManager.setOpenFolderForQrCode(folder);
         PreferencesManager.setNotificationsShown(notification);
+        PreferencesManager.setOpenedPreviouslyFilesHistoryEnable(saveOpenedFiles);
     }
 
     private void saveLocale() {
