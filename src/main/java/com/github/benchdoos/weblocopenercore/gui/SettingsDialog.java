@@ -140,7 +140,6 @@ public class SettingsDialog extends JFrame implements Translatable {
         this.$$$loadLabelText$$$(dragAndDropNotice, ResourceBundle.getBundle("translations/SettingsDialogBundle").getString("dragAndDropNotice"));
         panel1.add(dragAndDropNotice, new GridConstraints(0, 0, 1, 5, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         settingsSavedLabel = new JLabel();
-        settingsSavedLabel.setForeground(new Color(-16732650));
         settingsSavedLabel.setIcon(new ImageIcon(getClass().getResource("/images/emojiSuccess16.png")));
         settingsSavedLabel.setToolTipText(ResourceBundle.getBundle("translations/SettingsDialogBundle").getString("settingsSaved"));
         panel1.add(settingsSavedLabel, new GridConstraints(1, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
