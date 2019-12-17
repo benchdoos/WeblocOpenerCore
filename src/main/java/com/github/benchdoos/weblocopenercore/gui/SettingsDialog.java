@@ -23,6 +23,7 @@ import com.github.benchdoos.weblocopenercore.gui.panels.AppearanceSetterPanel;
 import com.github.benchdoos.weblocopenercore.gui.panels.BrowserSetterPanel;
 import com.github.benchdoos.weblocopenercore.gui.panels.FileProcessingPanel;
 import com.github.benchdoos.weblocopenercore.gui.panels.MainSetterPanel;
+import com.github.benchdoos.weblocopenercore.gui.panels.PreviousOpenedFilesPanel;
 import com.github.benchdoos.weblocopenercore.gui.panels.SettingsPanel;
 import com.github.benchdoos.weblocopenercore.gui.wrappers.CreateNewFileDialogWrapper;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
@@ -95,6 +96,7 @@ public class SettingsDialog extends JFrame implements Translatable {
     private MainSetterPanel mainSetterPanel;
     private AppearanceSetterPanel appearanceSetterPanel;
     private FileProcessingPanel fileProcessingPanel;
+    private PreviousOpenedFilesPanel previousOpenedFilesPanel;
     private final String launcherLocationPath;
 
 
@@ -412,11 +414,13 @@ public class SettingsDialog extends JFrame implements Translatable {
         browserSetterPanel = new BrowserSetterPanel();
         appearanceSetterPanel = new AppearanceSetterPanel();
         fileProcessingPanel = new FileProcessingPanel();
+        previousOpenedFilesPanel = new PreviousOpenedFilesPanel();
 
         model.addElement(mainSetterPanel);
         model.addElement(browserSetterPanel);
         model.addElement(fileProcessingPanel);
         model.addElement(appearanceSetterPanel);
+        model.addElement(previousOpenedFilesPanel);
         settingsList.setModel(model);
 
         if (PreferencesManager.isDarkModeEnabledNow()) {
@@ -425,6 +429,7 @@ public class SettingsDialog extends JFrame implements Translatable {
             colorful.colorize(browserSetterPanel);
             colorful.colorize(fileProcessingPanel);
             colorful.colorize(appearanceSetterPanel);
+            colorful.colorize(previousOpenedFilesPanel);
         }
     }
 
@@ -533,6 +538,26 @@ public class SettingsDialog extends JFrame implements Translatable {
             } catch (Exception e) {
                 log.warn("Could not colorize component", e);
             }
+        }
+    }
+
+    public void loadSettingsForPanel(Class clazz) {
+        if (clazz != null) {
+            log.debug("Trying to load settings for panel with class: {}", clazz);
+            final ListModel<SettingsPanel> model = settingsList.getModel();
+            if (model != null) {
+                for (int i = 0; i < model.getSize(); i++) {
+                    final SettingsPanel panel = model.getElementAt(i);
+                    log.trace("Panel class is: {}, checking if class: {} is equal to it.", panel.getClass(), clazz);
+                    if (panel.getClass().equals(clazz)) {
+                        log.info("Loading settings for panel with class: {}", panel.getClass());
+                        panel.loadSettings();
+                        break;
+                    }
+                }
+            }
+        } else {
+            log.warn("Given class is null");
         }
     }
 }

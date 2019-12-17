@@ -69,6 +69,7 @@ import static java.awt.Frame.MAXIMIZED_HORIZ;
 @Log4j2
 public class Application {
     private static final String CORRECT_CREATION_SYNTAX = "-create <file path> <url>";
+    private static SettingsDialog settingsDialog;
 
     public Application(final String[] args) {
         log.info("{} starts in mode: {}", ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME, Main.getCurrentMode());
@@ -369,12 +370,14 @@ public class Application {
     }
 
     public static void runSettingsDialog(String launcherLocationPath) {
-        new WindowLauncher<SettingsDialog>() {
+        final SettingsDialog settingsDialog = new WindowLauncher<SettingsDialog>() {
             @Override
             public SettingsDialog initWindow() {
                 return new SettingsDialog(launcherLocationPath);
             }
-        }.getWindow().setVisible(true);
+        }.getWindow();
+        Application.settingsDialog = settingsDialog;
+        settingsDialog.setVisible(true);
     }
 
     public static void launchApplication(String applicationPath, String... args) {
@@ -466,5 +469,9 @@ public class Application {
         } else {
             log.warn("System is not supported yet: {}", SystemUtils.getCurrentOS());
         }
+    }
+
+    public static SettingsDialog getSettingsDialog() {
+        return settingsDialog;
     }
 }
