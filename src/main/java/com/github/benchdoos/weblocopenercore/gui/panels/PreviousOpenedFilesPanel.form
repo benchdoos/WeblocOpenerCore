@@ -33,7 +33,12 @@
                 </constraints>
                 <properties/>
                 <border type="none"/>
-                <children/>
+                <children>
+                  <component id="46185" class="javax.swing.JList" binding="recentlyOpenedFilesList">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                </children>
               </scrollpane>
               <grid id="2690c" layout-manager="GridLayoutManager" row-count="6" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                 <margin top="0" left="0" bottom="0" right="0"/>
@@ -56,7 +61,7 @@
                       <text value="Full link filename:"/>
                     </properties>
                   </component>
-                  <component id="aff55" class="javax.swing.JTextField" binding="textField1" default-binding="true">
+                  <component id="aff55" class="javax.swing.JTextField" binding="fileNameTextField">
                     <constraints>
                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                         <preferred-size width="150" height="-1"/>
@@ -71,14 +76,6 @@
                     <properties>
                       <text value="Full link:"/>
                     </properties>
-                  </component>
-                  <component id="fa99d" class="javax.swing.JTextField" binding="textField2" default-binding="true">
-                    <constraints>
-                      <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
-                        <preferred-size width="150" height="-1"/>
-                      </grid>
-                    </constraints>
-                    <properties/>
                   </component>
                   <grid id="fe02a" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="0" left="0" bottom="0" right="0"/>
@@ -119,7 +116,7 @@
                       <text value="Last opened:"/>
                     </properties>
                   </component>
-                  <component id="cd6e0" class="javax.swing.JLabel">
+                  <component id="cd6e0" class="javax.swing.JLabel" binding="dateLabel">
                     <constraints>
                       <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -127,7 +124,7 @@
                       <text value="date"/>
                     </properties>
                   </component>
-                  <component id="11dba" class="javax.swing.JTextField" binding="pageTitlePreviewHereTextField" default-binding="true">
+                  <component id="11dba" class="javax.swing.JTextField" binding="pageTitlePreviewTextField">
                     <constraints>
                       <grid row="3" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                         <preferred-size width="150" height="-1"/>
@@ -136,6 +133,14 @@
                     <properties>
                       <text value="Page title preview here"/>
                     </properties>
+                  </component>
+                  <component id="fa99d" class="javax.swing.JTextField" binding="fullLinkTextField">
+                    <constraints>
+                      <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="150" height="-1"/>
+                      </grid>
+                    </constraints>
+                    <properties/>
                   </component>
                 </children>
               </grid>
