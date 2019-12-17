@@ -39,6 +39,7 @@ import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -140,7 +141,8 @@ public class SettingsDialog extends JFrame implements Translatable {
         panel1.add(dragAndDropNotice, new GridConstraints(0, 0, 1, 5, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         settingsSavedLabel = new JLabel();
         settingsSavedLabel.setForeground(new Color(-16732650));
-        this.$$$loadLabelText$$$(settingsSavedLabel, ResourceBundle.getBundle("translations/SettingsDialogBundle").getString("settingsSaved"));
+        settingsSavedLabel.setIcon(new ImageIcon(getClass().getResource("/images/emojiSuccess16.png")));
+        settingsSavedLabel.setToolTipText(ResourceBundle.getBundle("translations/SettingsDialogBundle").getString("settingsSaved"));
         panel1.add(settingsSavedLabel, new GridConstraints(1, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         createNewFileButton = new JButton();
         createNewFileButton.setMargin(new Insets(0, 5, 0, 5));
@@ -440,7 +442,7 @@ public class SettingsDialog extends JFrame implements Translatable {
     public void translate() {
         Translation translation = new Translation("SettingsDialogBundle");
         setTitle(translation.getTranslatedString("windowTitle"));
-        settingsSavedLabel.setText(translation.getTranslatedString("settingsSaved"));
+        settingsSavedLabel.setToolTipText(translation.getTranslatedString("settingsSaved"));
         buttonApply.setText(translation.getTranslatedString("buttonApply"));
         buttonOK.setText(translation.getTranslatedString("buttonOk"));
         buttonCancel.setText(translation.getTranslatedString("buttonCancel"));

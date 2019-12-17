@@ -69,8 +69,8 @@
               <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <foreground color="-16732650"/>
-              <text resource-bundle="translations/SettingsDialogBundle" key="settingsSaved"/>
+              <icon value="images/emojiSuccess16.png"/>
+              <toolTipText resource-bundle="translations/SettingsDialogBundle" key="settingsSaved"/>
             </properties>
           </component>
           <component id="974ff" class="javax.swing.JButton" binding="createNewFileButton">
