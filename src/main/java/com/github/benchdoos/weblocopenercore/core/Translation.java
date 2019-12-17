@@ -37,7 +37,7 @@ public class Translation {
             new Locale("ru", "RU")};
 
     private static volatile Locale locale;
-    private final ResourceBundle messages;
+    private ResourceBundle messages;
     private final String bundlePath;
     private final String bundleName;
 
@@ -99,6 +99,10 @@ public class Translation {
     public String getTranslatedString(String message) {
         try {
             log.trace("[TRANSLATION] Translating message: {}", message);
+
+            locale = PreferencesManager.getLocale();
+            this.messages = getTranslation();
+
             return messages.getString(message);
         } catch (Exception e) {
             log.warn("Could not localize string: " + bundleName + ":[" + message + "]", e);
