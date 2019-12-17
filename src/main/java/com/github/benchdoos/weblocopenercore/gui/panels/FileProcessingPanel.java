@@ -114,6 +114,7 @@ public class FileProcessingPanel extends JPanel implements SettingsPanel, Transl
         unixOpenModeLabel.setText(translation.getTranslatedString("unixOpenModeLabel"));
         createFileByDefaultLabel.setText(translation.getTranslatedString("createFileLabel"));
         openInBrowser.setText(translation.getTranslatedString("openInFileBrowser"));
+        fillUnixOpenModeComboBox();
     }
 
     @Override
