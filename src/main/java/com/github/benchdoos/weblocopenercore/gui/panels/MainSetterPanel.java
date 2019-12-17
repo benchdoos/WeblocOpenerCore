@@ -17,6 +17,7 @@ package com.github.benchdoos.weblocopenercore.gui.panels;
 
 import com.github.benchdoos.weblocopenercore.core.Application;
 import com.github.benchdoos.weblocopenercore.core.Translation;
+import com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants;
 import com.github.benchdoos.weblocopenercore.core.constants.SettingsConstants;
 import com.github.benchdoos.weblocopenercore.gui.AboutApplicationDialog;
 import com.github.benchdoos.weblocopenercore.gui.Translatable;
@@ -360,17 +361,11 @@ public class MainSetterPanel extends JPanel implements SettingsPanel, Translatab
     private void translateLanguagePanel() {
         Translation translation = new Translation("LocaleSetterPanelBundle");
         languageLabel.setText(translation.getTranslatedString("language"));
-        translateComboBox(translation);
-    }
-
-    private void translateComboBox(Translation translation) {
-        final DefaultComboBoxModel<Object> model = (DefaultComboBoxModel<Object>) localeComboBox.getModel();
-        model.removeElementAt(0);
-        model.insertElementAt(translation.getTranslatedString("languageDefault"), 0);
+        fillLocaleComboBox();
     }
 
     private void onUpdateNow() {
         FrameUtils.findWindow(this).dispose();
-        Application.launchApplication(launcherLocationPath, "-update");
+        Application.launchApplication(launcherLocationPath, ArgumentConstants.OPENER_UPDATE_ARGUMENT);
     }
 }
