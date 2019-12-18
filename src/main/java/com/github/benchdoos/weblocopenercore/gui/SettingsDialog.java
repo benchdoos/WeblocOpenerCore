@@ -23,7 +23,7 @@ import com.github.benchdoos.weblocopenercore.gui.panels.AppearanceSetterPanel;
 import com.github.benchdoos.weblocopenercore.gui.panels.BrowserSetterPanel;
 import com.github.benchdoos.weblocopenercore.gui.panels.FileProcessingPanel;
 import com.github.benchdoos.weblocopenercore.gui.panels.MainSetterPanel;
-import com.github.benchdoos.weblocopenercore.gui.panels.PreviousOpenedFilesPanel;
+import com.github.benchdoos.weblocopenercore.gui.panels.ResentOpenedFilesPanel;
 import com.github.benchdoos.weblocopenercore.gui.panels.SettingsPanel;
 import com.github.benchdoos.weblocopenercore.gui.wrappers.CreateNewFileDialogWrapper;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
@@ -96,7 +96,7 @@ public class SettingsDialog extends JFrame implements Translatable {
     private MainSetterPanel mainSetterPanel;
     private AppearanceSetterPanel appearanceSetterPanel;
     private FileProcessingPanel fileProcessingPanel;
-    private PreviousOpenedFilesPanel previousOpenedFilesPanel;
+    private ResentOpenedFilesPanel resentOpenedFilesPanel;
     private final String launcherLocationPath;
 
 
@@ -414,13 +414,13 @@ public class SettingsDialog extends JFrame implements Translatable {
         browserSetterPanel = new BrowserSetterPanel();
         appearanceSetterPanel = new AppearanceSetterPanel();
         fileProcessingPanel = new FileProcessingPanel();
-        previousOpenedFilesPanel = new PreviousOpenedFilesPanel();
+        resentOpenedFilesPanel = new ResentOpenedFilesPanel();
 
         model.addElement(mainSetterPanel);
         model.addElement(browserSetterPanel);
         model.addElement(fileProcessingPanel);
         model.addElement(appearanceSetterPanel);
-        model.addElement(previousOpenedFilesPanel);
+        model.addElement(resentOpenedFilesPanel);
         settingsList.setModel(model);
 
         if (PreferencesManager.isDarkModeEnabledNow()) {
@@ -429,7 +429,7 @@ public class SettingsDialog extends JFrame implements Translatable {
             colorful.colorize(browserSetterPanel);
             colorful.colorize(fileProcessingPanel);
             colorful.colorize(appearanceSetterPanel);
-            colorful.colorize(previousOpenedFilesPanel);
+            colorful.colorize(resentOpenedFilesPanel);
         }
     }
 
