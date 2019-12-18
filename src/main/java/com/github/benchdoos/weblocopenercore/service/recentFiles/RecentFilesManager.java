@@ -1,22 +1,15 @@
 package com.github.benchdoos.weblocopenercore.service.recentFiles;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.benchdoos.weblocopenercore.core.constants.PathConstants;
-import com.github.benchdoos.weblocopenercore.utils.browser.BrowserManager;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.io.IOUtils;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Log4j2
 //todo move to jackson
@@ -27,18 +20,17 @@ public class RecentFilesManager {
         log.info("Processing recent files. History file location: {}", historyFile);
     }
 
-    public List<OpenedFileInfo> loadRecentOpenedFilesList() {
+    public Set<OpenedFileInfo> loadRecentOpenedFilesList() {
         if (historyFile.exists() && historyFile.isFile()) {
             try {
-                final String jsonString = IOUtils.toString(
-                        BrowserManager.class.getResourceAsStream(historyFile.getAbsolutePath()),
-                        StandardCharsets.UTF_8);
-                //todo load file
+                final ObjectMapper mapper = new ObjectMapper();
+
+                return (Set<OpenedFileInfo>) mapper.readValue(historyFile, Set.class);
             } catch (IOException e) {
                 log.warn("Could not load file list", e);
             }
         }
-        return Collections.emptyList();
+        return Collections.emptySet();
     }
 
     public void appendRecentOpenedFile(OpenedFileInfo file) throws IOException {
@@ -46,51 +38,12 @@ public class RecentFilesManager {
     }
 
     public void appendRecentOpenedFile(List<OpenedFileInfo> files) throws IOException {
-        JsonElement rootElement = null;
-
-        rootElement = readJsonAndGetRootJsonElement(rootElement);
-
-        if (rootElement == null) {
-                rootElement = new JsonArray();
-            }
-
-            final JsonArray rootArray = rootElement.getAsJsonArray();
-
-            final JsonArray arrayToAppend = new JsonArray();
-
-            files.forEach(file -> {
-                final JsonObject element = new JsonObject();
-                element.addProperty("type", file.getType().toString());
-                element.addProperty("filename", file.getFilename());
-                element.addProperty("filePath", file.getFilePath().toString());
-
-                arrayToAppend.add(element);
-            });
-            rootArray.addAll(arrayToAppend);
-
-        writeRootJsonElementToFile(rootElement);
+        //todo fix linkedHashMap issue
+        final Set<OpenedFileInfo> openedFileInfos = loadRecentOpenedFilesList();
+        final Set<OpenedFileInfo> result = new HashSet<>(openedFileInfos);
+        result.addAll(files);
+        final ObjectMapper mapper = new ObjectMapper();
+        mapper.writeValue(historyFile, result);
     }
 
-    private void writeRootJsonElementToFile(JsonElement rootElement) throws IOException {
-        try (final FileWriter fileWriter = new FileWriter(historyFile)){
-            new GsonBuilder().create().toJson(rootElement, fileWriter);
-        }
-    }
-
-    private JsonElement readJsonAndGetRootJsonElement(JsonElement rootElement) throws IOException {
-        try (final FileReader fileReader = new FileReader(historyFile);) {
-            final GsonBuilder builder = new GsonBuilder();
-            final Gson gson = builder.create();
-
-            if (historyFile.exists()) {
-                try {
-                    rootElement = gson.fromJson(fileReader, JsonElement.class);
-                } catch (Exception e) {
-                    log.warn("Could not parse get json string from existed file: {}", historyFile, e);
-                    rootElement = new JsonArray();
-                }
-            }
-        }
-        return rootElement;
-    }
 }

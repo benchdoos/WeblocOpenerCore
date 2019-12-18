@@ -5,6 +5,7 @@ import com.github.benchdoos.linksupport.links.LinkProcessor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.io.File;
@@ -14,6 +15,7 @@ import java.nio.file.Path;
 @AllArgsConstructor
 @Data
 @Builder
+@EqualsAndHashCode
 public class OpenedFileInfo {
     private Link type;
     private String filename;
