@@ -32,7 +32,7 @@ public class DisabledResentFilesPanel extends JPanel {
 
     private void initListeners() {
         enableButton.addActionListener(e -> {
-            PreferencesManager.setOpenedPreviouslyFilesHistoryEnable(true);
+            PreferencesManager.setRecentOpenedFilesHistoryEnable(true);
             final SettingsDialog settingsDialog = Application.getSettingsDialog();
             if (settingsDialog != null) {
                 settingsDialog.loadSettingsForPanel(MainSetterPanel.class);

@@ -33,6 +33,8 @@ import com.github.benchdoos.weblocopenercore.service.UrlsProceed;
 import com.github.benchdoos.weblocopenercore.service.WindowLauncher;
 import com.github.benchdoos.weblocopenercore.service.clipboard.ClipboardManager;
 import com.github.benchdoos.weblocopenercore.service.notification.NotificationManager;
+import com.github.benchdoos.weblocopenercore.service.recentFiles.OpenedFileInfo;
+import com.github.benchdoos.weblocopenercore.service.recentFiles.RecentFilesManager;
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import com.github.benchdoos.weblocopenercore.utils.FileUtils;
 import com.github.benchdoos.weblocopenercore.utils.FrameUtils;
@@ -213,6 +215,11 @@ public class Application {
         try {
             String url = new DefaultAnalyzer(arg).getUrl();
             if (!url.isEmpty()) {
+
+                if (PreferencesManager.isRecentOpenedFilesHistoryEnabled()) {
+                    new RecentFilesManager().appendRecentOpenedFile(OpenedFileInfo.fromFile(new File(arg)));
+                }
+
                 UrlsProceed.openUrl(url);
             } else {
                 runEditDialog(arg);

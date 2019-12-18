@@ -48,7 +48,7 @@
                         <properties/>
                         <border type="none"/>
                         <children>
-                          <component id="9c585" class="javax.swing.JList" binding="recentlyOpenedFilesList">
+                          <component id="9c585" class="javax.swing.JList" binding="fileList">
                             <constraints/>
                             <properties/>
                           </component>

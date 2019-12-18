@@ -51,7 +51,7 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel {
     }
 
     private void initFileList() {
-        fileList.setCellRenderer(new DefaultListCellRenderer(){
+        fileList.setCellRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 //todo add renderer
@@ -83,7 +83,7 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel {
 
 
     private void initVisiblePanels() {
-        final boolean enabled = PreferencesManager.isOpenedPreviouslyFilesHistoryEnabled();
+        final boolean enabled = PreferencesManager.isRecentOpenedFilesHistoryEnabled();
         enabledPanel.setVisible(enabled);
         disabledPanel.setVisible(!enabled);
     }

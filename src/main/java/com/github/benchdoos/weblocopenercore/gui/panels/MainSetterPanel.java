@@ -296,7 +296,7 @@ public class MainSetterPanel extends JPanel implements SettingsPanel, Translatab
         openFolderForQRCheckBox.setSelected(PreferencesManager.openFolderForQrCode());
         showNotificationsToUserCheckBox.setSelected(PreferencesManager.isNotificationsShown());
         localeComboBox.setSelectedItem(PreferencesManager.getLocale());
-        savePreviouslyOpenedFilesCheckBox.setSelected(PreferencesManager.isOpenedPreviouslyFilesHistoryEnabled());
+        savePreviouslyOpenedFilesCheckBox.setSelected(PreferencesManager.isRecentOpenedFilesHistoryEnabled());
     }
 
     @Override
@@ -321,7 +321,7 @@ public class MainSetterPanel extends JPanel implements SettingsPanel, Translatab
         PreferencesManager.setBetaUpdateInstalling(beta);
         PreferencesManager.setOpenFolderForQrCode(folder);
         PreferencesManager.setNotificationsShown(notification);
-        PreferencesManager.setOpenedPreviouslyFilesHistoryEnable(saveOpenedFiles);
+        PreferencesManager.setRecentOpenedFilesHistoryEnable(saveOpenedFiles);
     }
 
     private void saveLocale() {
