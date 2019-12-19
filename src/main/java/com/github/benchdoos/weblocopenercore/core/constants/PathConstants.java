@@ -28,5 +28,6 @@ public interface PathConstants {
     String UPDATE_PATH_FILE = System.getProperty("java.io.tmpdir") + File.separator + WEBLOCOPENER_APPLICATION_NAME + File.separator;
 
     String RECENT_OPENED_FILES_FILE_PATH = System
-            .getProperty("java.io.tmpdir") + File.separator + WEBLOCOPENER_APPLICATION_NAME + File.separator + "recent-files.json";
+            .getProperty("java.io.tmpdir") + File.separator + WEBLOCOPENER_APPLICATION_NAME + File.separator
+            + System.getProperty("user.name") + "-recent-files.json";
 }
