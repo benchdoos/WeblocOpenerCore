@@ -1,7 +1,6 @@
 package com.github.benchdoos.weblocopenercore.service.recentFiles;
 
 import com.github.benchdoos.linksupport.links.Link;
-import com.github.benchdoos.linksupport.links.LinkProcessor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
