@@ -22,12 +22,6 @@ public interface ApplicationConstants {
     String WEBLOCOPENER_APPLICATION_NAME = "WeblocOpener";
     String UPDATER_APPLICATION_NAME = "WeblocOpenerUpdater";
 
-    String WEBLOC_FILE_EXTENSION = "webloc";
-
-    String URL_FILE_EXTENSION = "url";
-
-    String DESKTOP_FILE_EXTENSION = "desktop";
-
     String DEFAULT_APPLICATION_CHARSET = "UTF-8";
 
     Theme DARK_MODE_THEME = JColorful.EXTREMELY_BLACK;

@@ -36,8 +36,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants.WEBLOC_FILE_EXTENSION;
-
 @Log4j2
 public class DefaultAnalyzer {
     private String url = "";
@@ -127,7 +125,7 @@ public class DefaultAnalyzer {
             final File[] files = parent.listFiles();
             if (files != null) {
                 for (File current : files) {
-                    if (FileUtils.getFileExtension(current).equalsIgnoreCase(ApplicationConstants.WEBLOC_FILE_EXTENSION)) {
+                    if (FileUtils.getFileExtension(current).equalsIgnoreCase(Link.WEBLOC_LINK.getExtension())) {
                         int compared = compareFileNames(file, current);
                         values.add(new ComparedFile(compared, current));
                     }
@@ -179,7 +177,7 @@ public class DefaultAnalyzer {
         final File currentFile = new File(arg);
         log.info("File [" + arg + "] exists: " + currentFile.exists() + " file?: " + currentFile.isFile());
         if (currentFile.isFile() && currentFile.exists()) {
-            if (FilenameUtils.getExtension(currentFile.getName()).equals(WEBLOC_FILE_EXTENSION)) {
+            if (FilenameUtils.getExtension(currentFile.getName()).equals(Link.WEBLOC_LINK.getExtension())) {
                 log.info("File added to proceed: " + currentFile.getAbsolutePath());
                 final ArrayList<File> arrayList = new ArrayList<>();
                 arrayList.add(currentFile);

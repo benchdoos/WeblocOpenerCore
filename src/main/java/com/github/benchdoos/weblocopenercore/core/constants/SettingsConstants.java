@@ -35,7 +35,6 @@ public interface SettingsConstants {
             LinkFactory.LinkType.desktop
             : LinkFactory.LinkType.binary_webloc);
     String BROWSER_DEFAULT_VALUE = "default";
-    String CONVERTER_DEFAULT_EXTENSION = ApplicationConstants.URL_FILE_EXTENSION;
     PreferencesManager.DARK_MODE DARK_MODE_DEFAULT_VALUE = PreferencesManager.DARK_MODE.DISABLED;
 
     SimpleTime DARK_MODE_BEGINNING_DEFAULT_TIME = new SimpleTime(21, 0);

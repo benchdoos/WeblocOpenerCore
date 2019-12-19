@@ -84,7 +84,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ResourceBundle;
 
 import static com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME;
-import static com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants.WEBLOC_FILE_EXTENSION;
 import static com.github.benchdoos.weblocopenercore.core.constants.StringConstants.FAVICON_GETTER_URL;
 
 @Log4j2
@@ -375,7 +374,7 @@ public class EditDialog extends JFrame implements Translatable {
             }
 
             private File getCreatingFileName(String pathToEditingFile) {
-                final String fileName = CoreUtils.fixFileName(urlPageTitle.getToolTipText()) + "." + WEBLOC_FILE_EXTENSION;
+                final String fileName = CoreUtils.fixFileName(urlPageTitle.getToolTipText()) + "." + Link.WEBLOC_LINK.getExtension();
                 File folder = new File(pathToEditingFile).getParentFile();
                 return new File(folder + File.separator + fileName);
             }
