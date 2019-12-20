@@ -1,8 +1,12 @@
 package com.github.benchdoos.weblocopenercore.gui.panels.resentFilesPanels;
 
+import com.github.benchdoos.linksupport.links.LinkProcessor;
+import com.github.benchdoos.weblocopenercore.service.UrlsProceed;
+import com.github.benchdoos.weblocopenercore.service.recentFiles.OpenedFileInfo;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import lombok.extern.log4j.Log4j2;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -12,7 +16,10 @@ import javax.swing.JTextField;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.io.File;
+import java.io.IOException;
 
+@Log4j2
 public class LinkInfoPanel extends JPanel {
     private JPanel contentPane;
     private JPanel linkInfoPanel;
@@ -20,17 +27,36 @@ public class LinkInfoPanel extends JPanel {
     private JLabel dateLabel;
     private JTextField pageTitlePreviewTextField;
     private JTextField fullLinkTextField;
-    private JButton openLink;
-    private JButton buttonOK;
-    private JButton buttonCancel;
+    private JButton openLinkButton;
+    private OpenedFileInfo selectedValue;
 
-    public LinkInfoPanel() {
+    public LinkInfoPanel(OpenedFileInfo selectedValue) {
+        this.selectedValue = selectedValue;
         initGui();
     }
 
     private void initGui() {
         setLayout(new GridLayout());
         add(contentPane);
+
+        fillData();
+        initListeners();
+    }
+
+    private void initListeners() {
+        openLinkButton.addActionListener(e -> {
+            final File file = selectedValue.getFilePath().toFile();
+            try {
+                UrlsProceed.openUrl(selectedValue.getType().getLinkProcessor().getUrl(file));
+            } catch (IOException ex) {
+                log.warn("Can not open file: {}", file, ex);
+            }
+        });
+    }
+
+    private void fillData() {
+        fileNameTextField.setText(selectedValue.getFilename());
+        fullLinkTextField.setText(selectedValue.getFilePath().toString());
     }
 
     {
@@ -82,9 +108,9 @@ public class LinkInfoPanel extends JPanel {
         linkInfoPanel.add(panel1, new GridConstraints(4, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final Spacer spacer2 = new Spacer();
         panel1.add(spacer2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
-        openLink = new JButton();
-        openLink.setText("Open link");
-        panel1.add(openLink, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        openLinkButton = new JButton();
+        openLinkButton.setText("Open link");
+        panel1.add(openLinkButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
@@ -93,4 +119,5 @@ public class LinkInfoPanel extends JPanel {
     public JComponent $$$getRootComponent$$$() {
         return contentPane;
     }
+
 }

@@ -1,6 +1,7 @@
 package com.github.benchdoos.weblocopenercore.gui.panels;
 
 import com.github.benchdoos.weblocopenercore.gui.panels.resentFilesPanels.DisabledResentFilesPanel;
+import com.github.benchdoos.weblocopenercore.gui.panels.resentFilesPanels.LinkInfoPanel;
 import com.github.benchdoos.weblocopenercore.gui.panels.resentFilesPanels.MessagePanel;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import com.github.benchdoos.weblocopenercore.service.recentFiles.OpenedFileInfo;
@@ -8,7 +9,6 @@ import com.github.benchdoos.weblocopenercore.service.recentFiles.RecentFilesMana
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import org.jsoup.internal.StringUtil;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
@@ -20,7 +20,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
-import javax.swing.ListModel;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
@@ -34,7 +33,7 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel {
     private JButton enableButton;
     private JButton removeSelectedItemsButton;
     private JButton removeAllItemsButton;
-    private JPanel linkInfoPanel;
+    private JPanel infoPanel;
     private JList<OpenedFileInfo> fileList;
     private DisabledResentFilesPanel disabledRecentFilesPanel;
 
@@ -84,13 +83,25 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel {
 
             if (firstIndex == -1 && lastIndex == -1) {
                 showNoSelectedItemMessage();
+            } else if (firstIndex == lastIndex) {
+                showLinkInfoPanel(fileList.getSelectedValue());
+            } else {
+                //todo handle lots' of panels
             }
         });
     }
 
+    private void showLinkInfoPanel(OpenedFileInfo selectedValue) {
+        if (infoPanel != null) {
+            infoPanel.removeAll();
+            final LinkInfoPanel comp = new LinkInfoPanel(selectedValue);
+            infoPanel.add(comp);
+        }
+    }
+
     private void showNoSelectedItemMessage() {
-        linkInfoPanel.removeAll();
-        linkInfoPanel.add(new MessagePanel("No selected item", "Select item to see its info"));
+        infoPanel.removeAll();
+        infoPanel.add(new MessagePanel("No selected item", "Select item to see its info"));
     }
 
     @Override
@@ -139,7 +150,7 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel {
         panel2.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
         splitPane1.setLeftComponent(panel2);
         final JScrollPane scrollPane1 = new JScrollPane();
-        panel2.add(scrollPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(200, -1), null, 0, false));
+        panel2.add(scrollPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         fileList = new JList();
         scrollPane1.setViewportView(fileList);
         final JToolBar toolBar1 = new JToolBar();
@@ -157,9 +168,9 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel {
         toolBar1.add(removeAllItemsButton);
         final Spacer spacer1 = new Spacer();
         panel2.add(spacer1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        linkInfoPanel = new JPanel();
-        linkInfoPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        splitPane1.setRightComponent(linkInfoPanel);
+        infoPanel = new JPanel();
+        infoPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        splitPane1.setRightComponent(infoPanel);
         disabledPanel = new JPanel();
         disabledPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         panel1.add(disabledPanel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
