@@ -17,7 +17,7 @@ package com.github.benchdoos.weblocopenercore.gui.panels;
 
 import com.github.benchdoos.weblocopenercore.core.Application;
 import com.github.benchdoos.weblocopenercore.core.Translation;
-import com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants;
+import com.github.benchdoos.weblocopenercore.core.constants.ApplicationArgument;
 import com.github.benchdoos.weblocopenercore.core.constants.SettingsConstants;
 import com.github.benchdoos.weblocopenercore.gui.AboutApplicationDialog;
 import com.github.benchdoos.weblocopenercore.gui.Translatable;
@@ -366,6 +366,6 @@ public class MainSetterPanel extends JPanel implements SettingsPanel, Translatab
 
     private void onUpdateNow() {
         FrameUtils.findWindow(this).dispose();
-        Application.launchApplication(launcherLocationPath, ArgumentConstants.OPENER_UPDATE_ARGUMENT);
+        Application.launchApplication(launcherLocationPath, ApplicationArgument.OPENER_UPDATE_ARGUMENT.getArgument());
     }
 }

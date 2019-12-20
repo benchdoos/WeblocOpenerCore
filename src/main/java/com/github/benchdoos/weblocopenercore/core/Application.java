@@ -16,7 +16,7 @@
 package com.github.benchdoos.weblocopenercore.core;
 
 import com.github.benchdoos.linksupport.links.Link;
-import com.github.benchdoos.weblocopenercore.Main;
+import com.github.benchdoos.weblocopenercore.core.constants.ApplicationArgument;
 import com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants;
 import com.github.benchdoos.weblocopenercore.core.constants.SettingsConstants;
 import com.github.benchdoos.weblocopenercore.gui.AboutApplicationDialog;
@@ -54,19 +54,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.OPENER_ABOUT_ARGUMENT;
-import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.OPENER_CONVERT_ARGUMENT;
-import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.OPENER_COPY_LINK_ARGUMENT;
-import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.OPENER_COPY_QR_ARGUMENT;
-import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.OPENER_CREATE_ARGUMENT;
-import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.OPENER_CREATE_NEW_ARGUMENT;
-import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.OPENER_EDIT_ARGUMENT;
-import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.OPENER_HELP_ARGUMENT_HYPHEN;
-import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.OPENER_OPEN_ARGUMENT;
-import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.OPENER_QR_ARGUMENT;
-import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.OPENER_SETTINGS_ARGUMENT;
-import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.OPENER_UPDATE_ARGUMENT;
-import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.UPDATE_SILENT_ARGUMENT;
 import static java.awt.Frame.MAXIMIZED_HORIZ;
 
 @Log4j2
@@ -75,7 +62,6 @@ public class Application {
     private static SettingsDialog settingsDialog;
 
     public Application(final String[] args) {
-        log.info("{} starts in mode: {}", ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME, Main.getCurrentMode());
         log.info("{} starts with arguments: {}", ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME, Arrays.toString(args));
 
         BrowserManager.loadBrowserList();
@@ -94,11 +80,11 @@ public class Application {
     }
 
     private static String helpText() {
-        return OPENER_CREATE_ARGUMENT + "\t[filepath] [link] \tCreates a new .webloc file on [filepath]. " +
+        return ApplicationArgument.OPENER_CREATE_ARGUMENT.getArgument() + "\t[filepath] [link] \tCreates a new .webloc file on [filepath]. " +
                 "[filepath] should end with [\\filename.webloc]\n" +
-                OPENER_EDIT_ARGUMENT + "\t[filepath] \t\t\tCalls Edit window to edit given .webloc file.\n" +
-                OPENER_SETTINGS_ARGUMENT + "\t\t\t\t\tCalls Settings window of WeblocOpener.\n" +
-                OPENER_UPDATE_ARGUMENT + "\t\t\t\t\t\tCalls update-tool for WeblocOpener.";
+                ApplicationArgument.OPENER_EDIT_ARGUMENT.getArgument() + "\t[filepath] \t\t\tCalls Edit window to edit given .webloc file.\n" +
+                ApplicationArgument.OPENER_SETTINGS_ARGUMENT.getArgument() + "\t\t\t\t\tCalls Settings window of WeblocOpener.\n" +
+                ApplicationArgument.OPENER_UPDATE_ARGUMENT.getArgument() + "\t\t\t\t\t\tCalls update-tool for WeblocOpener.";
     }
 
     /**
@@ -111,8 +97,11 @@ public class Application {
         if (args.length > 0) {
             log.info("Got args: " + Arrays.toString(args));
             final String arg = args[0];
-            if (!arg.isEmpty()) {
-                switch (arg) {
+
+            final ApplicationArgument argument = ApplicationArgument.getByArgument(arg);
+
+            if (argument != null) {
+                switch (argument) {
                     case OPENER_OPEN_ARGUMENT:
                         runAnalyzer(args[1]);
                         break;
@@ -292,7 +281,7 @@ public class Application {
                 log.warn("Could not edit file: {}", path, e);
             }
         } else {
-            showIncorrectArgumentMessage(OPENER_EDIT_ARGUMENT);
+            showIncorrectArgumentMessage(ApplicationArgument.OPENER_EDIT_ARGUMENT.getArgument());
         }
     }
 
@@ -423,12 +412,12 @@ public class Application {
     }
 
     private void manageArgumentsOnUnix(String[] args) {
-        final String unixOpeningMode = PreferencesManager.getUnixOpeningMode();
+        final ApplicationArgument unixOpeningMode = PreferencesManager.getUnixOpeningMode();
         log.info("Unix: opening mode is: {}", unixOpeningMode);
-        if (unixOpeningMode.equalsIgnoreCase(SettingsConstants.OPENER_UNIX_DEFAULT_SELECTOR_MODE)) {
+        if (unixOpeningMode.equals(SettingsConstants.OPENER_UNIX_DEFAULT_SELECTOR_MODE)) {
             runModeSelectorWindow(args);
         } else {
-            String[] unixArgs = new String[]{unixOpeningMode, args[0]};
+            String[] unixArgs = new String[]{unixOpeningMode.getArgument(), args[0]};
             manageArguments(unixArgs);
         }
     }
@@ -444,36 +433,44 @@ public class Application {
             manageArguments(args);
         } else if (OperatingSystem.isUnix()) {
             final String arg = args[0];
-            switch (arg) {
-                case OPENER_CREATE_NEW_ARGUMENT:
-                    runCreateNewFileWindow();
-                    break;
-                case OPENER_SETTINGS_ARGUMENT:
-                    runSettingsDialog(null);
-                    break;
-                case OPENER_ABOUT_ARGUMENT:
-                    new AboutApplicationDialog().setVisible(true);
-                    break;
-                case OPENER_UPDATE_ARGUMENT:
-                case UPDATE_SILENT_ARGUMENT:
-                    log.warn("UPDATE IS NOT SUPPORTED BY CORE! Argument: {}", arg);
-                    break;
-                case OPENER_HELP_ARGUMENT_HYPHEN: {
-                    System.out.println(helpText());
-                    break;
+
+            final ApplicationArgument argument = ApplicationArgument.getByArgument(arg);
+
+            if (argument != null) {
+
+                switch (argument) {
+                    case OPENER_CREATE_NEW_ARGUMENT:
+                        runCreateNewFileWindow();
+                        break;
+                    case OPENER_SETTINGS_ARGUMENT:
+                        runSettingsDialog(null);
+                        break;
+                    case OPENER_ABOUT_ARGUMENT:
+                        new AboutApplicationDialog().setVisible(true);
+                        break;
+                    case OPENER_UPDATE_ARGUMENT:
+                    case UPDATE_SILENT_ARGUMENT:
+                        log.warn("UPDATE IS NOT SUPPORTED BY CORE! Argument: {}", arg);
+                        break;
+                    case OPENER_HELP_ARGUMENT_HYPHEN: {
+                        System.out.println(helpText());
+                        break;
+                    }
+                    case OPENER_EDIT_ARGUMENT:
+                        manageEditArgument(args);
+                        break;
+                    case OPENER_OPEN_ARGUMENT:
+                        showIncorrectArgumentMessage(ApplicationArgument.OPENER_OPEN_ARGUMENT.getArgument());
+                        break;
+                    case OPENER_CONVERT_ARGUMENT:
+                        runConverterDialog(args);
+                        break;
+                    default:
+                        manageArgumentsOnUnix(args);
+                        break;
                 }
-                case OPENER_EDIT_ARGUMENT:
-                    manageEditArgument(args);
-                    break;
-                case OPENER_OPEN_ARGUMENT:
-                    showIncorrectArgumentMessage(OPENER_OPEN_ARGUMENT);
-                    break;
-                case OPENER_CONVERT_ARGUMENT:
-                    runConverterDialog(args);
-                    break;
-                default:
-                    manageArgumentsOnUnix(args);
-                    break;
+            } else {
+                manageArgumentsOnUnix(args);
             }
         } else {
             log.warn("System is not supported yet: {}", SystemUtils.getCurrentOS());

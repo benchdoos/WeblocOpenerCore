@@ -18,8 +18,8 @@ package com.github.benchdoos.weblocopenercore.gui.unix;
 import com.github.benchdoos.jcolorful.core.JColorful;
 import com.github.benchdoos.weblocopenercore.core.Application;
 import com.github.benchdoos.weblocopenercore.core.Translation;
+import com.github.benchdoos.weblocopenercore.core.constants.ApplicationArgument;
 import com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants;
-import com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants;
 import com.github.benchdoos.weblocopenercore.core.constants.SettingsConstants;
 import com.github.benchdoos.weblocopenercore.gui.Translatable;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
@@ -49,17 +49,10 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.ResourceBundle;
 
-import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.*;
-import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.OPENER_COPY_LINK_ARGUMENT;
-import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.OPENER_COPY_QR_ARGUMENT;
-import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.OPENER_EDIT_ARGUMENT;
-import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.OPENER_OPEN_ARGUMENT;
-import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.OPENER_QR_ARGUMENT;
-
 @Log4j2
 public class ModeSelectorDialog extends JFrame implements Translatable {
     private final File file;
-    private String mode = PreferencesManager.getUnixOpeningMode();
+    private ApplicationArgument mode = PreferencesManager.getUnixOpeningMode();
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
@@ -103,8 +96,8 @@ public class ModeSelectorDialog extends JFrame implements Translatable {
     }
 
     private void initSelectionMode() {
-        if (mode.equalsIgnoreCase(SettingsConstants.OPENER_UNIX_DEFAULT_SELECTOR_MODE)) {
-            mode = ArgumentConstants.OPENER_OPEN_ARGUMENT;
+        if (mode.equals(SettingsConstants.OPENER_UNIX_DEFAULT_SELECTOR_MODE)) {
+            mode = ApplicationArgument.OPENER_OPEN_ARGUMENT;
         }
 
         switch (mode) {
@@ -158,14 +151,14 @@ public class ModeSelectorDialog extends JFrame implements Translatable {
         );
 
 
-        openRadioButton.addItemListener(getRadioButtonListener(OPENER_OPEN_ARGUMENT));
-        editRadioButton.addItemListener(getRadioButtonListener(OPENER_EDIT_ARGUMENT));
-        copyRadioButton.addItemListener(getRadioButtonListener(OPENER_COPY_LINK_ARGUMENT));
-        generateQrRadioButton.addItemListener(getRadioButtonListener(OPENER_QR_ARGUMENT));
-        copyQrRadioButton.addItemListener(getRadioButtonListener(OPENER_COPY_QR_ARGUMENT));
+        openRadioButton.addItemListener(getRadioButtonListener(ApplicationArgument.OPENER_OPEN_ARGUMENT));
+        editRadioButton.addItemListener(getRadioButtonListener(ApplicationArgument.OPENER_EDIT_ARGUMENT));
+        copyRadioButton.addItemListener(getRadioButtonListener(ApplicationArgument.OPENER_COPY_LINK_ARGUMENT));
+        generateQrRadioButton.addItemListener(getRadioButtonListener(ApplicationArgument.OPENER_QR_ARGUMENT));
+        copyQrRadioButton.addItemListener(getRadioButtonListener(ApplicationArgument.OPENER_COPY_QR_ARGUMENT));
     }
 
-    private ItemListener getRadioButtonListener(String mode) {
+    private ItemListener getRadioButtonListener(ApplicationArgument mode) {
         return e -> {
             if (((JRadioButton) e.getItem()).isSelected()) {
                 this.mode = mode;
@@ -208,9 +201,9 @@ public class ModeSelectorDialog extends JFrame implements Translatable {
             PreferencesManager.setUnixOpeningMode(mode);
             PreferencesManager.flushPreferences();
         }
-        if (!mode.equalsIgnoreCase(SettingsConstants.OPENER_UNIX_DEFAULT_SELECTOR_MODE)) {
+        if (!mode.equals(SettingsConstants.OPENER_UNIX_DEFAULT_SELECTOR_MODE)) {
             log.info("Starting processing of file: {} in mode: {}", file, mode);
-            String[] args = new String[]{mode, file.getAbsolutePath()};
+            String[] args = new String[]{mode.getArgument(), file.getAbsolutePath()};
             Application.manageArguments(args);
             dispose();
         } else {

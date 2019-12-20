@@ -17,7 +17,7 @@ package com.github.benchdoos.weblocopenercore.gui.panels;
 
 import com.github.benchdoos.linksupport.links.Link;
 import com.github.benchdoos.weblocopenercore.core.Translation;
-import com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants;
+import com.github.benchdoos.weblocopenercore.core.constants.ApplicationArgument;
 import com.github.benchdoos.weblocopenercore.core.constants.SettingsConstants;
 import com.github.benchdoos.weblocopenercore.gui.Translatable;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
@@ -26,6 +26,7 @@ import com.github.benchdoos.weblocopenercore.utils.system.OperatingSystem;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 
 import javax.swing.AbstractButton;
@@ -43,7 +44,6 @@ import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.util.List;
-import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.StringJoiner;
 
@@ -51,7 +51,7 @@ import java.util.StringJoiner;
 public class FileProcessingPanel extends JPanel implements SettingsPanel, Translatable {
     private Translation translation = new Translation("MainSetterPanelBundle");
     private JPanel contentPane;
-    private String mode;
+    private ApplicationArgument mode;
 
     private JPanel unixOpenModePanel;
     private JLabel unixOpenModeLabel;
@@ -186,7 +186,7 @@ public class FileProcessingPanel extends JPanel implements SettingsPanel, Transl
         final ComboBoxModel<UnixOpenMode> model = unixOpenModeComboBox.getModel();
         for (int i = 0; i < model.getSize(); i++) {
             final UnixOpenMode mode = model.getElementAt(i);
-            if (mode.getMode().equalsIgnoreCase(this.mode)) {
+            if (mode.getMode().equals(this.mode)) {
                 unixOpenModeComboBox.setSelectedItem(mode);
             }
         }
@@ -195,19 +195,19 @@ public class FileProcessingPanel extends JPanel implements SettingsPanel, Transl
     private void fillUnixOpenModeComboBox() {
         final UnixOpenMode defaultMode = new UnixOpenMode(SettingsConstants.OPENER_UNIX_DEFAULT_SELECTOR_MODE,
                 Translation.getTranslatedString("MainSetterPanelBundle", "unixModeAsk"));
-        final UnixOpenMode openMode = new UnixOpenMode(ArgumentConstants.OPENER_OPEN_ARGUMENT,
+        final UnixOpenMode openMode = new UnixOpenMode(ApplicationArgument.OPENER_OPEN_ARGUMENT,
                 Translation.getTranslatedString("MainSetterPanelBundle", "unixModeOpen"));
-        final UnixOpenMode editMode = new UnixOpenMode(ArgumentConstants.OPENER_EDIT_ARGUMENT,
+        final UnixOpenMode editMode = new UnixOpenMode(ApplicationArgument.OPENER_EDIT_ARGUMENT,
                 Translation.getTranslatedString("MainSetterPanelBundle", "unixModeEdit"));
-        final UnixOpenMode copyMode = new UnixOpenMode(ArgumentConstants.OPENER_COPY_LINK_ARGUMENT,
+        final UnixOpenMode copyMode = new UnixOpenMode(ApplicationArgument.OPENER_COPY_LINK_ARGUMENT,
                 Translation.getTranslatedString("MainSetterPanelBundle", "unixModeCopy"));
-        final UnixOpenMode generateQrMode = new UnixOpenMode(ArgumentConstants.OPENER_QR_ARGUMENT,
+        final UnixOpenMode generateQrMode = new UnixOpenMode(ApplicationArgument.OPENER_QR_ARGUMENT,
                 Translation.getTranslatedString("MainSetterPanelBundle", "unixModeGenerateQR"));
-        final UnixOpenMode copyQr = new UnixOpenMode(ArgumentConstants.OPENER_COPY_QR_ARGUMENT,
+        final UnixOpenMode copyQr = new UnixOpenMode(ApplicationArgument.OPENER_COPY_QR_ARGUMENT,
                 Translation.getTranslatedString("MainSetterPanelBundle", "unixModeCopyQR"));
 
 
-        DefaultComboBoxModel<UnixOpenMode> model = new DefaultComboBoxModel<>();
+        final DefaultComboBoxModel<UnixOpenMode> model = new DefaultComboBoxModel<>();
         model.addElement(defaultMode);
         model.addElement(openMode);
         model.addElement(editMode);
@@ -342,13 +342,13 @@ public class FileProcessingPanel extends JPanel implements SettingsPanel, Transl
         return contentPane;
     }
 
+    @Data
     class UnixOpenMode {
-        private final String mode;
+        private final ApplicationArgument mode;
         private final String modeName;
 
-        UnixOpenMode(String mode, String modeName) {
+        UnixOpenMode(ApplicationArgument mode, String modeName) {
             this.mode = mode;
-
             this.modeName = modeName;
         }
 
@@ -358,14 +358,6 @@ public class FileProcessingPanel extends JPanel implements SettingsPanel, Transl
                     .add("mode='" + mode + "'")
                     .add("modeName='" + modeName + "'")
                     .toString();
-        }
-
-        public String getMode() {
-            return mode;
-        }
-
-        public String getModeName() {
-            return modeName;
         }
     }
 }

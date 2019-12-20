@@ -20,7 +20,8 @@ public enum ApplicationArgument {
     OPENER_COPY_LINK_ARGUMENT("-copy"),
     OPENER_COPY_QR_ARGUMENT("-copy-qr"),
     OPENER_CONVERT_ARGUMENT("-convert"),
-    UPDATE_SILENT_ARGUMENT("-update-silent");
+    UPDATE_SILENT_ARGUMENT("-update-silent"),
+    UNIX_DEFAULT_OPEN_MODE_ARGUMENT("default");
 
     private final String argument;
 

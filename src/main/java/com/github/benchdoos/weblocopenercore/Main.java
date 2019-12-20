@@ -2,7 +2,6 @@ package com.github.benchdoos.weblocopenercore;
 
 import com.github.benchdoos.weblocopenercore.core.Application;
 import com.github.benchdoos.weblocopenercore.core.Logging;
-import com.github.benchdoos.weblocopenercore.core.Mode;
 import com.github.benchdoos.weblocopenercore.core.Translation;
 import com.github.benchdoos.weblocopenercore.gui.InfoDialog;
 import com.github.benchdoos.weblocopenercore.service.notification.NotificationManager;
@@ -18,7 +17,6 @@ import java.util.Arrays;
 import static com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME;
 
 public class Main {
-    private static Mode currentMode = Mode.WEBLOCOPENER;
     private static Logger log;
 
     public static void main(String[] args) {
@@ -79,8 +77,4 @@ public class Main {
         new Logging(WEBLOCOPENER_APPLICATION_NAME);
         log = LogManager.getLogger(Logging.getCurrentClassName());
     }
-    public static Mode getCurrentMode() {
-        return currentMode;
-    }
-
 }

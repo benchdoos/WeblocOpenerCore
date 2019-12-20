@@ -16,6 +16,7 @@
 package com.github.benchdoos.weblocopenercore.preferences;
 
 import com.github.benchdoos.linksupport.links.Link;
+import com.github.benchdoos.weblocopenercore.core.constants.ApplicationArgument;
 import com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants;
 import com.github.benchdoos.weblocopenercore.core.constants.SettingsConstants;
 import com.github.benchdoos.weblocopenercore.service.gui.darkMode.DarkModeAnalyzer;
@@ -30,11 +31,12 @@ import java.util.Locale;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
-import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.OPENER_COPY_LINK_ARGUMENT;
-import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.OPENER_COPY_QR_ARGUMENT;
-import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.OPENER_EDIT_ARGUMENT;
-import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.OPENER_OPEN_ARGUMENT;
-import static com.github.benchdoos.weblocopenercore.core.constants.ArgumentConstants.OPENER_QR_ARGUMENT;
+import static com.github.benchdoos.weblocopenercore.core.constants.ApplicationArgument.OPENER_COPY_LINK_ARGUMENT;
+import static com.github.benchdoos.weblocopenercore.core.constants.ApplicationArgument.OPENER_COPY_QR_ARGUMENT;
+import static com.github.benchdoos.weblocopenercore.core.constants.ApplicationArgument.OPENER_EDIT_ARGUMENT;
+import static com.github.benchdoos.weblocopenercore.core.constants.ApplicationArgument.OPENER_OPEN_ARGUMENT;
+import static com.github.benchdoos.weblocopenercore.core.constants.ApplicationArgument.OPENER_QR_ARGUMENT;
+import static com.github.benchdoos.weblocopenercore.core.constants.ApplicationArgument.UNIX_DEFAULT_OPEN_MODE_ARGUMENT;
 
 /**
  * Created by Eugene Zrazhevsky on 19.11.2016.
@@ -219,19 +221,24 @@ public class PreferencesManager {
         return PREFERENCES.getBoolean(KEY_OPEN_FOR_NEW_FILE, SettingsConstants.OPEN_FOLDER_FOR_NEW_FILE);
     }
 
-    public static String getUnixOpeningMode() {
-        return PREFERENCES.get(KEY_UNIX_OPENING_MODE, SettingsConstants.OPENER_UNIX_DEFAULT_SELECTOR_MODE);
+    public static ApplicationArgument getUnixOpeningMode() {
+        final String modeArgument = PREFERENCES.get(
+                KEY_UNIX_OPENING_MODE,
+                SettingsConstants.OPENER_UNIX_DEFAULT_SELECTOR_MODE.getArgument());
+
+        final ApplicationArgument argument = ApplicationArgument.getByArgument(modeArgument);
+        return argument != null ? argument : SettingsConstants.OPENER_UNIX_DEFAULT_SELECTOR_MODE;
     }
 
-    public static void setUnixOpeningMode(String mode) {
+    public static void setUnixOpeningMode(ApplicationArgument mode) {
         switch (mode) {
             case OPENER_OPEN_ARGUMENT:
             case OPENER_EDIT_ARGUMENT:
             case OPENER_QR_ARGUMENT:
             case OPENER_COPY_LINK_ARGUMENT:
             case OPENER_COPY_QR_ARGUMENT:
-            case SettingsConstants.OPENER_UNIX_DEFAULT_SELECTOR_MODE:
-                PREFERENCES.put(KEY_UNIX_OPENING_MODE, mode);
+            case UNIX_DEFAULT_OPEN_MODE_ARGUMENT:
+                PREFERENCES.put(KEY_UNIX_OPENING_MODE, mode.getArgument());
                 break;
             default:
                 log.warn("Can not save mode: {}, supported modes are: {},{},{},{},{},{}", mode,
@@ -239,7 +246,8 @@ public class PreferencesManager {
                         OPENER_EDIT_ARGUMENT,
                         OPENER_QR_ARGUMENT,
                         OPENER_COPY_LINK_ARGUMENT,
-                        OPENER_COPY_QR_ARGUMENT, SettingsConstants.OPENER_UNIX_DEFAULT_SELECTOR_MODE);
+                        OPENER_COPY_QR_ARGUMENT,
+                        UNIX_DEFAULT_OPEN_MODE_ARGUMENT);
                 break;
 
         }
