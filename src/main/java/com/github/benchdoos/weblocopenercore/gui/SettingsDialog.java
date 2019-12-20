@@ -468,7 +468,7 @@ public class SettingsDialog extends JFrame implements Translatable {
     }
 
     private void updateLocale() {
-        ListModel model = settingsList.getModel();
+        final ListModel model = settingsList.getModel();
 
         for (int i = 0; i < model.getSize(); i++) {
             Object o = model.getElementAt(i);
