@@ -1,11 +1,9 @@
 package com.github.benchdoos.weblocopenercore.service;
 
-import com.github.benchdoos.jcolorful.core.JColorful;
 import com.github.benchdoos.linksupport.links.Link;
-import com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants;
+import com.github.benchdoos.weblocopenercore.exceptions.LinkCanNotBeProcessedException;
 import com.github.benchdoos.weblocopenercore.exceptions.UnsupportedFileFormatException;
 import com.github.benchdoos.weblocopenercore.gui.FileChooser;
-import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import com.github.benchdoos.weblocopenercore.service.links.LinkUtilities;
 import com.github.benchdoos.weblocopenercore.utils.FileUtils;
 import com.github.benchdoos.weblocopenercore.utils.FrameUtils;
@@ -14,14 +12,14 @@ import me.xdrop.fuzzywuzzy.FuzzySearch;
 import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.SwingUtilities;
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Log4j2
-//todo implement all this
 public class ExtendedFileAnalyzer implements FileAnalyzer {
     private final String filePath;
 
@@ -30,13 +28,19 @@ public class ExtendedFileAnalyzer implements FileAnalyzer {
     }
 
     @Override
-    public LinkFile getUrl() {
-        final File file = getFileIfExists(filePath);
+    public LinkFile getLinkFile() {
+        try {
+            final File file = getFileIfExists(filePath);
 
-        validateExistedFile(file);
+            validateExistedFile(file);
 
+            final Link type = Link.getLinkForFile(file);
+            final URL url = type.getLinkProcessor().getUrl(file);
 
-        return null;
+            return new LinkFile(file, type, url);
+        } catch (IOException e) {
+            throw new LinkCanNotBeProcessedException("Can not process link for file: " + filePath, e);
+        }
     }
 
     private File getFileIfExists(String filePath) {
@@ -49,16 +53,14 @@ public class ExtendedFileAnalyzer implements FileAnalyzer {
             File chosen = null;
             if (files != null) {
                 if (files.size() > 1) {
-                    final FileChooser fileChooser;
-                    //todo check if can be moved to WindowLauncher
-                    if (PreferencesManager.isDarkModeEnabledNow()) {
-                        final JColorful colorful = new JColorful(ApplicationConstants.DARK_MODE_THEME);
-                        colorful.colorizeGlobal();
-                        fileChooser = new FileChooser(files);
-                        SwingUtilities.invokeLater(() -> colorful.colorize(fileChooser));
-                    } else {
-                        fileChooser = new FileChooser(files);
-                    }
+
+                    final FileChooser fileChooser = new WindowLauncher<FileChooser>() {
+                        @Override
+                        public FileChooser initWindow() {
+                            return new FileChooser(files);
+                        }
+                    }.getWindow();
+
                     FrameUtils.setWindowOnScreenCenter(fileChooser);
                     fileChooser.setVisible(true);
                     chosen = fileChooser.getChosenFile();
@@ -95,7 +97,8 @@ public class ExtendedFileAnalyzer implements FileAnalyzer {
         if (linkByExtension != null) {
 
             final File currentFile = new File(arg);
-            log.info("File [" + arg + "] exists: " + currentFile.exists() + " file?: " + currentFile.isFile());
+
+            log.info("File [{}] exists: {}, and it is file: {}", arg, currentFile.exists(), currentFile.isFile());
 
             if (currentFile.isFile() && currentFile.exists()) {
 
