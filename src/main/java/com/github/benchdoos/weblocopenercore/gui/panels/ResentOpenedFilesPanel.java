@@ -3,11 +3,15 @@ package com.github.benchdoos.weblocopenercore.gui.panels;
 import com.github.benchdoos.weblocopenercore.gui.panels.resentFilesPanels.DisabledResentFilesPanel;
 import com.github.benchdoos.weblocopenercore.gui.panels.resentFilesPanels.MessagePanel;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
+import com.github.benchdoos.weblocopenercore.service.recentFiles.OpenedFileInfo;
+import com.github.benchdoos.weblocopenercore.service.recentFiles.RecentFilesManager;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import org.jsoup.internal.StringUtil;
 
 import javax.swing.DefaultListCellRenderer;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -16,10 +20,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
+import javax.swing.ListModel;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.util.Set;
 
 public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel {
     private JPanel contentPane;
@@ -29,7 +35,7 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel {
     private JButton removeSelectedItemsButton;
     private JButton removeAllItemsButton;
     private JPanel linkInfoPanel;
-    private JList fileList;
+    private JList<OpenedFileInfo> fileList;
     private DisabledResentFilesPanel disabledRecentFilesPanel;
 
     public ResentOpenedFilesPanel() {
@@ -42,19 +48,30 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel {
         add(contentPane);
 
         initVisiblePanels();
-        initFileListList();
+        initFileList();
+        loadFileList();
     }
 
-    private void initFileListList() {
-        initFileList();
-        initFileListListeners();
+    private void loadFileList() {
+        final Set<OpenedFileInfo> openedFileInfos = new RecentFilesManager().loadRecentOpenedFilesList();
+        final DefaultListModel<OpenedFileInfo> model = new DefaultListModel<>();
+        openedFileInfos.forEach(model::addElement);
+        fileList.setModel(model);
     }
 
     private void initFileList() {
+        initFileListRenderer();
+        initFileListListeners();
+    }
+
+    private void initFileListRenderer() {
         fileList.setCellRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                //todo add renderer
+                if (value instanceof OpenedFileInfo) {
+                    final OpenedFileInfo fileInfo = (OpenedFileInfo) value;
+                    return super.getListCellRendererComponent(list, fileInfo.getFilename(), index, isSelected, cellHasFocus);
+                }
                 return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
             }
         });
@@ -122,7 +139,7 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel {
         panel2.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
         splitPane1.setLeftComponent(panel2);
         final JScrollPane scrollPane1 = new JScrollPane();
-        panel2.add(scrollPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        panel2.add(scrollPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(200, -1), null, 0, false));
         fileList = new JList();
         scrollPane1.setViewportView(fileList);
         final JToolBar toolBar1 = new JToolBar();
