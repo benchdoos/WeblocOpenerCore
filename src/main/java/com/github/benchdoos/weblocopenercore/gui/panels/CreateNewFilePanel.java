@@ -16,6 +16,7 @@
 package com.github.benchdoos.weblocopenercore.gui.panels;
 
 import com.github.benchdoos.linksupport.links.Link;
+import com.github.benchdoos.weblocopenercore.core.Application;
 import com.github.benchdoos.weblocopenercore.core.Translation;
 import com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants;
 import com.github.benchdoos.weblocopenercore.gui.PlaceholderTextField;
@@ -158,13 +159,16 @@ public class CreateNewFilePanel extends JPanel implements Translatable {
                 if (!path.endsWith(suffix)) {
                     path += suffix;
                 }
+                final File file = new File(path);
                 try {
                     log.debug("Link with url: {} at location: {} will be created as: {}", url, path, link.getName());
 
-                    link.getLinkProcessor().createLink(url, new FileOutputStream(new File(path)));
+                    link.getLinkProcessor().createLink(url, new FileOutputStream(file));
+
+                    Application.saveRecentFileRecord(file);
 
                     if (PreferencesManager.openFolderForNewFile()) {
-                        FileUtils.openFileInFileBrowser(new File(path));
+                        FileUtils.openFileInFileBrowser(file);
                     } else {
                         log.info("Opening in file browser disabled by settings");
                     }
@@ -175,7 +179,7 @@ public class CreateNewFilePanel extends JPanel implements Translatable {
                     NotificationManager.getNotificationForCurrentOS().showErrorNotification(
                             ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME,
                             Translation.getTranslatedString("CreateNewFileBundle", "errorSave")
-                                    + " " + new File(path).getName() + " \n" + e.getLocalizedMessage()
+                                    + " " + file.getName() + " \n" + e.getLocalizedMessage()
                     );
                 }
             } else {

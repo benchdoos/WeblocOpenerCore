@@ -208,9 +208,7 @@ public class Application {
 
             if (!url.isEmpty()) {
 
-                if (PreferencesManager.isRecentOpenedFilesHistoryEnabled()) {
-                    new RecentFilesManager().appendRecentOpenedFile(OpenedFileInfo.fromFile(new File(arg)));
-                }
+                saveRecentFileRecord(new File(arg));
 
                 UrlsProceed.openUrl(url);
             } else {
@@ -275,6 +273,9 @@ public class Application {
             try {
                 file = new ExtendedFileAnalyzer(path).getLinkFile().getFile();
                 if (file != null) {
+
+                    saveRecentFileRecord(file);
+
                     runEditDialog(file.getAbsolutePath());
                 }
             } catch (Exception e) {
@@ -282,6 +283,12 @@ public class Application {
             }
         } else {
             showIncorrectArgumentMessage(ApplicationArgument.OPENER_EDIT_ARGUMENT.getArgument());
+        }
+    }
+
+    public static void saveRecentFileRecord(File file) throws IOException {
+        if (PreferencesManager.isRecentOpenedFilesHistoryEnabled()) {
+            new RecentFilesManager().appendRecentOpenedFile(OpenedFileInfo.fromFile(file));
         }
     }
 
@@ -296,7 +303,11 @@ public class Application {
     private static void runCopyLink(String path) {
         String url;
         try {
-            url = new ExtendedFileAnalyzer(path).getLinkFile().getUrl().toString();
+            final LinkFile linkFile = new ExtendedFileAnalyzer(path).getLinkFile();
+
+            saveRecentFileRecord(linkFile.getFile());
+
+            url = linkFile.getUrl().toString();
             ClipboardManager.getClipboardForSystem().copy(url);
             log.info("Successfully copied url to clipboard from: " + path);
 
@@ -317,7 +328,11 @@ public class Application {
             if (args.length > 1) {
                 final String path = args[1];
                 String url;
-                url = new ExtendedFileAnalyzer(path).getLinkFile().getUrl().toString();
+                final LinkFile linkFile = new ExtendedFileAnalyzer(path).getLinkFile();
+
+                saveRecentFileRecord(linkFile.getFile());
+
+                url = linkFile.getUrl().toString();
                 final BufferedImage image = UrlsProceed.generateQrCode(url);
 
                 ClipboardManager.getClipboardForSystem().copy(image);
@@ -355,6 +370,9 @@ public class Application {
     private static void runQrDialog(String arg) {
         try {
             final File file = new ExtendedFileAnalyzer(arg).getLinkFile().getFile();
+
+            saveRecentFileRecord(file);
+
             final ShowQrDialog qrDialog = new WindowLauncher<ShowQrDialog>() {
                 @Override
                 public ShowQrDialog initWindow() {
