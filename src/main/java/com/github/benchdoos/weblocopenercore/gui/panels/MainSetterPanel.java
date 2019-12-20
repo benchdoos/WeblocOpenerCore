@@ -362,6 +362,7 @@ public class MainSetterPanel extends JPanel implements SettingsPanel, Translatab
         Translation translation = new Translation("LocaleSetterPanelBundle");
         languageLabel.setText(translation.getTranslatedString("language"));
         fillLocaleComboBox();
+        localeComboBox.setSelectedItem(PreferencesManager.getLocale());
     }
 
     private void onUpdateNow() {
