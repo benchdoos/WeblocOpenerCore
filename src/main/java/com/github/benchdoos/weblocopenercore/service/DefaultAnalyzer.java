@@ -28,6 +28,7 @@ import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import org.apache.commons.io.FilenameUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.SwingUtilities;
 import java.io.File;
@@ -35,6 +36,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Log4j2
 public class DefaultAnalyzer {
@@ -138,17 +141,14 @@ public class DefaultAnalyzer {
         return null;
     }
 
-    private ArrayList<File> getAllFilesWithMaximumValue(final int maximumValue, final ArrayList<ComparedFile> values) {
-        ArrayList<File> result = null;
-        for (ComparedFile c : values) {
-            if (c.getEqualSymbols() == maximumValue) {
-                if (result == null) {
-                    result = new ArrayList<>();
-                }
-                result.add(c.getFile());
-            }
-        }
-        return result;
+    private ArrayList<File> getAllFilesWithMaximumValue(final int maximumValue,
+                                                        @NotNull final ArrayList<ComparedFile> values) {
+        final List<File> collect = values.stream()
+                .filter(c -> c.getEqualSymbols() == maximumValue)
+                .map(ComparedFile::getFile)
+                .collect(Collectors.toList());
+
+        return collect.size() > 0 ? new ArrayList<>(collect) : null;
     }
 
     public File getFile() {

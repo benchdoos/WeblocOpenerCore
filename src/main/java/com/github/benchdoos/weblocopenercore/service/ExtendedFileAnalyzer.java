@@ -17,6 +17,8 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.SwingUtilities;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Log4j2
 //todo implement all this
@@ -140,17 +142,13 @@ public class ExtendedFileAnalyzer implements FileAnalyzer {
     }
 
     private ArrayList<File> getAllFilesWithMaximumValue(final int maximumValue,
-                                                        final ArrayList<ComparedFile> values) {
-        ArrayList<File> result = null;
-        for (ComparedFile c : values) {
-            if (c.getEqualSymbols() == maximumValue) {
-                if (result == null) {
-                    result = new ArrayList<>();
-                }
-                result.add(c.getFile());
-            }
-        }
-        return result;
+                                                        @NotNull final ArrayList<ComparedFile> values) {
+        final List<File> collect = values.stream()
+                .filter(c -> c.getEqualSymbols() == maximumValue)
+                .map(ComparedFile::getFile)
+                .collect(Collectors.toList());
+
+        return collect.size() > 0 ? new ArrayList<>(collect) : null;
     }
 
     private int compareFileNames(final File fileOriginal, final File fileComparing) {
