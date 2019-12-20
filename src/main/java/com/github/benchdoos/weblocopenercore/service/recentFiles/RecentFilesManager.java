@@ -1,5 +1,6 @@
 package com.github.benchdoos.weblocopenercore.service.recentFiles;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.benchdoos.weblocopenercore.core.constants.PathConstants;
 import lombok.extern.log4j.Log4j2;
@@ -12,7 +13,6 @@ import java.util.List;
 import java.util.Set;
 
 @Log4j2
-//todo move to jackson
 public class RecentFilesManager {
     private static final File historyFile = new File(PathConstants.RECENT_OPENED_FILES_FILE_PATH);
 
@@ -25,7 +25,7 @@ public class RecentFilesManager {
             try {
                 final ObjectMapper mapper = new ObjectMapper();
 
-                return (Set<OpenedFileInfo>) mapper.readValue(historyFile, Set.class);
+                return  mapper.readValue(historyFile, new TypeReference<Set<OpenedFileInfo>>(){});
             } catch (IOException e) {
                 log.warn("Could not load file list", e);
             }
@@ -38,7 +38,6 @@ public class RecentFilesManager {
     }
 
     public void appendRecentOpenedFile(List<OpenedFileInfo> files) throws IOException {
-        //todo fix linkedHashMap issue
         final Set<OpenedFileInfo> openedFileInfos = loadRecentOpenedFilesList();
         final Set<OpenedFileInfo> result = new HashSet<>(openedFileInfos);
         result.addAll(files);
