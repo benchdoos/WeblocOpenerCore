@@ -46,4 +46,15 @@ public class RecentFilesManager {
         mapper.writeValue(historyFile, result);
     }
 
+    public boolean cleanup() {
+        log.info("Removing recent opened files list");
+        final boolean delete = historyFile.delete();
+        log.info("File was deleted: {}", delete);
+        return delete;
+    }
+
+    public boolean historyExistsForCurrentUser() {
+        return historyFile.exists();
+    }
+
 }
