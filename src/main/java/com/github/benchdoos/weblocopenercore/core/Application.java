@@ -28,7 +28,8 @@ import com.github.benchdoos.weblocopenercore.gui.unix.ModeSelectorDialog;
 import com.github.benchdoos.weblocopenercore.gui.wrappers.CreateNewFileDialogWrapper;
 import com.github.benchdoos.weblocopenercore.gui.wrappers.CreateNewFileFrameWrapper;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
-import com.github.benchdoos.weblocopenercore.service.DefaultAnalyzer;
+import com.github.benchdoos.weblocopenercore.service.ExtendedFileAnalyzer;
+import com.github.benchdoos.weblocopenercore.service.LinkFile;
 import com.github.benchdoos.weblocopenercore.service.UrlsProceed;
 import com.github.benchdoos.weblocopenercore.service.WindowLauncher;
 import com.github.benchdoos.weblocopenercore.service.clipboard.ClipboardManager;
@@ -213,7 +214,9 @@ public class Application {
 
     private static void runAnalyzer(String arg) {
         try {
-            String url = new DefaultAnalyzer(arg).getUrl();
+            final LinkFile linkFile = new ExtendedFileAnalyzer(arg).getLinkFile();
+            final String url = linkFile.getUrl().toString();
+
             if (!url.isEmpty()) {
 
                 if (PreferencesManager.isRecentOpenedFilesHistoryEnabled()) {
@@ -227,7 +230,6 @@ public class Application {
         } catch (Exception e) {
             log.warn("Could not open file: {}", arg, e);
             final File file = new File(arg);
-            final Link linkByName = Link.getLinkForFile(file);
 
             if (SystemUtils.getCurrentOS().equals(OperatingSystem.OS.UNIX)) {
                 if (Link.DESKTOP_LINK.getExtension().equals(org.apache.logging.log4j.core.util.FileUtils.getFileExtension(file))) {
@@ -237,7 +239,7 @@ public class Application {
                     try {
                         FileUtils.openFileInNautilusUnix(file);
                     } catch (IOException ex) {
-                        ex.printStackTrace();
+                        log.warn("Can not open file in nautilus", ex);
                     }
                 }
             }
@@ -282,7 +284,7 @@ public class Application {
             final String path = args[1];
             final File file;
             try {
-                file = new DefaultAnalyzer(path).getFile();
+                file = new ExtendedFileAnalyzer(path).getLinkFile().getFile();
                 if (file != null) {
                     runEditDialog(file.getAbsolutePath());
                 }
@@ -305,7 +307,7 @@ public class Application {
     private static void runCopyLink(String path) {
         String url;
         try {
-            url = new DefaultAnalyzer(path).getUrl();
+            url = new ExtendedFileAnalyzer(path).getLinkFile().getUrl().toString();
             ClipboardManager.getClipboardForSystem().copy(url);
             log.info("Successfully copied url to clipboard from: " + path);
 
@@ -326,7 +328,7 @@ public class Application {
             if (args.length > 1) {
                 final String path = args[1];
                 String url;
-                url = new DefaultAnalyzer(path).getUrl();
+                url = new ExtendedFileAnalyzer(path).getLinkFile().getUrl().toString();
                 final BufferedImage image = UrlsProceed.generateQrCode(url);
 
                 ClipboardManager.getClipboardForSystem().copy(image);
@@ -363,7 +365,7 @@ public class Application {
 
     private static void runQrDialog(String arg) {
         try {
-            final File file = new DefaultAnalyzer(arg).getFile();
+            final File file = new ExtendedFileAnalyzer(arg).getLinkFile().getFile();
             final ShowQrDialog qrDialog = new WindowLauncher<ShowQrDialog>() {
                 @Override
                 public ShowQrDialog initWindow() {

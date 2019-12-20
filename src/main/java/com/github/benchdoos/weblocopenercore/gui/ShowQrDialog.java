@@ -19,14 +19,14 @@ import com.github.benchdoos.weblocopenercore.core.Translation;
 import com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants;
 import com.github.benchdoos.weblocopenercore.gui.buttons.DonationButton;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
-import com.github.benchdoos.weblocopenercore.service.DefaultAnalyzer;
+import com.github.benchdoos.weblocopenercore.service.ExtendedFileAnalyzer;
 import com.github.benchdoos.weblocopenercore.service.UrlsProceed;
 import com.github.benchdoos.weblocopenercore.service.clipboard.ClipboardManager;
 import com.github.benchdoos.weblocopenercore.service.gui.MousePickListener;
+import com.github.benchdoos.weblocopenercore.service.notification.NotificationManager;
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import com.github.benchdoos.weblocopenercore.utils.FileUtils;
 import com.github.benchdoos.weblocopenercore.utils.FrameUtils;
-import com.github.benchdoos.weblocopenercore.service.notification.NotificationManager;
 import com.google.zxing.WriterException;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
@@ -68,7 +68,7 @@ public class ShowQrDialog extends JFrame implements Translatable {
         this.weblocFile = weblocFile;
         try {
 
-        url = new DefaultAnalyzer(weblocFile.getAbsolutePath()).getUrl();
+            url = new ExtendedFileAnalyzer(weblocFile.getAbsolutePath()).getLinkFile().getUrl().toString();
 
             this.qrCodeImage = UrlsProceed.generateQrCode(url);
             $$$setupUI$$$();
