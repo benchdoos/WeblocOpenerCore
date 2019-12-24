@@ -10,6 +10,7 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.collections.CollectionUtils;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
@@ -21,32 +22,28 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
-import javax.swing.Timer;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Insets;
-import java.io.Closeable;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
-import static com.github.benchdoos.weblocopenercore.core.constants.SettingsConstants.RECENT_FILES_UPDATE_SCHEDULE_DELAY;
 @Log4j2
-public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel, Closeable {
+public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel {
     private JPanel contentPane;
     private JPanel enabledPanel;
     private JPanel disabledPanel;
     private JButton enableButton;
     private JButton removeSelectedItemsButton;
-    private JButton removeAllItemsButton;
     private JPanel infoPanel;
     private JList<OpenedFileInfo> fileList;
     private DisabledResentFilesPanel disabledRecentFilesPanel;
-    private Timer timer = null;
+    private JButton updateItemsList;
 
     public ResentOpenedFilesPanel() {
         $$$setupUI$$$();
-        initScheduledUpdate();
         initGui();
     }
 
@@ -56,14 +53,35 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel, Clo
 
         initVisiblePanels();
         initFileList();
-        loadFileList();
+        loadFileList(new RecentFilesManager().loadRecentOpenedFilesList());
+
+        initListeners();
     }
 
-    private void loadFileList() {
-        final Set<OpenedFileInfo> openedFileInfos = new RecentFilesManager().loadRecentOpenedFilesList();
+    private void initListeners() {
+        updateItemsList.addActionListener(e -> updateFilesList());
+        removeSelectedItemsButton.addActionListener(e -> removeSelectedItems());
+    }
+
+    private void removeSelectedItems() {
+        if (fileList.getModel().getSize() > 0) {
+            final List<OpenedFileInfo> selectedValuesList = fileList.getSelectedValuesList();
+            if (CollectionUtils.isNotEmpty(selectedValuesList)) {
+                try {
+                    final Set<OpenedFileInfo> openedFileInfos = new RecentFilesManager().removeFiles(selectedValuesList);
+                    loadFileList(openedFileInfos);
+                } catch (IOException e) {
+                    log.warn("Could not remove files", e);
+                }
+            }
+        }
+    }
+
+    private void loadFileList(Set<OpenedFileInfo> openedFileInfos) {
         final DefaultListModel<OpenedFileInfo> model = new DefaultListModel<>();
         openedFileInfos.forEach(model::addElement);
         fileList.setModel(model);
+        showNoSelectedItemMessage();
     }
 
     private void initFileList() {
@@ -100,16 +118,21 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel, Clo
     }
 
     private void showLinkInfoPanel(OpenedFileInfo selectedValue) {
-        if (infoPanel != null) {
-            infoPanel.removeAll();
+        if (infoPanel != null && selectedValue != null) {
             final LinkInfoPanel comp = new LinkInfoPanel(selectedValue);
-            infoPanel.add(comp);//fixme NPE при добавлении
+            updateInfoPanel(comp);
         }
     }
 
     private void showNoSelectedItemMessage() {
+        updateInfoPanel(new MessagePanel("No selected item", "Select item to see its info"));
+    }
+
+    private void updateInfoPanel(Component component) {
         infoPanel.removeAll();
-        infoPanel.add(new MessagePanel("No selected item", "Select item to see its info"));
+        infoPanel.add(component);
+        infoPanel.revalidate();
+        infoPanel.repaint();
     }
 
     @Override
@@ -128,6 +151,27 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel, Clo
     public void loadSettings() {
         initVisiblePanels();
         //todo load previous opened files
+    }
+
+    private void updateFilesList() {
+        if (PreferencesManager.isRecentOpenedFilesHistoryEnabled()) {
+            if (fileList != null) {
+                try {
+                    final int[] selectedIndices = fileList.getSelectedIndices();
+
+                    final Set<OpenedFileInfo> openedFileInfos = new RecentFilesManager().loadRecentOpenedFilesList();
+                    final DefaultListModel<OpenedFileInfo> model = (DefaultListModel<OpenedFileInfo>) fileList.getModel();
+
+                    model.clear();
+                    openedFileInfos.forEach(model::addElement);
+
+                    fileList.updateUI();
+                    fileList.setSelectedIndices(selectedIndices);
+                } catch (Exception ex) {
+                    log.warn("Can not update recent opened files list", ex);
+                }
+            }
+        }
     }
 
     @Override
@@ -158,26 +202,26 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel, Clo
         panel2.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
         splitPane1.setLeftComponent(panel2);
         final JScrollPane scrollPane1 = new JScrollPane();
-        panel2.add(scrollPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        panel2.add(scrollPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(100, -1), new Dimension(200, -1), null, 0, false));
         fileList = new JList();
         scrollPane1.setViewportView(fileList);
         final JToolBar toolBar1 = new JToolBar();
         toolBar1.setFloatable(false);
         toolBar1.setOrientation(0);
         panel2.add(toolBar1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        updateItemsList = new JButton();
+        updateItemsList.setIcon(new ImageIcon(getClass().getResource("/images/refresh16.png")));
+        updateItemsList.setText("");
+        updateItemsList.setToolTipText("Update items list");
+        toolBar1.add(updateItemsList);
         removeSelectedItemsButton = new JButton();
         removeSelectedItemsButton.setBorderPainted(false);
         removeSelectedItemsButton.setIcon(new ImageIcon(getClass().getResource("/images/emojiCross16.png")));
         removeSelectedItemsButton.setOpaque(false);
         removeSelectedItemsButton.setText("");
         toolBar1.add(removeSelectedItemsButton);
-        removeAllItemsButton = new JButton();
-        removeAllItemsButton.setText("Remove all");
-        toolBar1.add(removeAllItemsButton);
         final Spacer spacer1 = new Spacer();
         panel2.add(spacer1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        infoPanel = new JPanel();
-        infoPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         splitPane1.setRightComponent(infoPanel);
         disabledPanel = new JPanel();
         disabledPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
@@ -194,38 +238,6 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel, Clo
 
     private void createUIComponents() {
         disabledRecentFilesPanel = new DisabledResentFilesPanel();
-    }
-
-    @Override
-    public void close() throws IOException {
-        try {
-            if (timer != null) {
-                if (timer.isRunning()) {
-                    timer.stop();
-                }
-            }
-        } catch (Exception e) {
-            throw new IOException("Can not stop schedule timer" + e);
-        }
-    }
-
-    private void initScheduledUpdate() {
-        if (timer == null) {
-            timer = new Timer(RECENT_FILES_UPDATE_SCHEDULE_DELAY, e -> {
-                if (PreferencesManager.isRecentOpenedFilesHistoryEnabled()) {
-                    if (fileList != null) {
-                        try {
-                            final int[] selectedIndices = fileList.getSelectedIndices();
-                            loadFileList();
-                            fileList.setSelectedIndices(selectedIndices);
-                        } catch (Exception ex) {
-                            log.warn("Can not update recent opened files list", ex);
-                        }
-                    }
-                }
-            });
-            timer.setRepeats(true);
-            timer.start();
-        }
+        infoPanel = new JPanel(new GridLayout());
     }
 }

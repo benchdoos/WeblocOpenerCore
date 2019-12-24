@@ -54,10 +54,19 @@ public class RecentFilesManager {
 
         log.debug("Updated size is: {}", result.size());
 
-        final ObjectMapper mapper = new ObjectMapper();
-        mapper.writeValue(historyFile, result);
+        saveFilesList(result);
 
         log.info("Recent files appended");
+    }
+
+    /**
+     * Saves given set to file
+     * @param files set of files
+     * @throws IOException if can not write a file
+     */
+    private void saveFilesList(Set<OpenedFileInfo> files) throws IOException {
+        final ObjectMapper mapper = new ObjectMapper();
+        mapper.writeValue(historyFile, files);
     }
 
     public boolean cleanup() {
@@ -71,4 +80,10 @@ public class RecentFilesManager {
         return historyFile.exists();
     }
 
+    public Set<OpenedFileInfo> removeFiles(List<OpenedFileInfo> selectedValuesList) throws IOException {
+        final Set<OpenedFileInfo> openedFileInfos = loadRecentOpenedFilesList();
+        openedFileInfos.removeAll(selectedValuesList);
+        saveFilesList(openedFileInfos);
+        return openedFileInfos;
+    }
 }
