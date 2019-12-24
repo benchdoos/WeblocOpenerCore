@@ -104,15 +104,14 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel {
 
     private void initFileListListeners() {
         fileList.addListSelectionListener(listener -> {
-            final int firstIndex = listener.getFirstIndex();
-            final int lastIndex = listener.getLastIndex();
+            final int[] selectedIndices = fileList.getSelectedIndices();
 
-            if (firstIndex == -1 && lastIndex == -1) {
+            if (selectedIndices.length == 0) {
                 showNoSelectedItemMessage();
-            } else if (firstIndex == lastIndex) {
+            } else if (selectedIndices.length == 1) {
                 showLinkInfoPanel(fileList.getSelectedValue());
             } else {
-                //todo handle lots' of panels
+                showMultipleSelectedItemsMessage();
             }
         });
     }
@@ -126,6 +125,10 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel {
 
     private void showNoSelectedItemMessage() {
         updateInfoPanel(new MessagePanel("No selected item", "Select item to see its info"));
+    }
+
+    private void showMultipleSelectedItemsMessage() {
+        updateInfoPanel(new MessagePanel("Multiple selection", "You have selected multiple files. No data to show."));
     }
 
     private void updateInfoPanel(Component component) {
