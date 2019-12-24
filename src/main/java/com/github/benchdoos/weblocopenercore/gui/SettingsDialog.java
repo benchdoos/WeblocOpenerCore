@@ -357,7 +357,7 @@ public class SettingsDialog extends JFrame implements Translatable {
 
 
         pack();
-        setMinimumSize(new Dimension(768, 500));
+        setMinimumSize(new Dimension(768, 400));
         setWindowOnScreenCenter(this);
         translate();
     }
