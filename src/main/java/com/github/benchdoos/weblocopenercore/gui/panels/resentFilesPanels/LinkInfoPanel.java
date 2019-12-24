@@ -1,8 +1,8 @@
 package com.github.benchdoos.weblocopenercore.gui.panels.resentFilesPanels;
 
-import com.github.benchdoos.linksupport.links.LinkProcessor;
 import com.github.benchdoos.weblocopenercore.service.UrlsProceed;
 import com.github.benchdoos.weblocopenercore.service.recentFiles.OpenedFileInfo;
+import com.github.benchdoos.weblocopenercore.utils.FileUtils;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
@@ -18,6 +18,7 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 @Log4j2
 public class LinkInfoPanel extends JPanel {
@@ -28,6 +29,7 @@ public class LinkInfoPanel extends JPanel {
     private JTextField pageTitlePreviewTextField;
     private JTextField fullLinkTextField;
     private JButton openLinkButton;
+    private JButton openLocationButton;
     private OpenedFileInfo selectedValue;
 
     public LinkInfoPanel(OpenedFileInfo selectedValue) {
@@ -40,23 +42,38 @@ public class LinkInfoPanel extends JPanel {
         add(contentPane);
 
         fillData();
+        updateCursorLocations();
         initListeners();
+    }
+
+    private void updateCursorLocations() {
+        fileNameTextField.select(0, 0);
+        fullLinkTextField.select(0, 0);
     }
 
     private void initListeners() {
         openLinkButton.addActionListener(e -> {
             final File file = selectedValue.getFilePath().toFile();
             try {
-                UrlsProceed.openUrl(selectedValue.getType().getLinkProcessor().getUrl(file));
+                final URL url = selectedValue.getType().getLinkProcessor().getUrl(file);
+                UrlsProceed.openUrl(url);
             } catch (IOException ex) {
                 log.warn("Can not open file: {}", file, ex);
             }
         });
+
+        openLocationButton.addActionListener(e -> FileUtils.openFileInFileBrowser(selectedValue.getFilePath().toFile()));
     }
 
     private void fillData() {
         fileNameTextField.setText(selectedValue.getFilename());
-        fullLinkTextField.setText(selectedValue.getFilePath().toString());
+        try {
+            final File file = selectedValue.getFilePath().toFile();
+            final URL url = selectedValue.getType().getLinkProcessor().getUrl(file);
+            fullLinkTextField.setText(url.toString());
+        } catch (IOException e) {
+            log.warn("Could not init url");
+        }
     }
 
     {
@@ -104,13 +121,16 @@ public class LinkInfoPanel extends JPanel {
         fullLinkTextField.setEditable(false);
         linkInfoPanel.add(fullLinkTextField, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         final JPanel panel1 = new JPanel();
-        panel1.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
         linkInfoPanel.add(panel1, new GridConstraints(4, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final Spacer spacer2 = new Spacer();
-        panel1.add(spacer2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        panel1.add(spacer2, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         openLinkButton = new JButton();
         openLinkButton.setText("Open link");
-        panel1.add(openLinkButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel1.add(openLinkButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        openLocationButton = new JButton();
+        openLocationButton.setText("Open location");
+        panel1.add(openLocationButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
