@@ -59,12 +59,6 @@ public class FileChooser extends JDialog implements Translatable {
     private File chosenFile = null;
     private ArrayList<File> fileArrayList;
 
-    private String message = "This window can appear when WeblocOpener can not operate selected file because of its name.\n" +
-            "Choose a file you wanted to operate from list.\n" +
-            "If you don't want to see this window every time you're operating with this file-\n" +
-            "rename it in latin characters and WeblocOpener will get this automatically!";
-    private String title = "Help";
-
     public FileChooser(ArrayList<File> fileArrayList) {
         this.fileArrayList = fileArrayList;
 
