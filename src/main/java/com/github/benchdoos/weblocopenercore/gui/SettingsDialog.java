@@ -28,8 +28,8 @@ import com.github.benchdoos.weblocopenercore.gui.panels.SettingsPanel;
 import com.github.benchdoos.weblocopenercore.gui.wrappers.CreateNewFileDialogWrapper;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import com.github.benchdoos.weblocopenercore.service.WindowLauncher;
-import com.github.benchdoos.weblocopenercore.utils.FrameUtils;
 import com.github.benchdoos.weblocopenercore.service.notification.NotificationManager;
+import com.github.benchdoos.weblocopenercore.utils.FrameUtils;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
@@ -70,7 +70,9 @@ import java.awt.dnd.DropTargetEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.Closeable;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -481,6 +483,19 @@ public class SettingsDialog extends JFrame implements Translatable {
     }
 
     private void onCancel() {
+        final DefaultListModel<SettingsPanel> model = (DefaultListModel<SettingsPanel>) settingsList.getModel();
+
+        for (int i = 0; i < model.size(); i++) {
+            SettingsPanel panel = model.get(i);
+            if (panel instanceof Closeable) {
+                try {
+                    ((Closeable) panel).close();
+                } catch (IOException e) {
+                    log.warn("Can not close operations at panel: {}", panel.getClass().getName(), e);
+                }
+            }
+        }
+
         dispose();
     }
 

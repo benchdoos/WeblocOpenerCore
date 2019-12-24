@@ -9,6 +9,7 @@ import com.github.benchdoos.weblocopenercore.service.recentFiles.RecentFilesMana
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import lombok.extern.log4j.Log4j2;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
@@ -20,13 +21,18 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
+import javax.swing.Timer;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.Set;
 
-public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel {
+import static com.github.benchdoos.weblocopenercore.core.constants.SettingsConstants.RECENT_FILES_UPDATE_SCHEDULE_DELAY;
+@Log4j2
+public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel, Closeable {
     private JPanel contentPane;
     private JPanel enabledPanel;
     private JPanel disabledPanel;
@@ -36,9 +42,11 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel {
     private JPanel infoPanel;
     private JList<OpenedFileInfo> fileList;
     private DisabledResentFilesPanel disabledRecentFilesPanel;
+    private Timer timer = null;
 
     public ResentOpenedFilesPanel() {
         $$$setupUI$$$();
+        initScheduledUpdate();
         initGui();
     }
 
@@ -95,7 +103,7 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel {
         if (infoPanel != null) {
             infoPanel.removeAll();
             final LinkInfoPanel comp = new LinkInfoPanel(selectedValue);
-            infoPanel.add(comp);
+            infoPanel.add(comp);//fixme NPE при добавлении
         }
     }
 
@@ -186,5 +194,36 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel {
 
     private void createUIComponents() {
         disabledRecentFilesPanel = new DisabledResentFilesPanel();
+    }
+
+    @Override
+    public void close() throws IOException {
+        try {
+            if (timer != null) {
+                if (timer.isRunning()) {
+                    timer.stop();
+                }
+            }
+        } catch (Exception e) {
+            throw new IOException("Can not stop schedule timer" + e);
+        }
+    }
+
+    private void initScheduledUpdate() {
+        if (timer == null) {
+            timer = new Timer(RECENT_FILES_UPDATE_SCHEDULE_DELAY, e -> {
+                if (fileList != null) {
+                    try {
+                        final int[] selectedIndices = fileList.getSelectedIndices();
+                        loadFileList();
+                        fileList.setSelectedIndices(selectedIndices);
+                    } catch (Exception ex) {
+                        log.warn("Can not update recent opened files list", ex);
+                    }
+                }
+            });
+            timer.setRepeats(true);
+            timer.start();
+        }
     }
 }
