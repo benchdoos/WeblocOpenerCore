@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.benchdoos.weblocopenercore.core.constants.PathConstants;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.collections.CollectionUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,10 +26,15 @@ public class RecentFilesManager {
             try {
                 final ObjectMapper mapper = new ObjectMapper();
 
-                return  mapper.readValue(historyFile, new TypeReference<Set<OpenedFileInfo>>(){});
+                return mapper.readValue(historyFile, new TypeReference<Set<OpenedFileInfo>>() {
+                });
             } catch (IOException e) {
                 log.warn("Could not load file list", e);
             }
+        } else {
+            log.warn("Can not get recently opened files list. History file exists: {}, is file: {}. Returning empty list.",
+                    historyFile.exists(),
+                    historyFile.isFile());
         }
         return Collections.emptySet();
     }
@@ -38,11 +44,20 @@ public class RecentFilesManager {
     }
 
     public void appendRecentOpenedFile(List<OpenedFileInfo> files) throws IOException {
+        log.info("Appending recent file to list. Collection: {}", CollectionUtils.isNotEmpty(files) ? files.size() : files);
         final Set<OpenedFileInfo> openedFileInfos = loadRecentOpenedFilesList();
+
+        log.debug("Recent files list size: {}", openedFileInfos.size());
+
         final Set<OpenedFileInfo> result = new HashSet<>(openedFileInfos);
         result.addAll(files);
+
+        log.debug("Updated size is: {}", result.size());
+
         final ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(historyFile, result);
+
+        log.info("Recent files appended");
     }
 
     public boolean cleanup() {

@@ -212,13 +212,15 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel, Clo
     private void initScheduledUpdate() {
         if (timer == null) {
             timer = new Timer(RECENT_FILES_UPDATE_SCHEDULE_DELAY, e -> {
-                if (fileList != null) {
-                    try {
-                        final int[] selectedIndices = fileList.getSelectedIndices();
-                        loadFileList();
-                        fileList.setSelectedIndices(selectedIndices);
-                    } catch (Exception ex) {
-                        log.warn("Can not update recent opened files list", ex);
+                if (PreferencesManager.isRecentOpenedFilesHistoryEnabled()) {
+                    if (fileList != null) {
+                        try {
+                            final int[] selectedIndices = fileList.getSelectedIndices();
+                            loadFileList();
+                            fileList.setSelectedIndices(selectedIndices);
+                        } catch (Exception ex) {
+                            log.warn("Can not update recent opened files list", ex);
+                        }
                     }
                 }
             });

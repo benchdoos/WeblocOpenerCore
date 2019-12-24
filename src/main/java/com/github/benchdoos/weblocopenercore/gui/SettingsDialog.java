@@ -489,6 +489,7 @@ public class SettingsDialog extends JFrame implements Translatable {
             SettingsPanel panel = model.get(i);
             if (panel instanceof Closeable) {
                 try {
+                    log.debug("Closing operations for panel: {}", panel.getClass().getName());
                     ((Closeable) panel).close();
                 } catch (IOException e) {
                     log.warn("Can not close operations at panel: {}", panel.getClass().getName(), e);
@@ -507,7 +508,7 @@ public class SettingsDialog extends JFrame implements Translatable {
     private void showOnApplyMessage() {
         if (PreferencesManager.isNotificationsShown()) {
             NotificationManager.getNotificationForCurrentOS().showInfoNotification(
-                    Translation.getTranslatedString("" +
+                    Translation.getTranslatedString(
                             "SettingsDialogBundle", "settingsSaved"), null);
         } else {
             showInsideSettingsWindowApplyMessage();
