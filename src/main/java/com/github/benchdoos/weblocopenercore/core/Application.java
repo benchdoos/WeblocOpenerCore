@@ -288,7 +288,10 @@ public class Application {
 
     public static void saveRecentFileRecord(File file) throws IOException {
         if (PreferencesManager.isRecentOpenedFilesHistoryEnabled()) {
-            new RecentFilesManager().appendRecentOpenedFile(OpenedFileInfo.fromFile(file));
+            final OpenedFileInfo fileInfo = OpenedFileInfo.fromFile(file);
+            if (fileInfo != null) {
+                new RecentFilesManager().appendRecentOpenedFile(fileInfo);
+            }
         }
     }
 
