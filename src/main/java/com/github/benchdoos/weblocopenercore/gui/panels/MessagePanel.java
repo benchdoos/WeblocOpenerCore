@@ -1,4 +1,4 @@
-package com.github.benchdoos.weblocopenercore.gui.panels.resentFilesPanels;
+package com.github.benchdoos.weblocopenercore.gui.panels;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;

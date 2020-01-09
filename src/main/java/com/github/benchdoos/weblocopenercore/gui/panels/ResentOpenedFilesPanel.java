@@ -2,7 +2,6 @@ package com.github.benchdoos.weblocopenercore.gui.panels;
 
 import com.github.benchdoos.weblocopenercore.gui.panels.resentFilesPanels.DisabledResentFilesPanel;
 import com.github.benchdoos.weblocopenercore.gui.panels.resentFilesPanels.LinkInfoPanel;
-import com.github.benchdoos.weblocopenercore.gui.panels.resentFilesPanels.MessagePanel;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import com.github.benchdoos.weblocopenercore.service.recentFiles.OpenedFileInfo;
 import com.github.benchdoos.weblocopenercore.service.recentFiles.RecentFilesManager;
