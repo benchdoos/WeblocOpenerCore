@@ -16,15 +16,19 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
+import javax.swing.filechooser.FileSystemView;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Insets;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
@@ -89,16 +93,24 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel {
     }
 
     private void initFileListRenderer() {
-        fileList.setCellRenderer(new DefaultListCellRenderer() {
-            @Override
-            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                if (value instanceof OpenedFileInfo) {
-                    final OpenedFileInfo fileInfo = (OpenedFileInfo) value;
-                    return super.getListCellRendererComponent(list, fileInfo.getFilename(), index, isSelected, cellHasFocus);
-                }
-                return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-            }
-        });
+//        fileList.setCellRenderer(new DefaultListCellRenderer() {
+//            @Override
+//            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+//                if (value instanceof OpenedFileInfo) {
+//                    final OpenedFileInfo fileInfo = (OpenedFileInfo) value;
+//                    final JLabel label = new JLabel();
+//                    label.setText(fileInfo.getFilename());
+//                    label.setOpaque(true);
+//
+//                    label.setIcon(FileSystemView.getFileSystemView().getSystemIcon(fileInfo.getFilePath().toFile()));
+//                    return super.getListCellRendererComponent(list, label, index, isSelected, cellHasFocus);
+////                    return super.getListCellRendererComponent(list, fileInfo.getFilename(), index, isSelected, cellHasFocus);
+//
+//                }
+//                return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+//            }
+//        });
+        fileList.setCellRenderer(new FileListCellRenderer());
     }
 
     private void initFileListListeners() {
@@ -179,6 +191,51 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel {
     @Override
     public void saveSettings() {
         initVisiblePanels();
+    }
+
+    /**
+     * A FileListCellRenderer for a File.
+     */
+    private static class FileListCellRenderer extends DefaultListCellRenderer {
+
+        private static final long serialVersionUID = -7799441088157759804L;
+        private final JList list = new JList();
+        private FileSystemView fileSystemView;
+        private JLabel label;
+        private Color selectionForeground = list.getSelectionForeground();
+        private Color selectionBackground = list.getSelectionBackground();
+        private Color foreground = list.getForeground();
+        private Color background = list.getBackground();
+
+        FileListCellRenderer() {
+            label = new JLabel();
+            label.setOpaque(true);
+            fileSystemView = FileSystemView.getFileSystemView();
+        }
+
+        @Override
+        public Component getListCellRendererComponent(
+                JList list,
+                Object value,
+                int index,
+                boolean selected,
+                boolean expanded) {
+
+            final File file = ((OpenedFileInfo) value).getFilePath().toFile();
+            label.setIcon(fileSystemView.getSystemIcon(file));
+            label.setText(fileSystemView.getSystemDisplayName(file));
+            label.setToolTipText(file.getPath());
+
+            if (selected) {
+                label.setBackground(selectionBackground);
+                label.setForeground(selectionForeground);
+            } else {
+                label.setBackground(background);
+                label.setForeground(foreground);
+            }
+
+            return label;
+        }
     }
 
     /**
