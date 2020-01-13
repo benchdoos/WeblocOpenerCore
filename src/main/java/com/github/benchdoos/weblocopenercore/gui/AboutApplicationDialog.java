@@ -356,16 +356,9 @@ public class AboutApplicationDialog extends JDialog {
                 }
 
                 infoDialog.setTitle(Translation.getTranslatedString("AboutApplicationDialogBundle", "librariesLabelToolTip"));
-                StringBuilder contentBuilder = new StringBuilder();
-                try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
-                        getClass().getResourceAsStream("/pages/libs.html")))) {
-                    String str;
-                    while ((str = bufferedReader.readLine()) != null) {
-                        contentBuilder.append(str);
-                    }
-                    infoDialog.setContent(getDarkStyle(contentBuilder.toString()));
-                    infoDialog.setVisible(true);
-                } catch (IOException ignore) {/*NOP*/}
+
+                infoDialog.setContent(getDarkStyle(CoreUtils.getContentFromResource("/pages/libs.html")));
+                infoDialog.setVisible(true);
             }
 
             @Override

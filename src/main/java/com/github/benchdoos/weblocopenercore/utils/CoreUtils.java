@@ -27,9 +27,11 @@ import javax.swing.UIManager;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
@@ -236,27 +238,10 @@ public class CoreUtils {
     public static void showFatalErrorMessage(Exception e) {
         InfoDialog infoDialog = new InfoDialog();
         infoDialog.setTitle(WEBLOCOPENER_APPLICATION_NAME);
-        //todo load this from file
+
         // todo add reporting errors??? how - hz...
-        final String content = "<html>\n" +
-                "<body>\n" +
-                "<h1>\n" +
-                "    Application failed with exception\n" +
-                "</h1>\n" +
-                "<br>\n" +
-                "Create your issue <a href=\"https://github.com/benchdoos/WeblocOpener/issues/new/choose\">here</a>.\n" +
-                "<br>\n" +
-                "Don't forget to copy stacktrace:\n" +
-                "<br>\n" +
-                "<br>\n" +
-                "<br>\n" +
-                "<table>\n" +
-                "    <tr>\n" +
-                "        <td>%s</td>\n" +
-                "    </tr>\n" +
-                "</table>\n" +
-                "</body>\n" +
-                "</html>";
+
+        final String content = getContentFromResource("/pages/fatalErrorPage.html");
 
         final StringWriter stringWriter = new StringWriter();
         final PrintWriter printWriter = new PrintWriter(stringWriter);
@@ -264,5 +249,19 @@ public class CoreUtils {
 
         infoDialog.setContent(String.format(content, stringWriter.toString()));
         infoDialog.setVisible(true);
+    }
+
+    public static String getContentFromResource(String path) {
+        final StringBuilder contentBuilder = new StringBuilder();
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
+                CoreUtils.class.getResourceAsStream(path)))) {
+            String str;
+            while ((str = bufferedReader.readLine()) != null) {
+                contentBuilder.append(str);
+            }
+            return contentBuilder.toString();
+        } catch (IOException ignore) {
+            return "";
+        }
     }
 }
