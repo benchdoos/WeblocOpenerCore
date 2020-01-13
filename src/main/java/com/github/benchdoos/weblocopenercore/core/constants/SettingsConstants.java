@@ -42,6 +42,4 @@ public interface SettingsConstants {
     String LOCALE_DEFAULT_VALUE = "default";
     ApplicationArgument OPENER_UNIX_DEFAULT_SELECTOR_MODE = ApplicationArgument.UNIX_DEFAULT_OPEN_MODE_ARGUMENT;
 
-    int RECENT_FILES_UPDATE_SCHEDULE_DELAY = 5000; //5 sec
-
 }
