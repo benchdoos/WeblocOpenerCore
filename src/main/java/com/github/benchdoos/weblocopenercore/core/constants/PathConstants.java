@@ -16,6 +16,8 @@
 package com.github.benchdoos.weblocopenercore.core.constants;
 
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
+import com.github.benchdoos.weblocopenercore.utils.system.OperatingSystem;
+import com.github.benchdoos.weblocopenercore.utils.system.SystemUtils;
 
 import java.io.File;
 
@@ -23,11 +25,14 @@ import static com.github.benchdoos.weblocopenercore.core.constants.ApplicationCo
 
 
 public interface PathConstants {
-    String APP_LOG_FOLDER_PATH = System
-            .getProperty("java.io.tmpdir") + File.separator + WEBLOCOPENER_APPLICATION_NAME + File.separator + "Log";
+
+    String ROOT_PATH = SystemUtils.getCurrentOS().equals(OperatingSystem.OS.WINDOWS) ?
+            System.getProperty("java.io.tmpdir") + File.separator + WEBLOCOPENER_APPLICATION_NAME :
+            System.getProperty("user.home") + File.separator + "." + WEBLOCOPENER_APPLICATION_NAME;
+
+    String APP_LOG_FOLDER_PATH = ROOT_PATH + File.separator + "Log";
     String APP_LOG_PROPERTY = "com.github.benchdoos.weblocopenercore.log.folder";
 
-    String RECENT_OPENED_FILES_FILE_PATH = System
-            .getProperty("java.io.tmpdir") + File.separator + WEBLOCOPENER_APPLICATION_NAME + File.separator
+    String RECENT_OPENED_FILES_FILE_PATH = ROOT_PATH + File.separator
             + CoreUtils.fixFileName("recent-files-" + System.getProperty("user.name").toLowerCase() + ".json");
 }
