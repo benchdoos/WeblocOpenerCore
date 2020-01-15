@@ -93,23 +93,6 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel {
     }
 
     private void initFileListRenderer() {
-//        fileList.setCellRenderer(new DefaultListCellRenderer() {
-//            @Override
-//            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-//                if (value instanceof OpenedFileInfo) {
-//                    final OpenedFileInfo fileInfo = (OpenedFileInfo) value;
-//                    final JLabel label = new JLabel();
-//                    label.setText(fileInfo.getFilename());
-//                    label.setOpaque(true);
-//
-//                    label.setIcon(FileSystemView.getFileSystemView().getSystemIcon(fileInfo.getFilePath().toFile()));
-//                    return super.getListCellRendererComponent(list, label, index, isSelected, cellHasFocus);
-////                    return super.getListCellRendererComponent(list, fileInfo.getFilename(), index, isSelected, cellHasFocus);
-//
-//                }
-//                return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-//            }
-//        });
         fileList.setCellRenderer(new FileListCellRenderer());
     }
 
