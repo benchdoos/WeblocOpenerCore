@@ -98,7 +98,7 @@ public class SettingsDialog extends JFrame implements Translatable {
     private MainSetterPanel mainSetterPanel;
     private AppearanceSetterPanel appearanceSetterPanel;
     private FileProcessingPanel fileProcessingPanel;
-    private ResentOpenedFilesPanel resentOpenedFilesPanel;
+    private ResentOpenedFilesPanel recentOpenedFilesPanel;
     private final String launcherLocationPath;
 
 
@@ -318,7 +318,7 @@ public class SettingsDialog extends JFrame implements Translatable {
 
         initSettingsList();
 
-        loadSettingsList();
+        fillSettingsList();
 
         loadSettings();
 
@@ -408,8 +408,8 @@ public class SettingsDialog extends JFrame implements Translatable {
         settingsList.setSelectedIndex(0);
     }
 
-    private void loadSettingsList() {
-        DefaultListModel<IconJList.IconObject<SettingsPanel>> model = new DefaultListModel<>();
+    private void fillSettingsList() {
+        final DefaultListModel<IconJList.IconObject<SettingsPanel>> model = new DefaultListModel<>();
 
         mainSetterPanel = new MainSetterPanel();
         mainSetterPanel.setLauncherLocationPath(launcherLocationPath);
@@ -417,13 +417,37 @@ public class SettingsDialog extends JFrame implements Translatable {
         browserSetterPanel = new BrowserSetterPanel();
         appearanceSetterPanel = new AppearanceSetterPanel();
         fileProcessingPanel = new FileProcessingPanel();
-        resentOpenedFilesPanel = new ResentOpenedFilesPanel();
+        recentOpenedFilesPanel = new ResentOpenedFilesPanel();
 
-        model.addElement(new IconJList.IconObject<>(null, mainSetterPanel));
-        model.addElement(new IconJList.IconObject<>(null, browserSetterPanel));
-        model.addElement(new IconJList.IconObject<>(null, fileProcessingPanel));
-        model.addElement(new IconJList.IconObject<>(null, appearanceSetterPanel));
-        model.addElement(new IconJList.IconObject<>(null, resentOpenedFilesPanel));
+        addSettingsPanelToModel(
+                model,
+                "/images/lists/selected/baseline_settings_applications_white_18dp.png",
+                "/images/lists/unselected/baseline_settings_applications_black_18dp.png",
+                mainSetterPanel);
+        addSettingsPanelToModel(
+                model,
+                "/images/lists/selected/baseline_link_white_18dp.png",
+                "/images/lists/unselected/baseline_link_black_18dp.png",
+                browserSetterPanel);
+
+        addSettingsPanelToModel(
+                model,
+                "/images/lists/selected/baseline_insert_drive_file_white_18dp.png",
+                "/images/lists/unselected/baseline_insert_drive_file_black_18dp.png",
+                fileProcessingPanel);
+
+        addSettingsPanelToModel(
+                model,
+                "/images/lists/selected/baseline_remove_red_eye_white_18dp.png",
+                "/images/lists/unselected/baseline_remove_red_eye_black_18dp.png",
+                appearanceSetterPanel);
+
+        addSettingsPanelToModel(
+                model,
+                "/images/lists/selected/baseline_settings_backup_restore_white_18dp.png",
+                "/images/lists/unselected/baseline_settings_backup_restore_black_18dp.png",
+                recentOpenedFilesPanel);
+
         settingsList.setModel(model);
 
         if (PreferencesManager.isDarkModeEnabledNow()) {
@@ -432,8 +456,14 @@ public class SettingsDialog extends JFrame implements Translatable {
             colorful.colorize(browserSetterPanel);
             colorful.colorize(fileProcessingPanel);
             colorful.colorize(appearanceSetterPanel);
-            colorful.colorize(resentOpenedFilesPanel);
+            colorful.colorize(recentOpenedFilesPanel);
         }
+    }
+
+    private void addSettingsPanelToModel(DefaultListModel<IconJList.IconObject<SettingsPanel>> model, String selectedImageUrl, String unselectedImageUrl, SettingsPanel panel) {
+        final ImageIcon selectedMainIcon = new ImageIcon(getClass().getResource(selectedImageUrl));
+        final ImageIcon unselectedMainIcon = new ImageIcon(getClass().getResource(unselectedImageUrl));
+        model.addElement(new IconJList.IconObject<>(selectedMainIcon, unselectedMainIcon, panel));
     }
 
 
@@ -531,14 +561,11 @@ public class SettingsDialog extends JFrame implements Translatable {
     }
 
     private void saveSettings() {
-        ListModel model = settingsList.getModel();
+        ListModel<IconJList.IconObject<SettingsPanel>> model = settingsList.getModel();
 
         for (int i = 0; i < model.getSize(); i++) {
-            Object o = model.getElementAt(i);
-            if (o instanceof SettingsPanel) {
-                SettingsPanel panel = ((SettingsPanel) o);
-                panel.saveSettings();
-            }
+            final SettingsPanel panel = model.getElementAt(i).getObject();
+            panel.saveSettings();
         }
         PreferencesManager.flushPreferences();
     }
@@ -549,10 +576,10 @@ public class SettingsDialog extends JFrame implements Translatable {
                 final JColorful colorful = new JColorful(ApplicationConstants.DARK_MODE_THEME);
                 colorful.colorize(this);
 
-                ListModel model = settingsList.getModel();
+                ListModel<IconJList.IconObject<SettingsPanel>> model = settingsList.getModel();
 
                 for (int i = 0; i < model.getSize(); i++) {
-                    Object o = model.getElementAt(i);
+                    Object o = model.getElementAt(i).getObject();
                     if (o instanceof Component) {
                         colorful.colorize(((Component) o));
                     }

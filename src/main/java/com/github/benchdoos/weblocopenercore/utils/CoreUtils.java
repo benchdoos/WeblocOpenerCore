@@ -23,7 +23,9 @@ import com.github.benchdoos.weblocopenercore.utils.version.Beta;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileExistsException;
 
+import javax.swing.Icon;
 import javax.swing.UIManager;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
@@ -190,6 +192,18 @@ public class CoreUtils {
 
     public static BufferedImage resize(final Image img, final int width, final int height) {
         return resize(toBufferedImage(img), width, height);
+    }
+
+    public static BufferedImage resize(final Icon icon, final int width, final int height) {
+        final BufferedImage bi = new BufferedImage(
+                icon.getIconWidth(),
+                icon.getIconHeight(),
+                BufferedImage.TYPE_INT_RGB);
+        final Graphics g = bi.createGraphics();
+        icon.paintIcon(null, g, 0, 0);
+        g.dispose();
+
+        return resize(bi, width, height);
     }
 
     public static BufferedImage resize(final BufferedImage img, final int width, final int height) {

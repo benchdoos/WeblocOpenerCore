@@ -9,7 +9,6 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JScrollPane;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.Color;
 import java.awt.Component;
@@ -30,7 +29,8 @@ public class IconJList<E> extends JList<E> {
     @AllArgsConstructor
     @Data
     public static class IconObject<O extends Named> {
-        private ImageIcon icon;
+        private ImageIcon selectedIcon;
+        private ImageIcon unselectedIcon;
         private O object;
     }
 
@@ -63,15 +63,17 @@ public class IconJList<E> extends JList<E> {
                 boolean expanded) {
 
             final IconObject<Named> iconObject = (IconObject<Named>) value;
-            updateIcon(iconObject.getIcon());
+
             label.setToolTipText(iconObject.getObject().getName());
 
             if (selected) {
                 label.setBackground(selectionBackground);
                 label.setForeground(selectionForeground);
+                updateIcon(iconObject.getSelectedIcon());
             } else {
                 label.setBackground(background);
                 label.setForeground(foreground);
+                updateIcon(iconObject.getUnselectedIcon());
             }
 
             if (minimalMode) {
@@ -86,12 +88,13 @@ public class IconJList<E> extends JList<E> {
         private void updateIcon(ImageIcon icon) {
             if (icon != null) {
                 if (icon.getIconHeight() != 16 && icon.getIconWidth() != 16) {
-                    label.setIcon(new ImageIcon(CoreUtils.resize(icon, 16, 16)));
+//                    label.setIcon(new ImageIcon(CoreUtils.resize(icon, 16, 16)));//fixme здесь не дружит с transparent
+                    label.setIcon(icon);
                 } else {
                     label.setIcon(icon);
                 }
             } else {
-                label.setIcon(icon);
+                label.setIcon(null);
             }
         }
     }
