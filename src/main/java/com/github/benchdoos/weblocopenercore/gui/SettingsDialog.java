@@ -487,7 +487,7 @@ public class SettingsDialog extends JFrame implements Translatable {
                                          SettingsPanel panel) {
         try {
             final BufferedImage selected = ImageIO.read(SettingsDialog.class.getResourceAsStream(selectedImageUrl));
-            final BufferedImage unselected = ImageIO.read(SettingsDialog.class.getResourceAsStream(selectedImageUrl));
+            final BufferedImage unselected = ImageIO.read(SettingsDialog.class.getResourceAsStream(unselectedImageUrl));
             model.addElement(new IconJList.IconObject<>(selected, unselected, panel));
         } catch (IOException e) {
             log.warn("Can not load images from given source: '{}','{}'", selectedImageUrl, unselectedImageUrl);
