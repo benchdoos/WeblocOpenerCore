@@ -21,12 +21,12 @@
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
             </constraints>
           </vspacer>
-          <component id="3d588" class="javax.swing.JLabel">
+          <component id="3d588" class="javax.swing.JLabel" binding="label">
             <constraints>
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Opened files history is disabled"/>
+              <text resource-bundle="translations/DisabledRecentFilesPanelBundle" key="label"/>
             </properties>
           </component>
           <component id="845dd" class="javax.swing.JButton" binding="enableButton" default-binding="true">
@@ -34,7 +34,7 @@
               <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Enable"/>
+              <text resource-bundle="translations/DisabledRecentFilesPanelBundle" key="button"/>
             </properties>
           </component>
           <vspacer id="4021c">

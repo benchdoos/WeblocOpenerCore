@@ -150,8 +150,8 @@ public class MainSetterPanel extends JPanel implements SettingsPanel, Translatab
         this.$$$loadButtonText$$$(savePreviouslyOpenedFilesCheckBox, ResourceBundle.getBundle("translations/MainSetterPanelBundle").getString("savePreviouslyOpenedFilesCheckBox"));
         panel2.add(savePreviouslyOpenedFilesCheckBox, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         cleanupRecentFilesButton = new JButton();
-        cleanupRecentFilesButton.setText("Clear");
-        cleanupRecentFilesButton.setToolTipText("Remove all records about recent opened files");
+        this.$$$loadButtonText$$$(cleanupRecentFilesButton, ResourceBundle.getBundle("translations/MainSetterPanelBundle").getString("cleanRecentFilesButtonText"));
+        cleanupRecentFilesButton.setToolTipText(ResourceBundle.getBundle("translations/MainSetterPanelBundle").getString("cleanRecentFilesButtonToolTip"));
         panel2.add(cleanupRecentFilesButton, new GridConstraints(3, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer2 = new Spacer();
         panel2.add(spacer2, new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
@@ -369,7 +369,7 @@ public class MainSetterPanel extends JPanel implements SettingsPanel, Translatab
 
     @Override
     public void translate() {
-        Translation translation = new Translation("MainSetterPanelBundle");
+        final Translation translation = new Translation("MainSetterPanelBundle");
         versionStringLabel.setText(translation.getTranslatedString("versionString"));
         versionLabel.setText(CoreUtils.getApplicationVersionString());
         aboutButton.setText(Translation.getTranslatedString("SettingsDialogBundle", "buttonAbout"));
@@ -383,11 +383,14 @@ public class MainSetterPanel extends JPanel implements SettingsPanel, Translatab
         betaInstallCheckBox.setText(translation.getTranslatedString("betaUpdateInstallCheckBox"));
         betaInstallCheckBox.setToolTipText(translation.getTranslatedString("betaUpdateTooltip"));
 
+        cleanupRecentFilesButton.setText(translation.getTranslatedString("cleanRecentFilesButtonText"));
+        cleanupRecentFilesButton.setToolTipText(translation.getTranslatedString("cleanRecentFilesButtonToolTip"));
+
         translateLanguagePanel();
     }
 
     private void translateLanguagePanel() {
-        Translation translation = new Translation("LocaleSetterPanelBundle");
+        final Translation translation = new Translation("LocaleSetterPanelBundle");
         languageLabel.setText(translation.getTranslatedString("language"));
         fillLocaleComboBox();
         localeComboBox.setSelectedItem(PreferencesManager.getLocale());

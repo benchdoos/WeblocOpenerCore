@@ -1,5 +1,7 @@
 package com.github.benchdoos.weblocopenercore.gui.panels;
 
+import com.github.benchdoos.weblocopenercore.core.Translation;
+import com.github.benchdoos.weblocopenercore.gui.Translatable;
 import com.github.benchdoos.weblocopenercore.gui.panels.resentFilesPanels.DisabledResentFilesPanel;
 import com.github.benchdoos.weblocopenercore.gui.panels.resentFilesPanels.LinkInfoPanel;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
@@ -34,11 +36,10 @@ import java.util.List;
 import java.util.Set;
 
 @Log4j2
-public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel {
+public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel, Translatable {
     private JPanel contentPane;
     private JPanel enabledPanel;
     private JPanel disabledPanel;
-    private JButton enableButton;
     private JButton removeSelectedItemsButton;
     private JPanel infoPanel;
     private JList<OpenedFileInfo> fileList;
@@ -48,6 +49,7 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel {
     public ResentOpenedFilesPanel() {
         $$$setupUI$$$();
         initGui();
+        translate();
     }
 
     private void initGui() {
@@ -98,34 +100,46 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel {
 
     private void initFileListListeners() {
         fileList.addListSelectionListener(listener -> {
-            final int[] selectedIndices = fileList.getSelectedIndices();
-
-            if (selectedIndices.length == 0) {
-                showNoSelectedItemMessage();
-            } else if (selectedIndices.length == 1) {
-                showLinkInfoPanel(fileList.getSelectedValue());
-            } else {
-                showMultipleSelectedItemsMessage();
-            }
+            updateInfoPanel();
         });
+    }
+
+    private void updateInfoPanel() {
+        final int[] selectedIndices = fileList.getSelectedIndices();
+
+        if (selectedIndices.length == 0) {
+            showNoSelectedItemMessage();
+        } else if (selectedIndices.length == 1) {
+            showLinkInfoPanel(fileList.getSelectedValue());
+        } else {
+            showMultipleSelectedItemsMessage();
+        }
     }
 
     private void showLinkInfoPanel(OpenedFileInfo selectedValue) {
         if (infoPanel != null && selectedValue != null) {
             final LinkInfoPanel comp = new LinkInfoPanel(selectedValue);
-            updateInfoPanel(comp);
+            repaintInfoPanel(comp);
         }
     }
 
     private void showNoSelectedItemMessage() {
-        updateInfoPanel(new MessagePanel("No selected item", "Select item to see its info"));
+        final Translation translation = new Translation("RecentFilesPanelBundle");
+        repaintInfoPanel(new MessagePanel(
+                translation.getTranslatedString("noSelectedItemTitle"),
+                translation.getTranslatedString("noSelectedItemMessage")
+        ));
     }
 
     private void showMultipleSelectedItemsMessage() {
-        updateInfoPanel(new MessagePanel("Multiple selection", "You have selected multiple files. No data to show."));
+        final Translation translation = new Translation("RecentFilesPanelBundle");
+        repaintInfoPanel(new MessagePanel(
+                translation.getTranslatedString("multipleSelectionTitle"),
+                translation.getTranslatedString("multipleSelectionMessage")
+        ));
     }
 
-    private void updateInfoPanel(Component component) {
+    private void repaintInfoPanel(Component component) {
         infoPanel.removeAll();
         infoPanel.add(component);
         infoPanel.revalidate();
@@ -134,7 +148,7 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel {
 
     @Override
     public String getName() {
-        return "Recently opened files"; //todo translate
+        return Translation.getTranslatedString("RecentFilesPanelBundle", "title");
     }
 
 
@@ -147,7 +161,6 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel {
     @Override
     public void loadSettings() {
         initVisiblePanels();
-        //todo load previous opened files
     }
 
     private void updateFilesList() {
@@ -174,6 +187,18 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel {
     @Override
     public void saveSettings() {
         initVisiblePanels();
+    }
+
+    @Override
+    public void translate() {
+        final Translation translation = new Translation("RecentFilesPanelBundle");
+        setName(translation.getTranslatedString("title"));
+        setName(translation.getTranslatedString("title"));
+
+        ((Translatable) disabledRecentFilesPanel).translate();
+
+        updateInfoPanel();
+
     }
 
     /**
