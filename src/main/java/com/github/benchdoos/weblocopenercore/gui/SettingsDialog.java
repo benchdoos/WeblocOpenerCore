@@ -83,6 +83,7 @@ import static com.github.benchdoos.weblocopenercore.utils.FrameUtils.setWindowOn
 
 @Log4j2
 public class SettingsDialog extends JFrame implements Translatable {
+    private static final int MINIMAL_MODE_SQUARE = 32;
     private Timer settingsSavedTimer = null;
     private JPanel contentPane;
     private JButton buttonOK;
@@ -237,7 +238,7 @@ public class SettingsDialog extends JFrame implements Translatable {
     private void createUIComponents() {
         scrollPaneContent = new JPanel();
         scrollPaneContent.setLayout(new GridLayout());
-        settingsList = new IconJList<>(20, 32);
+        settingsList = new IconJList<>(20, MINIMAL_MODE_SQUARE);
     }
 
 
@@ -369,13 +370,13 @@ public class SettingsDialog extends JFrame implements Translatable {
     private void initSplitPane() {
         splitPane.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,
                 e -> {
-                    final Dimension minimumSize = settingsList.getMinimumSize();
                     final Integer newValue = (Integer) e.getNewValue();
-                    final double minimumSizeWidth = minimumSize.getWidth();
-                    final boolean newValueSmallerMinimalSize = newValue <= minimumSizeWidth;
 
-                    boolean newValueIsSmallerThat30PercentOfMinimalSize = (newValue / minimumSizeWidth) > 0.7;
-                    ((IconJList) settingsList).setMinimalMode(newValueSmallerMinimalSize && newValueIsSmallerThat30PercentOfMinimalSize);
+                    final boolean minimalMode = newValue < 145;
+                    ((IconJList) settingsList).setMinimalMode(minimalMode);
+                    if (minimalMode) {
+                        splitPane.setDividerLocation(MINIMAL_MODE_SQUARE + 2);
+                    }
                 });
     }
 

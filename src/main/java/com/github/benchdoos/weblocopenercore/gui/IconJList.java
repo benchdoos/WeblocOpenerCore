@@ -12,6 +12,8 @@ import javax.swing.JList;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Image;
 
 public class IconJList<E> extends JList<E> {
@@ -28,6 +30,9 @@ public class IconJList<E> extends JList<E> {
 
     public void setMinimalMode(boolean minimalMode) {
         this.minimalMode = minimalMode;
+        final Container parent = getParent().getParent();
+        parent.setMinimumSize(new Dimension(minimalModeSquare + 20, parent.getHeight()));
+        parent.setSize(new Dimension(minimalModeSquare + 20, parent.getHeight()));
         updateUI();
     }
 
