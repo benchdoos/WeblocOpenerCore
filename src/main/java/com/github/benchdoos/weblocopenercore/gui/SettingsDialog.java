@@ -84,6 +84,7 @@ import static com.github.benchdoos.weblocopenercore.utils.FrameUtils.setWindowOn
 @Log4j2
 public class SettingsDialog extends JFrame implements Translatable {
     private static final int MINIMAL_MODE_SQUARE = 32;
+    private static final int MINIMAL_MODE_DIVIDER_LOCATION = MINIMAL_MODE_SQUARE + 2;
     private Timer settingsSavedTimer = null;
     private JPanel contentPane;
     private JButton buttonOK;
@@ -111,7 +112,14 @@ public class SettingsDialog extends JFrame implements Translatable {
         log.debug("Creating settings dialog.");
         log.debug("Settings dialog launcher location: {}", launcherLocationPath);
         initGui();
+        enableMinimalMode();
         log.debug("Settings dialog created.");
+    }
+
+    private void enableMinimalMode() {
+        if (PreferencesManager.isMinimalListModeEnabled()) {
+            splitPane.setDividerLocation(MINIMAL_MODE_DIVIDER_LOCATION);
+        }
     }
 
     /**
@@ -375,9 +383,19 @@ public class SettingsDialog extends JFrame implements Translatable {
                     final boolean minimalMode = newValue < 145;
                     ((IconJList) settingsList).setMinimalMode(minimalMode);
                     if (minimalMode) {
-                        splitPane.setDividerLocation(MINIMAL_MODE_SQUARE + 2);
+                        splitPane.setDividerLocation(MINIMAL_MODE_DIVIDER_LOCATION);
                     }
+
+                    updateMinimalModeValue(minimalMode);
                 });
+    }
+
+    private void updateMinimalModeValue(boolean minimalMode) {
+        if (PreferencesManager.isMinimalListModeEnabled() != minimalMode) {
+            log.info("Updating minimal mode");
+            PreferencesManager.setMinimalListModeEnabled(minimalMode);
+            PreferencesManager.flushPreferences();
+        }
     }
 
     private void createNewFile() {
