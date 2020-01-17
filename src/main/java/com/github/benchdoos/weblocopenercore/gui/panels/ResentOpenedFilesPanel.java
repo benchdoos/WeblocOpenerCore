@@ -118,8 +118,8 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel, Tra
 
     private void showLinkInfoPanel(OpenedFileInfo selectedValue) {
         if (infoPanel != null && selectedValue != null) {
-            final LinkInfoPanel comp = new LinkInfoPanel(selectedValue);
-            repaintInfoPanel(comp);
+            final LinkInfoPanel linkInfoPanel = new LinkInfoPanel(selectedValue);
+            repaintInfoPanel(linkInfoPanel);
         }
     }
 
@@ -193,12 +193,26 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel, Tra
     public void translate() {
         final Translation translation = new Translation("RecentFilesPanelBundle");
         setName(translation.getTranslatedString("title"));
-        setName(translation.getTranslatedString("title"));
 
         ((Translatable) disabledRecentFilesPanel).translate();
 
+        updateItemsList.setToolTipText("updateItemsList");
+        removeSelectedItemsButton.setToolTipText("removeSelectedItemsButton");
+
+        translateInfoPanelComponent();
         updateInfoPanel();
 
+    }
+
+    private void translateInfoPanelComponent() {
+        if (infoPanel != null) {
+            final Component component = infoPanel.getComponent(0);
+            if (component != null) {
+                if (component instanceof Translatable) {
+                    ((Translatable) component).translate();
+                }
+            }
+        }
     }
 
     /**

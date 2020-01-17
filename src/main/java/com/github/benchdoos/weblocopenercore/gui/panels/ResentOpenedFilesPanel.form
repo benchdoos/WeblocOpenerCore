@@ -72,7 +72,7 @@
                             <properties>
                               <icon value="images/refresh16.png"/>
                               <text value=""/>
-                              <toolTipText value="Update items list"/>
+                              <toolTipText resource-bundle="translations/RecentFilesPanelBundle" key="updateItemsList"/>
                             </properties>
                           </component>
                           <component id="48dd6" class="javax.swing.JButton" binding="removeSelectedItemsButton">
@@ -82,6 +82,7 @@
                               <icon value="images/emojiCross16.png"/>
                               <opaque value="false"/>
                               <text value=""/>
+                              <toolTipText resource-bundle="translations/RecentFilesPanelBundle" key="removeSelectedItemsButton"/>
                             </properties>
                           </component>
                         </children>
