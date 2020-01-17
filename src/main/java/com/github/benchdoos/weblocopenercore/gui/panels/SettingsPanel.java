@@ -15,14 +15,10 @@
 
 package com.github.benchdoos.weblocopenercore.gui.panels;
 
-public interface SettingsPanel {
+public interface SettingsPanel extends Named{
     void loadSettings();
 
     void saveSettings();
-
-    void setName(String name);
-
-    String getName();
 
     default void setLauncherLocationPath(String launcherLocationPath) {
         /*NOP*/

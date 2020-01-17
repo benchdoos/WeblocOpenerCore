@@ -38,7 +38,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -87,13 +86,14 @@ public class SettingsDialog extends JFrame implements Translatable {
     private JButton buttonOK;
     private JButton buttonCancel;
     private JScrollPane scrollpane;
-    private JList<SettingsPanel> settingsList;
+    private JList<IconJList.IconObject<SettingsPanel>> settingsList;
     private JPanel scrollPaneContent;
     private JButton buttonApply;
     private JLabel settingsSavedLabel;
     private JLabel dragAndDropNotice;
     private JButton createNewFileButton;
     private DonationButton donationButton;
+    private JSplitPane splitPane;
     private BrowserSetterPanel browserSetterPanel;
     private MainSetterPanel mainSetterPanel;
     private AppearanceSetterPanel appearanceSetterPanel;
@@ -156,16 +156,15 @@ public class SettingsDialog extends JFrame implements Translatable {
         panel1.add(donationButton, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final Spacer spacer2 = new Spacer();
         contentPane.add(spacer2, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        final JSplitPane splitPane1 = new JSplitPane();
-        contentPane.add(splitPane1, new GridConstraints(0, 0, 2, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
+        splitPane = new JSplitPane();
+        contentPane.add(splitPane, new GridConstraints(0, 0, 2, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
         final JScrollPane scrollPane1 = new JScrollPane();
         scrollPane1.setMinimumSize(new Dimension(128, 15));
-        splitPane1.setLeftComponent(scrollPane1);
-        settingsList = new JList();
+        splitPane.setLeftComponent(scrollPane1);
         settingsList.setSelectionMode(0);
         scrollPane1.setViewportView(settingsList);
         scrollpane = new JScrollPane();
-        splitPane1.setRightComponent(scrollpane);
+        splitPane.setRightComponent(scrollpane);
         final JPanel panel3 = new JPanel();
         panel3.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         scrollpane.setViewportView(panel3);
@@ -236,6 +235,7 @@ public class SettingsDialog extends JFrame implements Translatable {
     private void createUIComponents() {
         scrollPaneContent = new JPanel();
         scrollPaneContent.setLayout(new GridLayout());
+        settingsList = new IconJList<>();
     }
 
 
@@ -322,6 +322,8 @@ public class SettingsDialog extends JFrame implements Translatable {
 
         loadSettings();
 
+        initSplitPane();
+
         buttonApply.addActionListener(e -> onApply());
 
         buttonOK.addActionListener(e -> onSave());
@@ -362,6 +364,19 @@ public class SettingsDialog extends JFrame implements Translatable {
         translate();
     }
 
+    private void initSplitPane() {
+        splitPane.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,
+                e -> {
+                    final Dimension minimumSize = settingsList.getMinimumSize();
+                    final Integer newValue = (Integer) e.getNewValue();
+                    final double minimumSizeWidth = minimumSize.getWidth();
+                    final boolean newValueSmallerMinimalSize = newValue <= minimumSizeWidth;
+
+                    boolean newValueIsSmallerThat30PercentOfMinimalSize = (newValue / minimumSizeWidth) > 0.7;
+                    ((IconJList) settingsList).setMinimalMode(newValueSmallerMinimalSize && newValueIsSmallerThat30PercentOfMinimalSize);
+                });
+    }
+
     private void createNewFile() {
         final CreateNewFileDialogWrapper jFrameWrapper = new WindowLauncher<CreateNewFileDialogWrapper>() {
             @Override
@@ -376,37 +391,25 @@ public class SettingsDialog extends JFrame implements Translatable {
     }
 
     private void initSettingsList() {
-        settingsList.setCellRenderer(new DefaultListCellRenderer() {
-            @Override
-            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                if (value instanceof SettingsPanel) {
-                    final SettingsPanel panel = (SettingsPanel) value;
-                    String name = panel.getName();
-                    return super.getListCellRendererComponent(list, name, index, isSelected, cellHasFocus);
-                }
-                return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-            }
-
-        });
-
         settingsList.addListSelectionListener(e -> {
             scrollPaneContent.removeAll();
-            scrollPaneContent.add((Component) settingsList.getSelectedValue());
+            scrollPaneContent.add((Component) settingsList.getSelectedValue().getObject());
             scrollpane.updateUI();
         });
     }
 
     private void loadSettings() {
-        final ListModel<SettingsPanel> model = settingsList.getModel();
+        final ListModel<IconJList.IconObject<SettingsPanel>> model = settingsList.getModel();
         for (int i = 0; i < model.getSize(); i++) {
-            final SettingsPanel settingsPanel = model.getElementAt(i);
+            final IconJList.IconObject<SettingsPanel> elementAt = model.getElementAt(i);
+            final SettingsPanel settingsPanel = elementAt.getObject();
             settingsPanel.loadSettings();
         }
         settingsList.setSelectedIndex(0);
     }
 
     private void loadSettingsList() {
-        DefaultListModel<SettingsPanel> model = new DefaultListModel<>();
+        DefaultListModel<IconJList.IconObject<SettingsPanel>> model = new DefaultListModel<>();
 
         mainSetterPanel = new MainSetterPanel();
         mainSetterPanel.setLauncherLocationPath(launcherLocationPath);
@@ -416,11 +419,11 @@ public class SettingsDialog extends JFrame implements Translatable {
         fileProcessingPanel = new FileProcessingPanel();
         resentOpenedFilesPanel = new ResentOpenedFilesPanel();
 
-        model.addElement(mainSetterPanel);
-        model.addElement(browserSetterPanel);
-        model.addElement(fileProcessingPanel);
-        model.addElement(appearanceSetterPanel);
-        model.addElement(resentOpenedFilesPanel);
+        model.addElement(new IconJList.IconObject<>(null, mainSetterPanel));
+        model.addElement(new IconJList.IconObject<>(null, browserSetterPanel));
+        model.addElement(new IconJList.IconObject<>(null, fileProcessingPanel));
+        model.addElement(new IconJList.IconObject<>(null, appearanceSetterPanel));
+        model.addElement(new IconJList.IconObject<>(null, resentOpenedFilesPanel));
         settingsList.setModel(model);
 
         if (PreferencesManager.isDarkModeEnabledNow()) {
@@ -460,31 +463,36 @@ public class SettingsDialog extends JFrame implements Translatable {
     }
 
     private void refreshSettingsList() {
-        final ListModel<SettingsPanel> model = settingsList.getModel();
+        final ListModel<IconJList.IconObject<SettingsPanel>> model = settingsList.getModel();
         for (int i = 0; i < model.getSize(); i++) {
-            final SettingsPanel panel = model.getElementAt(i);
+            final SettingsPanel panel = model.getElementAt(i).getObject();
             panel.setName(null);
         }
     }
 
     private void updateLocale() {
-        final ListModel model = settingsList.getModel();
+        final ListModel<IconJList.IconObject<SettingsPanel>> model = settingsList.getModel();
 
         for (int i = 0; i < model.getSize(); i++) {
-            Object o = model.getElementAt(i);
-            if (o instanceof Translatable) {
-                Translatable translatable = ((Translatable) o);
-                translatable.translate();
+            final IconJList.IconObject<SettingsPanel> elementAt = model.getElementAt(i);
+            if (elementAt != null) {
+                final SettingsPanel object = elementAt.getObject();
+
+                if (object instanceof Translatable) {
+                    Translatable translatable = ((Translatable) object);
+                    translatable.translate();
+                }
             }
         }
         this.translate();
     }
 
     private void onCancel() {
-        final DefaultListModel<SettingsPanel> model = (DefaultListModel<SettingsPanel>) settingsList.getModel();
+        final DefaultListModel<IconJList.IconObject<SettingsPanel>> model =
+                (DefaultListModel<IconJList.IconObject<SettingsPanel>>) settingsList.getModel();
 
         for (int i = 0; i < model.size(); i++) {
-            SettingsPanel panel = model.get(i);
+            SettingsPanel panel = model.get(i).getObject();
             if (panel instanceof Closeable) {
                 try {
                     log.debug("Closing operations for panel: {}", panel.getClass().getName());
@@ -558,10 +566,10 @@ public class SettingsDialog extends JFrame implements Translatable {
     public void loadSettingsForPanel(Class clazz) {
         if (clazz != null) {
             log.debug("Trying to load settings for panel with class: {}", clazz);
-            final ListModel<SettingsPanel> model = settingsList.getModel();
+            final ListModel<IconJList.IconObject<SettingsPanel>> model = settingsList.getModel();
             if (model != null) {
                 for (int i = 0; i < model.getSize(); i++) {
-                    final SettingsPanel panel = model.getElementAt(i);
+                    final SettingsPanel panel = model.getElementAt(i).getObject();
                     log.trace("Panel class is: {}, checking if class: {} is equal to it.", panel.getClass(), clazz);
                     if (panel.getClass().equals(clazz)) {
                         log.info("Loading settings for panel with class: {}", panel.getClass());
