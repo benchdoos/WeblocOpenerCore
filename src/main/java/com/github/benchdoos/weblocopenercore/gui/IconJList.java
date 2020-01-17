@@ -1,13 +1,15 @@
 package com.github.benchdoos.weblocopenercore.gui;
 
 import com.github.benchdoos.weblocopenercore.gui.panels.Named;
+import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.swing.DefaultListCellRenderer;
-import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JScrollPane;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.Color;
 import java.awt.Component;
@@ -23,6 +25,13 @@ public class IconJList<E> extends JList<E> {
     public void setMinimalMode(boolean minimalMode) {
         this.minimalMode = minimalMode;
         updateUI();
+    }
+
+    @AllArgsConstructor
+    @Data
+    public static class IconObject<O extends Named> {
+        private ImageIcon icon;
+        private O object;
     }
 
     /**
@@ -54,7 +63,7 @@ public class IconJList<E> extends JList<E> {
                 boolean expanded) {
 
             final IconObject<Named> iconObject = (IconObject<Named>) value;
-            label.setIcon(iconObject.getIcon());
+            updateIcon(iconObject.getIcon());
             label.setToolTipText(iconObject.getObject().getName());
 
             if (selected) {
@@ -73,13 +82,18 @@ public class IconJList<E> extends JList<E> {
 
             return label;
         }
-    }
 
-    @AllArgsConstructor
-    @Data
-    public static class IconObject<O extends Named> {
-        private Icon icon;
-        private O object;
+        private void updateIcon(ImageIcon icon) {
+            if (icon != null) {
+                if (icon.getIconHeight() != 16 && icon.getIconWidth() != 16) {
+                    label.setIcon(new ImageIcon(CoreUtils.resize(icon, 16, 16)));
+                } else {
+                    label.setIcon(icon);
+                }
+            } else {
+                label.setIcon(icon);
+            }
+        }
     }
 
 
