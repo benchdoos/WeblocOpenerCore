@@ -31,8 +31,8 @@ public class IconJList<E> extends JList<E> {
     public void setMinimalMode(boolean minimalMode) {
         this.minimalMode = minimalMode;
         final Container parent = getParent().getParent();
-        parent.setMinimumSize(new Dimension(minimalModeSquare + 20, parent.getHeight()));
-        parent.setSize(new Dimension(minimalModeSquare + 20, parent.getHeight()));
+        parent.setMinimumSize(new Dimension(minimalModeSquare + 2, parent.getHeight()));
+        parent.setSize(new Dimension(minimalModeSquare + 2, parent.getHeight()));
         updateUI();
     }
 
