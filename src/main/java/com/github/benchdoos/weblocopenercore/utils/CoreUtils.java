@@ -194,18 +194,6 @@ public class CoreUtils {
         return resize(toBufferedImage(img), width, height);
     }
 
-    public static BufferedImage resize(final Icon icon, final int width, final int height) {
-        final BufferedImage bi = new BufferedImage(
-                icon.getIconWidth(),
-                icon.getIconHeight(),
-                BufferedImage.TYPE_INT_RGB);
-        final Graphics g = bi.createGraphics();
-        icon.paintIcon(null, g, 0, 0);
-        g.dispose();
-
-        return resize(bi, width, height);
-    }
-
     public static BufferedImage resize(final BufferedImage img, final int width, final int height) {
         Image tmp = img.getScaledInstance(width, height, Image.SCALE_SMOOTH);
         BufferedImage dimg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);

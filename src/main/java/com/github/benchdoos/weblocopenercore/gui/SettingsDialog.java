@@ -36,6 +36,7 @@ import com.intellij.uiDesigner.core.Spacer;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 
+import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -69,6 +70,7 @@ import java.awt.dnd.DropTargetEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
@@ -235,7 +237,7 @@ public class SettingsDialog extends JFrame implements Translatable {
     private void createUIComponents() {
         scrollPaneContent = new JPanel();
         scrollPaneContent.setLayout(new GridLayout());
-        settingsList = new IconJList<>();
+        settingsList = new IconJList<>(20, 32);
     }
 
 
@@ -421,31 +423,31 @@ public class SettingsDialog extends JFrame implements Translatable {
 
         addSettingsPanelToModel(
                 model,
-                "/images/lists/selected/baseline_settings_applications_white_18dp.png",
-                "/images/lists/unselected/baseline_settings_applications_black_18dp.png",
+                "/images/lists/selected/baseline_settings_applications_white_36dp.png",
+                "/images/lists/unselected/baseline_settings_applications_black_36dp.png",
                 mainSetterPanel);
         addSettingsPanelToModel(
                 model,
-                "/images/lists/selected/baseline_link_white_18dp.png",
-                "/images/lists/unselected/baseline_link_black_18dp.png",
+                "/images/lists/selected/baseline_link_white_36dp.png",
+                "/images/lists/unselected/baseline_link_black_36dp.png",
                 browserSetterPanel);
 
         addSettingsPanelToModel(
                 model,
-                "/images/lists/selected/baseline_insert_drive_file_white_18dp.png",
-                "/images/lists/unselected/baseline_insert_drive_file_black_18dp.png",
+                "/images/lists/selected/baseline_insert_drive_file_white_36dp.png",
+                "/images/lists/unselected/baseline_insert_drive_file_black_36dp.png",
                 fileProcessingPanel);
 
         addSettingsPanelToModel(
                 model,
-                "/images/lists/selected/baseline_remove_red_eye_white_18dp.png",
-                "/images/lists/unselected/baseline_remove_red_eye_black_18dp.png",
+                "/images/lists/selected/baseline_remove_red_eye_white_36dp.png",
+                "/images/lists/unselected/baseline_remove_red_eye_black_36dp.png",
                 appearanceSetterPanel);
 
         addSettingsPanelToModel(
                 model,
-                "/images/lists/selected/baseline_settings_backup_restore_white_18dp.png",
-                "/images/lists/unselected/baseline_settings_backup_restore_black_18dp.png",
+                "/images/lists/selected/baseline_settings_backup_restore_white_36dp.png",
+                "/images/lists/unselected/baseline_settings_backup_restore_black_36dp.png",
                 recentOpenedFilesPanel);
 
         settingsList.setModel(model);
@@ -460,10 +462,19 @@ public class SettingsDialog extends JFrame implements Translatable {
         }
     }
 
-    private void addSettingsPanelToModel(DefaultListModel<IconJList.IconObject<SettingsPanel>> model, String selectedImageUrl, String unselectedImageUrl, SettingsPanel panel) {
-        final ImageIcon selectedMainIcon = new ImageIcon(getClass().getResource(selectedImageUrl));
-        final ImageIcon unselectedMainIcon = new ImageIcon(getClass().getResource(unselectedImageUrl));
-        model.addElement(new IconJList.IconObject<>(selectedMainIcon, unselectedMainIcon, panel));
+    private void addSettingsPanelToModel(DefaultListModel<IconJList.IconObject<SettingsPanel>> model,
+                                         String selectedImageUrl,
+                                         String unselectedImageUrl,
+                                         SettingsPanel panel) {
+        try {
+            final BufferedImage selected = ImageIO.read(SettingsDialog.class.getResourceAsStream(selectedImageUrl));
+            final BufferedImage unselected = ImageIO.read(SettingsDialog.class.getResourceAsStream(selectedImageUrl));
+            model.addElement(new IconJList.IconObject<>(selected, unselected, panel));
+        } catch (IOException e) {
+            log.warn("Can not load images from given source: '{}','{}'", selectedImageUrl, unselectedImageUrl);
+            model.addElement(new IconJList.IconObject<>(null, null, panel));
+        }
+
     }
 
 

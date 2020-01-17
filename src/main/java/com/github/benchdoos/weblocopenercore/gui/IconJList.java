@@ -12,12 +12,17 @@ import javax.swing.JList;
 import javax.swing.filechooser.FileSystemView;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Image;
 
 public class IconJList<E> extends JList<E> {
 
     private boolean minimalMode;
+    private final int minimalModeSquare;
+    private final int normalModeSquare;
 
-    public IconJList() {
+    public IconJList(int normalModeSquare, int minimalModeSquare) {
+        this.normalModeSquare = normalModeSquare;
+        this.minimalModeSquare = minimalModeSquare;
         setCellRenderer(new ImageListCellRenderer());
     }
 
@@ -29,8 +34,8 @@ public class IconJList<E> extends JList<E> {
     @AllArgsConstructor
     @Data
     public static class IconObject<O extends Named> {
-        private ImageIcon selectedIcon;
-        private ImageIcon unselectedIcon;
+        private Image selectedIcon;
+        private Image unselectedIcon;
         private O object;
     }
 
@@ -85,13 +90,20 @@ public class IconJList<E> extends JList<E> {
             return label;
         }
 
-        private void updateIcon(ImageIcon icon) {
+        private void updateIcon(Image icon) {
             if (icon != null) {
-                if (icon.getIconHeight() != 16 && icon.getIconWidth() != 16) {
-//                    label.setIcon(new ImageIcon(CoreUtils.resize(icon, 16, 16)));//fixme здесь не дружит с transparent
-                    label.setIcon(icon);
+                if (!minimalMode) {
+                    if (icon.getHeight(null) != normalModeSquare && icon.getWidth(null) != normalModeSquare) {
+                        label.setIcon(new ImageIcon(CoreUtils.resize(icon, normalModeSquare, normalModeSquare)));
+                    } else {
+                        label.setIcon(new ImageIcon(icon));
+                    }
                 } else {
-                    label.setIcon(icon);
+                    if (icon.getHeight(null) != minimalModeSquare && icon.getWidth(null) != minimalModeSquare) {
+                        label.setIcon(new ImageIcon(CoreUtils.resize(icon, minimalModeSquare, minimalModeSquare)));
+                    } else {
+                        label.setIcon(new ImageIcon(icon));
+                    }
                 }
             } else {
                 label.setIcon(null);
