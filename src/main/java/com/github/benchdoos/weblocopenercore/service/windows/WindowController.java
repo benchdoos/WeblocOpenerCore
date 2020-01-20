@@ -3,6 +3,7 @@ package com.github.benchdoos.weblocopenercore.service.windows;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.Window;
 import java.io.File;
@@ -18,9 +19,9 @@ public abstract class WindowController {
     public WindowController() {
         mapper = new ObjectMapper();
     }
-    public abstract void storeWindow(Window window) throws IOException;
+    public abstract void storeWindow(@NotNull Window window);
 
-    public void saveSettings(Set<WindowSetting> settings, File file) throws IOException {
+    public void saveSettings(Set<WindowSettings> settings, File file) throws IOException {
         Assertions.assertThat(file).isNotNull();
         Assertions.assertThat(file.isDirectory()).isFalse();
 
@@ -28,10 +29,10 @@ public abstract class WindowController {
     }
 
 
-    public Set<WindowSetting> loadSettings(File file) throws IOException {
-        return mapper.readValue(file, new TypeReference<Set<WindowSetting>>() {
+    public Set<WindowSettings> loadSettings(File file) throws IOException {
+        return mapper.readValue(file, new TypeReference<Set<WindowSettings>>() {
         });
     }
 
-    public abstract void loadWindow(Window window) throws IOException;
+    public abstract void loadWindow(@NotNull Window window);
 }

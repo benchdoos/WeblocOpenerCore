@@ -29,6 +29,7 @@ import com.github.benchdoos.weblocopenercore.gui.wrappers.CreateNewFileDialogWra
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import com.github.benchdoos.weblocopenercore.service.WindowLauncher;
 import com.github.benchdoos.weblocopenercore.service.notification.NotificationManager;
+import com.github.benchdoos.weblocopenercore.service.windows.DefaultWindowController;
 import com.github.benchdoos.weblocopenercore.utils.FrameUtils;
 import com.github.benchdoos.weblocopenercore.utils.GuiUtils;
 import com.github.benchdoos.weblocopenercore.utils.system.OS;
@@ -55,16 +56,10 @@ import javax.swing.KeyStroke;
 import javax.swing.ListModel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
-import javax.swing.border.Border;
-import javax.swing.plaf.SplitPaneUI;
-import javax.swing.plaf.basic.BasicSplitPaneDivider;
-import javax.swing.plaf.basic.BasicSplitPaneUI;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.Window;
@@ -379,7 +374,7 @@ public class SettingsDialog extends JFrame implements Translatable {
 
         pack();
         setMinimumSize(new Dimension(768, 400));
-        setWindowOnScreenCenter(this);
+
         translate();
     }
 
@@ -401,6 +396,12 @@ public class SettingsDialog extends JFrame implements Translatable {
         }
 
         splitPane.setBorder(null);
+    }
+
+    @Override
+    public void dispose() {
+        new DefaultWindowController().storeWindow(this);
+        super.dispose();
     }
 
     private void updateMinimalModeValue(boolean minimalMode) {
