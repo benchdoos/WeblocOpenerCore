@@ -305,7 +305,9 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel, Tra
         toolBar1.add(removeSelectedItemsButton);
         final Spacer spacer1 = new Spacer();
         panel2.add(spacer1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        splitPane1.setRightComponent(infoPanel);
+        final JScrollPane scrollPane2 = new JScrollPane();
+        splitPane1.setRightComponent(scrollPane2);
+        scrollPane2.setViewportView(infoPanel);
         disabledPanel = new JPanel();
         disabledPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         panel1.add(disabledPanel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
