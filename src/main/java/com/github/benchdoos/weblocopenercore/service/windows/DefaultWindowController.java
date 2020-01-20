@@ -1,6 +1,7 @@
 package com.github.benchdoos.weblocopenercore.service.windows;
 
 import lombok.extern.log4j.Log4j2;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.JFrame;
 import java.awt.Dimension;
@@ -8,8 +9,7 @@ import java.awt.Point;
 import java.awt.Window;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
 import java.util.Set;
 
 import static com.github.benchdoos.weblocopenercore.core.constants.PathConstants.WINDOW_LOCATIONS_FILE_PATH;
@@ -18,73 +18,111 @@ import static com.github.benchdoos.weblocopenercore.core.constants.PathConstants
 public class DefaultWindowController extends WindowController {
 
     private static final File WINDOW_SETTINGS_FILE = new File(WINDOW_LOCATIONS_FILE_PATH);
-    private static Set<WindowSetting> windowSettings = null;
+    private static Set<WindowSettings> windowSettings = null;
 
     @Override
-    public void storeWindow(Window window) throws IOException {
-        final HashMap<WindowSettingName, Object> settings = new HashMap<>();
+    public void storeWindow(@NotNull Window window) {
+        final WindowSettings.Settings settings = new WindowSettings.Settings();
+        try {
 
-        saveWindowProperties(window, settings);
+            saveWindowProperties(window, settings);
 
-        updateWindowsSettings(window, settings);
+            updateWindowsSettings(window, settings);
+        } catch (IOException e) {
+            log.warn("Could not save window location. Window: {}. Settings: {}", window.getClass().getSimpleName(), settings, e);
+        }
     }
 
     @Override
-    public void loadWindow(Window window) throws IOException {
+    public void loadWindow(@NotNull Window window) {
         if (windowSettings == null) {
             forceSettingsLoad();
         }
 
-        windowSettings.stream()
-                .filter(setting -> setting.getWindowClassName().equals(window.getClass().getSimpleName()))
-                .findFirst().ifPresent(s -> setWindowPropertiesFromSettings(window, s));
+        if (windowSettings != null) {
+            windowSettings.stream()
+                    .filter(setting -> setting.getWindow().equals(window.getClass().getName()))
+                    .findFirst().ifPresent(s -> setWindowPropertiesFromSettings(window, s));
+        }
     }
 
-    public void forceSettingsLoad() throws IOException {
-        windowSettings = loadSettings(WINDOW_SETTINGS_FILE);
+    public void forceSettingsLoad() {
+        try {
+            windowSettings = loadSettings(WINDOW_SETTINGS_FILE);
+        } catch (IOException e) {
+            log.warn("Could not read settings from file: {}", WINDOW_SETTINGS_FILE, e);
+            windowSettings = new HashSet<>();
+        }
     }
 
-    private void setWindowPropertiesFromSettings(Window window, WindowSetting windowSetting) {
-        final Map<WindowSettingName, Object> settings = windowSetting.getSettings();
-        if (settings.containsKey(WindowSettingName.LOCATION)) {
-            final Point point = (Point) settings.get(WindowSettingName.LOCATION);
-            window.setLocation(point);
-        }
+    private void setWindowPropertiesFromSettings(Window window, WindowSettings windowSettings) {
+        final WindowSettings.Settings settings = windowSettings.getSettings();
 
-        if (settings.containsKey(WindowSettingName.WINDOW_SIZE)) {
-            final Dimension dimension = (Dimension) settings.get(WindowSettingName.WINDOW_SIZE);
-            window.setSize(dimension);
-        }
-
-        if (settings.containsKey(WindowSettingName.EXTENDED_STATE)) {
+        if (settings.getExtendedState() != null) {
             if (window instanceof JFrame) {
                 final JFrame frame = (JFrame) window;
 
-                final int state = (int) settings.get(WindowSettingName.EXTENDED_STATE);
-                frame.setExtendedState(state);
+                frame.setExtendedState(settings.getExtendedState());
+
+                if (settings.getExtendedState() == JFrame.NORMAL) {
+                    applyLocationAndSizeSettingsToWindow(window, settings);
+                }
+            }
+        } else {
+            applyLocationAndSizeSettingsToWindow(window, settings);
+        }
+        log.info("Window ({}) settings were set to {}", window.getClass().getName(), settings);
+    }
+
+    private void applyLocationAndSizeSettingsToWindow(Window window, WindowSettings.Settings settings) {
+        if (settings.getLocation() != null) {
+            if (settings.getLocation().x > 50 && settings.getLocation().y > 50) {
+                window.setLocation(settings.getLocation());
+            }
+        }
+
+        if (settings.getSize() != null) {
+            if (settings.getSize().getWidth() >= window.getMinimumSize().getWidth()
+                    && settings.getSize().getHeight() >= window.getMinimumSize().getHeight()) {
+
+                window.setSize(settings.getSize());
             }
         }
     }
 
-    private void updateWindowsSettings(Window window, HashMap<WindowSettingName, Object> settings) throws IOException {
+    private void updateWindowsSettings(Window window, WindowSettings.Settings settings) throws IOException {
         forceSettingsLoad();
 
-        final Set<WindowSetting> windowSettings = loadSettings(WINDOW_SETTINGS_FILE);
-        windowSettings.add(new WindowSetting(window.getClass().getSimpleName(), settings));
+        final String name = window.getClass().getName();
+
+        // settings not used in equals+hashcode, so object is equal to each other, so it is not updated.
+        windowSettings.remove(new WindowSettings(name, null));
+
+        windowSettings.add(new WindowSettings(name, settings));
 
         saveSettings(windowSettings, WINDOW_SETTINGS_FILE);
+
+        log.info("Saved window settings for window: {}. Settings: {}", name, settings);
     }
 
-    private void saveWindowProperties(Window window, HashMap<WindowSettingName, Object> settings) {
+    private void saveWindowProperties(Window window, WindowSettings.Settings settings) {
         if (window instanceof JFrame) {
             final int extendedState = ((JFrame) window).getExtendedState();
-            settings.put(WindowSettingName.EXTENDED_STATE, extendedState);
-        }
+            settings.setExtendedState(extendedState);
 
+            if (extendedState == JFrame.NORMAL) {
+                updateLocationAndSize(window, settings);
+            }
+        } else {
+            updateLocationAndSize(window, settings);
+        }
+    }
+
+    private void updateLocationAndSize(Window window, WindowSettings.Settings settings) {
         final Point location = window.getLocation();
-        settings.put(WindowSettingName.LOCATION, location);
+        settings.setLocation(location);
 
         final Dimension size = window.getSize();
-        settings.put(WindowSettingName.WINDOW_SIZE, size);
+        settings.setSize(size);
     }
 }
