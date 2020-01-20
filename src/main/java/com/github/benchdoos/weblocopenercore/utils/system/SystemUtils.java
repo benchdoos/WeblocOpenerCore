@@ -16,25 +16,22 @@
 package com.github.benchdoos.weblocopenercore.utils.system;
 
 
+import com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants;
 import com.github.benchdoos.weblocopenercore.utils.Internal;
 import lombok.extern.log4j.Log4j2;
 
-import static com.github.benchdoos.weblocopenercore.utils.system.OperatingSystem.getOsName;
-import static com.github.benchdoos.weblocopenercore.utils.system.OperatingSystem.isMac;
-import static com.github.benchdoos.weblocopenercore.utils.system.OperatingSystem.isSolaris;
-import static com.github.benchdoos.weblocopenercore.utils.system.OperatingSystem.isUnix;
-import static com.github.benchdoos.weblocopenercore.utils.system.OperatingSystem.isWindows;
+import static com.github.benchdoos.weblocopenercore.utils.system.OS.getOsName;
+import static com.github.benchdoos.weblocopenercore.utils.system.OS.isWindows;
 
 @Log4j2
 public class SystemUtils {
     private static final String MINIMUM_WINDOWS_VERSION = "5.1"; //Windows XP
-    private static final OperatingSystem.OS[] SUPPORTED = new OperatingSystem.OS[]{OperatingSystem.OS.WINDOWS, OperatingSystem.OS.UNIX};
 
     private static final String CURRENT_OS_VERSION = getOsVersion();
     public static final boolean IS_WINDOWS_XP = isWindows()
             && Internal.versionCompare(SystemUtils.CURRENT_OS_VERSION, "5.1") >= 0
             && Internal.versionCompare(SystemUtils.CURRENT_OS_VERSION, "6.0") < 0;
-    private static final OperatingSystem.OS CURRENT_OS = getCurrentOS();
+    private static final OS CURRENT_OS = OS.getCurrentOS();
 
 
     private static String getOsVersion() {
@@ -42,7 +39,7 @@ public class SystemUtils {
     }
 
     private static String getRealSystemArch() {
-        if (getCurrentOS() == OperatingSystem.OS.WINDOWS) {
+        if (OS.isWindows()) {
             String arch = System.getenv("PROCESSOR_ARCHITECTURE");
             String wow64Arch = System.getenv("PROCESSOR_ARCHITEW6432");
 
@@ -55,7 +52,7 @@ public class SystemUtils {
     public static void checkIfSystemIsSupported() throws UnsupportedSystemException {
         initSystem();
         if (isSupported()) {
-            if (CURRENT_OS == OperatingSystem.OS.WINDOWS) {
+            if (CURRENT_OS == OS.WINDOWS) {
                 checkWindows();
             }
         } else {
@@ -67,7 +64,6 @@ public class SystemUtils {
     private static void initSystem() {
         log.info("Initializing system...");
         try {
-            getCurrentOS();
             log.info(getSystemParameters());
         } catch (Throwable e) {
             log.warn("Could not properly init system, but anyway continuing...", e);
@@ -82,7 +78,7 @@ public class SystemUtils {
     }
 
     private static boolean isSupported() {
-        for (OperatingSystem.OS supportedSystems : SUPPORTED) {
+        for (OS supportedSystems : ApplicationConstants.SUPPORTED_OS) {
             if (SystemUtils.CURRENT_OS.equals(supportedSystems)) {
                 return true;
             }
@@ -110,19 +106,5 @@ public class SystemUtils {
             return "";
         }
     }
-
-    public static OperatingSystem.OS getCurrentOS() {
-        if (isWindows()) {
-            return OperatingSystem.OS.WINDOWS;
-        } else if (isMac()) {
-            return OperatingSystem.OS.MAC_OS;
-        } else if (isUnix()) {
-            return OperatingSystem.OS.UNIX;
-        } else if (isSolaris()) {
-            return OperatingSystem.OS.SOLARIS;
-        } else return OperatingSystem.OS.UNSUPPORTED;
-    }
-
-
 
 }

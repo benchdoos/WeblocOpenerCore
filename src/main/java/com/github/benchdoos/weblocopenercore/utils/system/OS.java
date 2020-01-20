@@ -15,30 +15,50 @@
 
 package com.github.benchdoos.weblocopenercore.utils.system;
 
-public class OperatingSystem {
+import lombok.RequiredArgsConstructor;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+@RequiredArgsConstructor
+public enum OS {
+    WINDOWS(Collections.singletonList("win")),
+    MAC_OS(Collections.singletonList("mac")),
+    UNIX(Arrays.asList("nix", "nux", "aix")),
+    SOLARIS(Collections.singletonList("sunos")),
+    UNSUPPORTED(Collections.emptyList());
+
+    private final List<String> names;
 
     public static String getOsName() {
         return System.getProperty("os.name").toLowerCase();
     }
 
     public static boolean isWindows() {
-        return (getOsName().contains("win"));
+        return (WINDOWS.names.contains(getOsName()));
     }
 
     public static boolean isMac() {
-        return (getOsName().contains("mac"));
+        return (MAC_OS.names.contains(getOsName()));
     }
 
     public static boolean isUnix() {
-        return (getOsName().contains("nix")
-                || getOsName().contains("nux")
-                || getOsName().contains("aix"));
+        return getCurrentOS() == OS.UNIX;
     }
 
     public static boolean isSolaris() {
-        return (getOsName().contains("sunos"));
+        return (SOLARIS.names.contains(getOsName()));
     }
 
-    public enum OS {WINDOWS, MAC_OS, UNIX, SOLARIS, UNSUPPORTED}
-
+    public static OS getCurrentOS() {
+        for (OS current : OS.values()) {
+            for (String name : current.names) {
+                if (getOsName().toLowerCase().contains(name)) {
+                    return current;
+                }
+            }
+        }
+        return UNSUPPORTED;
+    }
 }

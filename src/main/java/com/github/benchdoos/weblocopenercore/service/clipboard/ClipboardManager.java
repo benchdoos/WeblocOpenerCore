@@ -17,15 +17,15 @@ package com.github.benchdoos.weblocopenercore.service.clipboard;
 
 import com.github.benchdoos.weblocopenercore.service.clipboard.impl.UnixClipboard;
 import com.github.benchdoos.weblocopenercore.service.clipboard.impl.WindowsClipboard;
-import com.github.benchdoos.weblocopenercore.utils.system.OperatingSystem;
+import com.github.benchdoos.weblocopenercore.utils.system.OS;
 
 public class ClipboardManager {
     private static final Clipboard DEFAULT_CLIPBOARD = new WindowsClipboard();
 
     public static Clipboard getClipboardForSystem() {
-        if (OperatingSystem.isWindows()) {
+        if (OS.isWindows()) {
             return new WindowsClipboard();
-        } else if (OperatingSystem.isUnix()) {
+        } else if (OS.isUnix()) {
             return new UnixClipboard();
         }
         return DEFAULT_CLIPBOARD;

@@ -5,6 +5,7 @@ import com.github.benchdoos.weblocopenercore.core.Logging;
 import com.github.benchdoos.weblocopenercore.core.Translation;
 import com.github.benchdoos.weblocopenercore.service.notification.NotificationManager;
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
+import com.github.benchdoos.weblocopenercore.utils.system.OS;
 import com.github.benchdoos.weblocopenercore.utils.system.SystemUtils;
 import com.github.benchdoos.weblocopenercore.utils.system.UnsupportedSystemException;
 import org.apache.logging.log4j.LogManager;
@@ -29,7 +30,7 @@ public class Main {
         } catch (UnsupportedSystemException e) {
             log.fatal("System not supported", e);
             final String translatedString = Translation.getTranslatedString("CommonsBundle", "systemNotSupported");
-            final String message = translatedString + " " + SystemUtils.getCurrentOS().name();
+            final String message = translatedString + " " + OS.getCurrentOS().name();
 
             NotificationManager.getForcedNotification(null).showErrorNotification(message, message);
         } catch (Exception e) {

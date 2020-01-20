@@ -22,7 +22,7 @@ import com.github.benchdoos.weblocopenercore.core.constants.SettingsConstants;
 import com.github.benchdoos.weblocopenercore.gui.Translatable;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import com.github.benchdoos.weblocopenercore.service.links.LinkFactory;
-import com.github.benchdoos.weblocopenercore.utils.system.OperatingSystem;
+import com.github.benchdoos.weblocopenercore.utils.system.OS;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
@@ -149,7 +149,7 @@ public class FileProcessingPanel extends JPanel implements SettingsPanel, Transl
                 "unix mode: {}", this.mode);
 
 
-        if (OperatingSystem.isUnix()) {
+        if (OS.isUnix()) {
             PreferencesManager.setUnixOpeningMode(this.mode);
         }
     }
@@ -220,7 +220,7 @@ public class FileProcessingPanel extends JPanel implements SettingsPanel, Transl
     }
 
     private void initUnixOpenModePanel() {
-        unixOpenModePanel.setVisible(OperatingSystem.isUnix());
+        unixOpenModePanel.setVisible(OS.isUnix());
     }
 
     {

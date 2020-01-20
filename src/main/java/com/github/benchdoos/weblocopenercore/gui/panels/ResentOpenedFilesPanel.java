@@ -7,6 +7,8 @@ import com.github.benchdoos.weblocopenercore.gui.panels.resentFilesPanels.LinkIn
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import com.github.benchdoos.weblocopenercore.service.recentFiles.OpenedFileInfo;
 import com.github.benchdoos.weblocopenercore.service.recentFiles.RecentFilesManager;
+import com.github.benchdoos.weblocopenercore.utils.GuiUtils;
+import com.github.benchdoos.weblocopenercore.utils.system.OS;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
@@ -46,6 +48,7 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel, Tra
     private JList<OpenedFileInfo> fileList;
     private DisabledResentFilesPanel disabledRecentFilesPanel;
     private JButton updateItemsList;
+    private JSplitPane splitPane;
 
     public ResentOpenedFilesPanel() {
         $$$setupUI$$$();
@@ -58,6 +61,11 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel, Tra
         add(contentPane);
 
         initVisiblePanels();
+
+        if (OS.isUnix()) {
+            GuiUtils.appendToSplitPaneDividerIcon(splitPane);
+        }
+
         initFileList();
         loadFileList(new RecentFilesManager().loadRecentOpenedFilesList());
 
@@ -278,11 +286,11 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel, Tra
         enabledPanel = new JPanel();
         enabledPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         panel1.add(enabledPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        final JSplitPane splitPane1 = new JSplitPane();
-        enabledPanel.add(splitPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
+        splitPane = new JSplitPane();
+        enabledPanel.add(splitPane, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 200), null, 0, false));
         final JPanel panel2 = new JPanel();
         panel2.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
-        splitPane1.setLeftComponent(panel2);
+        splitPane.setLeftComponent(panel2);
         final JScrollPane scrollPane1 = new JScrollPane();
         panel2.add(scrollPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(100, -1), new Dimension(200, -1), null, 0, false));
         fileList = new JList();
@@ -306,7 +314,7 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel, Tra
         final Spacer spacer1 = new Spacer();
         panel2.add(spacer1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         final JScrollPane scrollPane2 = new JScrollPane();
-        splitPane1.setRightComponent(scrollPane2);
+        splitPane.setRightComponent(scrollPane2);
         scrollPane2.setViewportView(infoPanel);
         disabledPanel = new JPanel();
         disabledPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));

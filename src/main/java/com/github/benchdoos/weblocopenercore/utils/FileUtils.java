@@ -15,7 +15,7 @@
 
 package com.github.benchdoos.weblocopenercore.utils;
 
-import com.github.benchdoos.weblocopenercore.utils.system.OperatingSystem;
+import com.github.benchdoos.weblocopenercore.utils.system.OS;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 
@@ -52,10 +52,10 @@ public class FileUtils {
     private static void openFile(File file) {
         log.info("Opening file in system file manager: {}", file);
         try {
-            log.debug("Current system is: {}", OperatingSystem.getOsName());
-            if (OperatingSystem.isWindows()) {
+            log.debug("Current system is: {}", OS.getOsName());
+            if (OS.isWindows()) {
                 openFileInWindowsExplorer(file);
-            } else if (OperatingSystem.isUnix()) {
+            } else if (OS.isUnix()) {
                 openFileInNautilusUnix(file);
             }
         } catch (IOException ex) {

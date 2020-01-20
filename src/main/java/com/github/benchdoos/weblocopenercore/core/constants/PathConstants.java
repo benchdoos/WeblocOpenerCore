@@ -16,7 +16,7 @@
 package com.github.benchdoos.weblocopenercore.core.constants;
 
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
-import com.github.benchdoos.weblocopenercore.utils.system.OperatingSystem;
+import com.github.benchdoos.weblocopenercore.utils.system.OS;
 import com.github.benchdoos.weblocopenercore.utils.system.SystemUtils;
 
 import java.io.File;
@@ -26,7 +26,7 @@ import static com.github.benchdoos.weblocopenercore.core.constants.ApplicationCo
 
 public interface PathConstants {
 
-    String ROOT_PATH = SystemUtils.getCurrentOS().equals(OperatingSystem.OS.WINDOWS) ?
+    String ROOT_PATH = OS.isWindows() ?
             System.getProperty("java.io.tmpdir") + File.separator + WEBLOCOPENER_APPLICATION_NAME :
             System.getProperty("user.home") + File.separator + "." + WEBLOCOPENER_APPLICATION_NAME;
 

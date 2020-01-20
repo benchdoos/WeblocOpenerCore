@@ -18,7 +18,7 @@ package com.github.benchdoos.weblocopenercore.core.constants;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import com.github.benchdoos.weblocopenercore.service.gui.darkMode.SimpleTime;
 import com.github.benchdoos.weblocopenercore.service.links.LinkFactory;
-import com.github.benchdoos.weblocopenercore.utils.system.OperatingSystem;
+import com.github.benchdoos.weblocopenercore.utils.system.OS;
 import com.github.benchdoos.weblocopenercore.utils.system.SystemUtils;
 
 public interface SettingsConstants {
@@ -28,10 +28,8 @@ public interface SettingsConstants {
     boolean OPEN_FOLDER_FOR_NEW_FILE = false;
     boolean SHOW_NOTIFICATIONS_TO_USER = true;
     boolean OPENED_PREVIOUSLY_FILES_HISTORY_ENABLED = true;
-    LinkFactory.LinkType URL_PROCESSOR = OperatingSystem.OS.WINDOWS
-            .equals(SystemUtils.getCurrentOS()) ?
-            LinkFactory.LinkType.url : (OperatingSystem.OS.UNIX
-            .equals(SystemUtils.getCurrentOS()) ?
+    LinkFactory.LinkType URL_PROCESSOR = OS.isWindows() ?
+            LinkFactory.LinkType.url : (OS.isUnix() ?
             LinkFactory.LinkType.desktop
             : LinkFactory.LinkType.binary_webloc);
     String BROWSER_DEFAULT_VALUE = "default";

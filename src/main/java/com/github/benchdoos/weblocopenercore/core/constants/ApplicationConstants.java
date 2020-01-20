@@ -17,6 +17,7 @@ package com.github.benchdoos.weblocopenercore.core.constants;
 
 import com.github.benchdoos.jcolorful.beans.Theme;
 import com.github.benchdoos.jcolorful.core.JColorful;
+import com.github.benchdoos.weblocopenercore.utils.system.OS;
 
 public interface ApplicationConstants {
     String WEBLOCOPENER_APPLICATION_NAME = "WeblocOpener";
@@ -25,4 +26,6 @@ public interface ApplicationConstants {
     String DEFAULT_APPLICATION_CHARSET = "UTF-8";
 
     Theme DARK_MODE_THEME = JColorful.EXTREMELY_BLACK;
+
+    OS[] SUPPORTED_OS = new OS[]{OS.WINDOWS, OS.UNIX};
 }

@@ -20,7 +20,7 @@ import com.github.benchdoos.weblocopenercore.core.constants.SettingsConstants;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import com.github.benchdoos.weblocopenercore.utils.QrCodeUtils;
 import com.github.benchdoos.weblocopenercore.service.notification.NotificationManager;
-import com.github.benchdoos.weblocopenercore.utils.system.OperatingSystem;
+import com.github.benchdoos.weblocopenercore.utils.system.OS;
 import com.github.benchdoos.weblocopenercore.utils.system.SystemUtils;
 import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageConfig;
@@ -98,7 +98,7 @@ public class UrlsProceed {
     }
 
     private static void openUrlInNotDefaultBrowser(final String url) throws IOException {
-        final OperatingSystem.OS currentOS = SystemUtils.getCurrentOS();
+        final OS currentOS = OS.getCurrentOS();
 
         switch (currentOS) {
             case WINDOWS:

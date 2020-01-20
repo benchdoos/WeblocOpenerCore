@@ -40,7 +40,7 @@ import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import com.github.benchdoos.weblocopenercore.utils.FileUtils;
 import com.github.benchdoos.weblocopenercore.utils.FrameUtils;
 import com.github.benchdoos.weblocopenercore.utils.browser.BrowserManager;
-import com.github.benchdoos.weblocopenercore.utils.system.OperatingSystem;
+import com.github.benchdoos.weblocopenercore.utils.system.OS;
 import com.github.benchdoos.weblocopenercore.utils.system.SystemUtils;
 import lombok.extern.log4j.Log4j2;
 
@@ -218,7 +218,7 @@ public class Application {
             log.warn("Could not open file: {}", arg, e);
             final File file = new File(arg);
 
-            if (SystemUtils.getCurrentOS().equals(OperatingSystem.OS.UNIX)) {
+            if (OS.isUnix()) {
                 if (Link.DESKTOP_LINK.getExtension().equals(org.apache.logging.log4j.core.util.FileUtils.getFileExtension(file))) {
                     NotificationManager.getNotificationForCurrentOS()
                             .showWarningNotification("Can not open file: " + file.getName(),
@@ -450,9 +450,9 @@ public class Application {
     }
 
     private void manageSoloArgument(String[] args) {
-        if (OperatingSystem.isWindows()) {
+        if (OS.isWindows()) {
             manageArguments(args);
-        } else if (OperatingSystem.isUnix()) {
+        } else if (OS.isUnix()) {
             final String arg = args[0];
 
             final ApplicationArgument argument = ApplicationArgument.getByArgument(arg);
@@ -494,7 +494,7 @@ public class Application {
                 manageArgumentsOnUnix(args);
             }
         } else {
-            log.warn("System is not supported yet: {}", SystemUtils.getCurrentOS());
+            log.warn("System is not supported yet: {}", OS.getCurrentOS());
         }
     }
 
