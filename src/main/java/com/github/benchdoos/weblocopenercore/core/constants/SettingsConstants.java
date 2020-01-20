@@ -40,5 +40,5 @@ public interface SettingsConstants {
     String LOCALE_DEFAULT_VALUE = "default";
     ApplicationArgument OPENER_UNIX_DEFAULT_SELECTOR_MODE = ApplicationArgument.UNIX_DEFAULT_OPEN_MODE_ARGUMENT;
 
-    boolean MINIMAL_LIST_MODE_ENABLED = false;
+    boolean MINIMAL_LIST_MODE_ENABLED = true;
 }
