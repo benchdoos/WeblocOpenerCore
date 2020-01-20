@@ -17,7 +17,6 @@ package com.github.benchdoos.weblocopenercore.core.constants;
 
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import com.github.benchdoos.weblocopenercore.utils.system.OS;
-import com.github.benchdoos.weblocopenercore.utils.system.SystemUtils;
 
 import java.io.File;
 
@@ -35,4 +34,7 @@ public interface PathConstants {
 
     String RECENT_OPENED_FILES_FILE_PATH = ROOT_PATH + File.separator
             + CoreUtils.fixFileName("recent-files-" + System.getProperty("user.name").toLowerCase() + ".json");
+
+    String WINDOW_LOCATIONS_FILE_PATH = ROOT_PATH + File.separator
+            + CoreUtils.fixFileName("window-locations-" + System.getProperty("user.name").toLowerCase() + ".json");
 }
