@@ -30,6 +30,7 @@ import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import com.github.benchdoos.weblocopenercore.service.WindowLauncher;
 import com.github.benchdoos.weblocopenercore.service.notification.NotificationManager;
 import com.github.benchdoos.weblocopenercore.utils.FrameUtils;
+import com.github.benchdoos.weblocopenercore.utils.GuiUtils;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
@@ -53,10 +54,16 @@ import javax.swing.KeyStroke;
 import javax.swing.ListModel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import javax.swing.border.Border;
+import javax.swing.plaf.SplitPaneUI;
+import javax.swing.plaf.basic.BasicSplitPaneDivider;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Graphics;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.Window;
@@ -388,6 +395,9 @@ public class SettingsDialog extends JFrame implements Translatable {
 
                     updateMinimalModeValue(minimalMode);
                 });
+        GuiUtils.appendToSplitPaneDividerIcon(splitPane);
+
+        splitPane.setBorder(null);
     }
 
     private void updateMinimalModeValue(boolean minimalMode) {
