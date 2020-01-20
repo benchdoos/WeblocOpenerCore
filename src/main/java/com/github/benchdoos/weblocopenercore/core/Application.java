@@ -163,7 +163,8 @@ public class Application {
                         break;
                 }
             } else {
-                log.warn("Illegal argument at index 0 : Argument is empty!");
+                log.info("No default argument ({}) detected at argument at index 0. ", arg);
+                runAnalyzer(arg);
             }
         } else {
             log.debug("No arguments found, launching settings");
