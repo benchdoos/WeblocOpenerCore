@@ -330,6 +330,7 @@ public class MainSetterPanel extends JPanel implements SettingsPanel, Translatab
         showNotificationsToUserCheckBox.setSelected(PreferencesManager.isNotificationsShown());
         localeComboBox.setSelectedItem(PreferencesManager.getLocale());
         savePreviouslyOpenedFilesCheckBox.setSelected(PreferencesManager.isRecentOpenedFilesHistoryEnabled());
+        shareInfoCheckBox.setSelected(PreferencesManager.isShareAnonymousInfoEnabled());
     }
 
     @Override
@@ -339,6 +340,7 @@ public class MainSetterPanel extends JPanel implements SettingsPanel, Translatab
         final boolean folder = openFolderForQRCheckBox.isSelected();
         final boolean notification = showNotificationsToUserCheckBox.isSelected();
         final boolean saveOpenedFiles = savePreviouslyOpenedFilesCheckBox.isSelected();
+        final boolean shareAnonymousInfo = shareInfoCheckBox.isSelected();
 
         saveLocale();
 
@@ -347,14 +349,16 @@ public class MainSetterPanel extends JPanel implements SettingsPanel, Translatab
                         "beta installing: {}, " +
                         "open folder for qr-code: {}, " +
                         "notifications available: {}," +
-                        "save previously opened files enabled: {}",
-                update, beta, folder, notification, saveOpenedFiles);
+                        "save previously opened files enabled: {}," +
+                        "share anonymous info enabled: {}",
+                update, beta, folder, notification, saveOpenedFiles, shareAnonymousInfo);
 
         PreferencesManager.setAutoUpdateActive(update);
         PreferencesManager.setBetaUpdateInstalling(beta);
         PreferencesManager.setOpenFolderForQrCode(folder);
         PreferencesManager.setNotificationsShown(notification);
         PreferencesManager.setRecentOpenedFilesHistoryEnable(saveOpenedFiles);
+        PreferencesManager.setShareAnonymousInfoEnabled(shareAnonymousInfo);
     }
 
     private void saveLocale() {
