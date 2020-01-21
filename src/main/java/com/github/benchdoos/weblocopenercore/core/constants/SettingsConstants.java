@@ -41,4 +41,5 @@ public interface SettingsConstants {
     ApplicationArgument OPENER_UNIX_DEFAULT_SELECTOR_MODE = ApplicationArgument.UNIX_DEFAULT_OPEN_MODE_ARGUMENT;
 
     boolean MINIMAL_LIST_MODE_ENABLED = true;
+    boolean SHARE_USER_INFO = false;
 }

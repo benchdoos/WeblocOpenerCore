@@ -68,6 +68,7 @@ public class Application {
 
         CoreUtils.enableLookAndFeel();
 
+        shareUserInfo();
 
         if (args.length > 1) {
             manageArguments(args);
@@ -75,6 +76,14 @@ public class Application {
             manageSoloArgument(args);
         } else {
             runSettingsDialog(null);
+        }
+
+    }
+
+    private void shareUserInfo() {
+        log.info("Checking if sharing anonymous info enabled");
+        if (PreferencesManager.isShareAnonymousInfoEnabled()) {
+            //todo share info here
         }
 
     }

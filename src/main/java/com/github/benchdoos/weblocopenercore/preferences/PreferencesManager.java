@@ -16,6 +16,7 @@
 package com.github.benchdoos.weblocopenercore.preferences;
 
 import com.github.benchdoos.linksupport.links.Link;
+import com.github.benchdoos.weblocopenercore.core.Translation;
 import com.github.benchdoos.weblocopenercore.core.constants.ApplicationArgument;
 import com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants;
 import com.github.benchdoos.weblocopenercore.core.constants.SettingsConstants;
@@ -24,7 +25,10 @@ import com.github.benchdoos.weblocopenercore.service.gui.darkMode.SimpleTime;
 import com.github.benchdoos.weblocopenercore.service.links.LinkFactory;
 import lombok.extern.log4j.Log4j2;
 
+import javax.swing.JOptionPane;
+import java.awt.HeadlessException;
 import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -57,6 +61,8 @@ public class PreferencesManager {
     private static final String KEY_OPEN_FOR_NEW_FILE = "open_folder_for_new_file";
     private static final String KEY_RECENT_OPENED_FILES_HISTORY_ENABLED = "recent_opened_files_history_enabled";
     private static final String KEY_MINIMAL_LIST_MODE_ENABLED = "minimal_list_mode";
+    private static final String KEY_SHARE_USER_INFO_ENABLED = "share_anonymous_info";
+    private static final String KEY_APPLICATION_UUID = "application_uuid";
 
     private static final Preferences PREFERENCES = Preferences.userRoot().node(ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME.toLowerCase());
 
@@ -287,7 +293,45 @@ public class PreferencesManager {
 
     public static void setMinimalListModeEnabled(boolean enabled) {
         PREFERENCES.putBoolean(KEY_MINIMAL_LIST_MODE_ENABLED, enabled);
+    }
 
+    public static boolean isShareAnonymousInfoEnabled() {
+        try {
+            if (Arrays.asList(PREFERENCES.keys()).contains(KEY_SHARE_USER_INFO_ENABLED)) {
+                return PREFERENCES.getBoolean(KEY_SHARE_USER_INFO_ENABLED, SettingsConstants.SHARE_USER_INFO);
+            } else {
+                try {
+                    Translation translation = new Translation("ShareAnonymousInfoBundle");
+                    final int selected = JOptionPane.showOptionDialog(
+                            null,
+                            translation.getTranslatedString("message"),
+                            ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME,
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.WARNING_MESSAGE,
+                            null,
+                            new String[]{
+                                    translation.getTranslatedString("disableButton"),
+                                    translation.getTranslatedString("enableButton")
+                            },
+                            translation.getTranslatedString("enableButton"));
+
+                    final boolean enabled = selected == 1;
+
+                    setShareAnonymousInfoEnabled(enabled);
+                    flushPreferences();
+
+                    return enabled;
+                } catch (Exception e) {
+                    return SettingsConstants.SHARE_USER_INFO;
+                }
+            }
+        } catch (BackingStoreException e) {
+            return SettingsConstants.SHARE_USER_INFO;
+        }
+    }
+
+    public static void setShareAnonymousInfoEnabled(boolean enabled) {
+        PREFERENCES.putBoolean(KEY_SHARE_USER_INFO_ENABLED, enabled);
     }
 
     public enum DARK_MODE {ALWAYS, DISABLED}
