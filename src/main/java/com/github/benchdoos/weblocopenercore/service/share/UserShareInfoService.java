@@ -30,8 +30,12 @@ public class UserShareInfoService {
         post.setHeader(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8");
         post.setEntity(entity);
 
-        try (CloseableHttpClient httpClient = HttpClients.createDefault();
-             CloseableHttpResponse response = httpClient.execute(post)) {
+        sendHttpRequest(post);
+    }
+
+    private void sendHttpRequest(HttpPost post) throws IOException {
+        try (final CloseableHttpClient httpClient = HttpClients.createDefault();
+             final CloseableHttpResponse response = httpClient.execute(post)) {
 
             final int statusCode = response.getStatusLine().getStatusCode();
             if (statusCode == 200) {
@@ -44,7 +48,6 @@ public class UserShareInfoService {
                         response.getEntity());
             }
         }
-
     }
 
     private HttpEntity prepareUserInfo() throws IOException {
@@ -54,10 +57,10 @@ public class UserShareInfoService {
 
         log.info("Prepared user info: {}", userLoginDto);
 
-        ObjectMapper mapper = new ObjectMapper();
+        final ObjectMapper mapper = new ObjectMapper();
         final byte[] bytes = mapper.writeValueAsBytes(userLoginDto);
 
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+        final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
 
         result.setContent(byteArrayInputStream);
         return result;
