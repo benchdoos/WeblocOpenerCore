@@ -354,7 +354,7 @@ public class PreferencesManager {
     }
 
     private static boolean preferencesContain(String key) throws BackingStoreException {
-        return Arrays.asList(PREFERENCES.keys()).contains(KEY_SHARE_USER_INFO_ENABLED);
+        return Arrays.asList(PREFERENCES.keys()).contains(key);
     }
 
     public enum DARK_MODE {ALWAYS, DISABLED;}

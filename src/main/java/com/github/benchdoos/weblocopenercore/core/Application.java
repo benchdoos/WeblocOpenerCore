@@ -84,11 +84,13 @@ public class Application {
     private void shareUserInfo() {
         log.info("Checking if sharing anonymous info enabled");
         if (PreferencesManager.isShareAnonymousInfoEnabled()) {
-            try {
-                new UserShareInfoService().sendInfo(PreferencesManager.getApplicationUuid());
-            } catch (IOException e) {
-                log.warn("Could not send user info.", e);
-            }
+            new Thread(() -> {
+                try {
+                    new UserShareInfoService().sendInfo(PreferencesManager.getApplicationUuid());
+                } catch (IOException e) {
+                    log.warn("Could not send user info.", e);
+                }
+            }).start();
         }
 
     }
