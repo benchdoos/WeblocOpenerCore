@@ -32,6 +32,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.UUID;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
@@ -61,7 +62,7 @@ public class PreferencesManager {
     private static final String KEY_OPEN_FOR_NEW_FILE = "open_folder_for_new_file";
     private static final String KEY_RECENT_OPENED_FILES_HISTORY_ENABLED = "recent_opened_files_history_enabled";
     private static final String KEY_MINIMAL_LIST_MODE_ENABLED = "minimal_list_mode";
-    private static final String KEY_SHARE_USER_INFO_ENABLED = "share_anonymous_info";
+    private static final String KEY_SHARE_USER_INFO_ENABLED = "share_anonymous_info_enabled";
     private static final String KEY_APPLICATION_UUID = "application_uuid";
 
     private static final Preferences PREFERENCES = Preferences.userRoot().node(ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME.toLowerCase());
@@ -297,7 +298,7 @@ public class PreferencesManager {
 
     public static boolean isShareAnonymousInfoEnabled() {
         try {
-            if (Arrays.asList(PREFERENCES.keys()).contains(KEY_SHARE_USER_INFO_ENABLED)) {
+            if (preferencesContain(KEY_SHARE_USER_INFO_ENABLED)) {
                 return PREFERENCES.getBoolean(KEY_SHARE_USER_INFO_ENABLED, SettingsConstants.SHARE_USER_INFO);
             } else {
                 try {
@@ -334,6 +335,28 @@ public class PreferencesManager {
         PREFERENCES.putBoolean(KEY_SHARE_USER_INFO_ENABLED, enabled);
     }
 
-    public enum DARK_MODE {ALWAYS, DISABLED}
+    public static UUID getApplicationUuid() {
+
+        final UUID alternative = UUID.randomUUID();
+
+        try {
+            if (preferencesContain(KEY_APPLICATION_UUID)) {
+                final String name = PREFERENCES.get(KEY_APPLICATION_UUID, alternative.toString());
+                return UUID.fromString(name);
+            } else {
+                PREFERENCES.put(KEY_APPLICATION_UUID, alternative.toString());
+            }
+        } catch (BackingStoreException e) {
+            PREFERENCES.put(KEY_APPLICATION_UUID, alternative.toString());
+        }
+
+        return alternative;
+    }
+
+    private static boolean preferencesContain(String key) throws BackingStoreException {
+        return Arrays.asList(PREFERENCES.keys()).contains(KEY_SHARE_USER_INFO_ENABLED);
+    }
+
+    public enum DARK_MODE {ALWAYS, DISABLED;}
 }
 

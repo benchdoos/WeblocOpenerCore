@@ -36,6 +36,7 @@ import com.github.benchdoos.weblocopenercore.service.clipboard.ClipboardManager;
 import com.github.benchdoos.weblocopenercore.service.notification.NotificationManager;
 import com.github.benchdoos.weblocopenercore.service.recentFiles.OpenedFileInfo;
 import com.github.benchdoos.weblocopenercore.service.recentFiles.RecentFilesManager;
+import com.github.benchdoos.weblocopenercore.service.share.UserShareInfoService;
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import com.github.benchdoos.weblocopenercore.utils.FileUtils;
 import com.github.benchdoos.weblocopenercore.utils.FrameUtils;
@@ -83,7 +84,11 @@ public class Application {
     private void shareUserInfo() {
         log.info("Checking if sharing anonymous info enabled");
         if (PreferencesManager.isShareAnonymousInfoEnabled()) {
-            //todo share info here
+            try {
+                new UserShareInfoService().sendInfo(PreferencesManager.getApplicationUuid());
+            } catch (IOException e) {
+                log.warn("Could not send user info.", e);
+            }
         }
 
     }

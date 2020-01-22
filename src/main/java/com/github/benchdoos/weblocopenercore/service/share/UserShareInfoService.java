@@ -6,6 +6,7 @@ import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import lombok.extern.log4j.Log4j2;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.BasicHttpEntity;
@@ -30,9 +31,17 @@ public class UserShareInfoService {
 
         try (CloseableHttpClient httpClient = HttpClients.createDefault();
              CloseableHttpResponse response = httpClient.execute(post)) {
-            log.info("Http request was send successfully. (code: {}, response: {})",
-                    response.getStatusLine().getStatusCode(),
-                    response.getEntity());
+
+            final int statusCode = response.getStatusLine().getStatusCode();
+            if (statusCode == 200) {
+                log.info("Http request was send successfully. (code: {}, response: {})",
+                        statusCode,
+                        response.getEntity());
+            } else {
+                log.warn("Http request received wrong code. (code: {}, response: {})",
+                        statusCode,
+                        response.getEntity());
+            }
         }
 
     }
