@@ -6,7 +6,7 @@ import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import lombok.extern.log4j.Log4j2;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpStatus;
+import org.apache.http.HttpHeaders;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.BasicHttpEntity;
@@ -27,6 +27,7 @@ public class UserShareInfoService {
         final HttpPost post = new HttpPost(String.format(StringConstants.SHARE_USER_INFO_URL, uuid.toString()));
         final HttpEntity entity = prepareUserInfo();
 
+        post.setHeader(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8");
         post.setEntity(entity);
 
         try (CloseableHttpClient httpClient = HttpClients.createDefault();
