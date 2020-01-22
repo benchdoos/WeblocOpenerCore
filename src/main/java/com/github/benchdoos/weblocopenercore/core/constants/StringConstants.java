@@ -29,12 +29,7 @@ public interface StringConstants {
             "%0AYou%20can%20attach%20log%20files%20(see%20WeblocOpener%20-%20Settings%20-%20About%20-%20Log%20folder%20-%20zip%20log%20folder%20-%20attach)." +
             "%0ADon't%20forget%20to%20close%20the%20application%20before%20zipping%20logs;)";
     String DONATE_DONATION_ALERTS_URL = "https://www.donationalerts.com/r/benchdoos";
-
-
     String WINDOWS_WEBLOCOPENER_SETUP_NAME = "WeblocOpenerSetupV";
-
     String FAVICON_GETTER_URL = "https://besticon-demo.herokuapp.com/allicons.json?url=";
-
-
-
+    String SHARE_USER_INFO_URL = "https://weblocopener-statistics.herokuapp.com/notify/%s";
 }
