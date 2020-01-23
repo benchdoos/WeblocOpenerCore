@@ -19,9 +19,11 @@ import com.github.benchdoos.weblocopenercore.core.Translation;
 import com.github.benchdoos.weblocopenercore.core.constants.SettingsConstants;
 import com.github.benchdoos.weblocopenercore.gui.Translatable;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
+import com.github.benchdoos.weblocopenercore.service.UrlsProceed;
 import com.github.benchdoos.weblocopenercore.utils.FrameUtils;
 import com.github.benchdoos.weblocopenercore.utils.browser.Browser;
 import com.github.benchdoos.weblocopenercore.utils.browser.BrowserManager;
+import com.github.benchdoos.weblocopenercore.utils.system.OS;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
@@ -249,12 +251,10 @@ public class BrowserSetterPanel extends JPanel implements SettingsPanel, Transla
                 log.debug("init: " + onInit);
                 if (!onInit) {
                     log.info("Opening file browser for custom browser search");
-                    String path = openFileBrowser();
+                    String path;
+                    path = createBrowserPathForCurrentOs();
                     if (path != null) {
-                        callLabel.setVisible(true);
-                        callTextField.setVisible(true);
-                        callTextField.setText(path);
-                        incognitoCheckBox.setEnabled(false);
+                        showBrowserCallTextField(path);
                     } else {
                         final int browser = findBrowser(PreferencesManager.getBrowserValue());
                         browserComboBox.setSelectedIndex(browser);
@@ -286,6 +286,27 @@ public class BrowserSetterPanel extends JPanel implements SettingsPanel, Transla
                 callTextField.setVisible(false);
             }
         });
+    }
+
+    /**
+     * Creates path for current system.
+     * Unix system does not need file browser
+     *
+     * @return path to browser or {@link UrlsProceed#SITE} string
+     */
+    private String createBrowserPathForCurrentOs() {
+        if (OS.isUnix()) {
+            return UrlsProceed.SITE;
+        } else {
+            return openFileBrowser();
+        }
+    }
+
+    private void showBrowserCallTextField(String path) {
+        callLabel.setVisible(true);
+        callTextField.setVisible(true);
+        callTextField.setText(path);
+        incognitoCheckBox.setEnabled(false);
     }
 
     private void initGui() {

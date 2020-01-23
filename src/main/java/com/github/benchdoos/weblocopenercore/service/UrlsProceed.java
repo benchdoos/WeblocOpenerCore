@@ -41,6 +41,8 @@ import java.net.URL;
 @Log4j2
 public class UrlsProceed {
 
+    public static final String SITE = "%site";
+
     public static BufferedImage generateQrCode(String url) throws IOException, WriterException {
         final MatrixToImageConfig conf;
         if (PreferencesManager.isDarkModeEnabledNow()) {
@@ -115,7 +117,7 @@ public class UrlsProceed {
 
     private static void openUrlOnUnix(final String url) throws IOException {
         if (!url.isEmpty()) {
-            final String call = PreferencesManager.getBrowserValue().replace("%site", url);
+            final String call = PreferencesManager.getBrowserValue().replace(SITE, url);
             final String[] preparedCall = call.split(" ");
             final Runtime runtime = Runtime.getRuntime();
             runtime.exec(preparedCall);
@@ -124,7 +126,7 @@ public class UrlsProceed {
 
     private static void openUrlOnWindows(final String url) throws IOException {
         if (!url.isEmpty()) {
-            final String call = PreferencesManager.getBrowserValue().replace("%site", url);
+            final String call = PreferencesManager.getBrowserValue().replace(SITE, url);
             final Runtime runtime = Runtime.getRuntime();
             final String command = "cmd /c " + call;
             if (call.startsWith("start")) {
