@@ -55,16 +55,10 @@ import javax.swing.KeyStroke;
 import javax.swing.ListModel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
-import javax.swing.border.Border;
-import javax.swing.plaf.SplitPaneUI;
-import javax.swing.plaf.basic.BasicSplitPaneDivider;
-import javax.swing.plaf.basic.BasicSplitPaneUI;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.Window;
@@ -106,6 +100,7 @@ public class SettingsDialog extends JFrame implements Translatable {
     private JButton createNewFileButton;
     private DonationButton donationButton;
     private JSplitPane splitPane;
+    private JButton feedbackButton;
     private BrowserSetterPanel browserSetterPanel;
     private MainSetterPanel mainSetterPanel;
     private AppearanceSetterPanel appearanceSetterPanel;
@@ -343,14 +338,7 @@ public class SettingsDialog extends JFrame implements Translatable {
 
         initSplitPane();
 
-        buttonApply.addActionListener(e -> onApply());
-
-        buttonOK.addActionListener(e -> onSave());
-
-        buttonCancel.addActionListener(e -> onCancel());
-
-
-        createNewFileButton.addActionListener(e -> createNewFile());
+        initButtons();
 
 
         // call onCancel() when cross is clicked
@@ -381,6 +369,29 @@ public class SettingsDialog extends JFrame implements Translatable {
         setMinimumSize(new Dimension(768, 400));
         setWindowOnScreenCenter(this);
         translate();
+    }
+
+    private void initButtons() {
+        buttonApply.addActionListener(e -> onApply());
+
+        buttonOK.addActionListener(e -> onSave());
+
+        buttonCancel.addActionListener(e -> onCancel());
+
+        createNewFileButton.addActionListener(e -> createNewFile());
+
+        feedbackButton.addActionListener(e -> createFeedBackButton());
+    }
+
+    private void createFeedBackButton() {
+        final FeedbackJFrame feedbackJFrame = new WindowLauncher<FeedbackJFrame>() {
+            @Override
+            public FeedbackJFrame initWindow() {
+                return new FeedbackJFrame();
+            }
+        }.getWindow();
+        FrameUtils.setWindowOnScreenCenter(feedbackJFrame);
+        feedbackJFrame.setVisible(true);
     }
 
     private void initSplitPane() {
