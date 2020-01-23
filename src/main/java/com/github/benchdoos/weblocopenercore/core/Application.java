@@ -63,6 +63,7 @@ public class Application {
     private static SettingsDialog settingsDialog;
 
     public Application(final String[] args) {
+        printDevMode();
         log.info("{} starts with arguments: {}", ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME, Arrays.toString(args));
 
         BrowserManager.loadBrowserList();
@@ -79,6 +80,12 @@ public class Application {
             runSettingsDialog(null);
         }
 
+    }
+
+    private void printDevMode() {
+        if (PreferencesManager.isDevMode()) {
+            log.fatal("[DEV MODE ACTIVATED]");
+        }
     }
 
     private void shareUserInfo() {
