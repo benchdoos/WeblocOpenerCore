@@ -24,13 +24,19 @@ public class UserShareInfoService {
 
     public void sendInfo(@NotNull UUID uuid) throws IOException {
         log.info("Sharing user info. UUID: {}", uuid);
-        final HttpPost post = new HttpPost(String.format(StringConstants.SHARE_USER_INFO_URL, uuid.toString()));
+        final String shareUserInfoUrl = getShareUserInfoUrl();
+        final HttpPost post = new HttpPost(String.format(shareUserInfoUrl, uuid.toString()));
         final HttpEntity entity = prepareUserInfo();
 
         post.setHeader(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8");
         post.setEntity(entity);
 
         sendHttpRequest(post);
+    }
+
+    @NotNull
+    private String getShareUserInfoUrl() {
+        return PreferencesManager.isDevMode() ? StringConstants.SHARE_USER_INFO_DEV_MODE_URL : StringConstants.SHARE_USER_INFO_URL;
     }
 
     private void sendHttpRequest(HttpPost post) throws IOException {

@@ -32,5 +32,5 @@ public interface StringConstants {
     String WINDOWS_WEBLOCOPENER_SETUP_NAME = "WeblocOpenerSetupV";
     String FAVICON_GETTER_URL = "https://besticon-demo.herokuapp.com/allicons.json?url=";
     String SHARE_USER_INFO_URL = "https://weblocopener-statistics.herokuapp.com/notify/%s";
-//    String SHARE_USER_INFO_URL = "http://localhost:8080/notify/%s"; //todo remove
+    String SHARE_USER_INFO_DEV_MODE_URL = "http://localhost:8022/notify/%s";
 }
