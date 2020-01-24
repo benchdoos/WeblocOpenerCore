@@ -1,6 +1,7 @@
 package com.github.benchdoos.weblocopenercore.gui;
 
 import com.github.benchdoos.weblocopenercore.gui.panels.BufferedImagePanel;
+import com.github.benchdoos.weblocopenercore.service.WindowLauncher;
 import com.github.benchdoos.weblocopenercore.service.feedback.FileExtension;
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import com.github.benchdoos.weblocopenercore.utils.FileUtils;
@@ -9,25 +10,27 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import lombok.extern.log4j.Log4j2;
+import net.coobird.thumbnailator.Thumbnails;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
-import java.awt.Color;
+import javax.swing.WindowConstants;
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -38,10 +41,7 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
-import java.awt.dnd.DropTargetAdapter;
-import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
-import java.awt.dnd.DropTargetEvent;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -51,10 +51,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.TooManyListenersException;
 
 @Log4j2
 public class FeedbackDialog extends JFrame implements Translatable {
+    private static final Dimension SCALED_IMAGE_SIZE = new Dimension(640, 480);
     private JPanel contentPane;
     private JButton sendButton;
     private JButton buttonCancel;
@@ -136,11 +136,51 @@ public class FeedbackDialog extends JFrame implements Translatable {
         });
         imagesList.setModel(new DefaultListModel<>());
 
-        imagesList.addListSelectionListener(l -> {
-            final Image image = imagesList.getSelectedValue().getImage();
-            final Image scaled = CoreUtils.scaleImageToSize(CoreUtils.toBufferedImage(image), new Dimension(640, 480));
-            JOptionPane.showMessageDialog(this, new ImageIcon(scaled), null, JOptionPane.INFORMATION_MESSAGE, null);
-        });
+        imagesList.addListSelectionListener(l -> openImage());
+    }
+
+    private void openImage() {
+        try {
+            if (imagesList.getSelectedValue() != null) {
+
+                final BufferedImage bufferedImage = CoreUtils.toBufferedImage(imagesList.getSelectedValue().getImage());
+
+                final BufferedImage scaled;
+
+                if (bufferedImage.getWidth() > SCALED_IMAGE_SIZE.width ||
+                        bufferedImage.getHeight() > SCALED_IMAGE_SIZE.height) {
+                    scaled = Thumbnails.of(bufferedImage)
+                            .size(640, 480)
+                            .asBufferedImage();
+                } else {
+                    scaled = bufferedImage;
+                }
+
+                showImagePreview(scaled);
+            }
+        } catch (Exception e) {
+            log.warn("Could not scale image", e);
+        }
+    }
+
+    private void showImagePreview(BufferedImage scaled) {
+        final JDialog dialog = new WindowLauncher<JDialog>() {
+            @Override
+            public JDialog initWindow() {
+                final JDialog dialog = new JDialog();
+                dialog.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                dialog.setLayout(new BorderLayout());
+                dialog.add(new JLabel(new ImageIcon(scaled)));
+                dialog.setModal(true);
+                dialog.pack();
+                dialog.setResizable(false);
+                return dialog;
+            }
+        }.initWindow();
+
+        FrameUtils.setWindowOnScreenCenter(dialog);
+
+        dialog.setVisible(true);
     }
 
     private void initDropTarget() {

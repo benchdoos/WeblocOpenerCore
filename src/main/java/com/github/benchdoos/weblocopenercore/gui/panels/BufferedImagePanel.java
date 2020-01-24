@@ -5,6 +5,8 @@ import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import lombok.extern.log4j.Log4j2;
+import net.coobird.thumbnailator.Thumbnails;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -15,7 +17,11 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
 
+@Log4j2
 public class BufferedImagePanel extends JPanel {
     final Dimension BUFFERED_PANEL_SIZE = new Dimension(55, 55); // size of panel
 
@@ -28,7 +34,11 @@ public class BufferedImagePanel extends JPanel {
 
     public BufferedImagePanel(Image image) {
         this.image = image;
-        this.scaledImage = CoreUtils.scaleImageToSize(CoreUtils.toBufferedImage(image), BUFFERED_PANEL_SIZE);
+        try {
+            this.scaledImage = Thumbnails.of(CoreUtils.toBufferedImage(image)).size(BUFFERED_PANEL_SIZE.width, BUFFERED_PANEL_SIZE.height).asBufferedImage();
+        } catch (IOException e) {
+            log.warn("Could not scale image");
+        }
         $$$setupUI$$$();
         initGui();
     }
@@ -37,11 +47,6 @@ public class BufferedImagePanel extends JPanel {
         setLayout(new GridLayout());
         add(contentPane);
 
-        initListeners();
-    }
-
-    private void initListeners() {
-        removeButton.addActionListener(e -> remove());
     }
 
     public Image getImage() {
@@ -50,13 +55,6 @@ public class BufferedImagePanel extends JPanel {
 
     public void setParentImageList(JList<BufferedImagePanel> imageList) {
         this.parentImageList = imageList;
-    }
-
-    private void remove() {
-        System.out.println("remove");
-        if (parentImageList != null) {
-            parentImageList.remove(this);
-        }
     }
 
     private void createUIComponents() {
@@ -94,4 +92,5 @@ public class BufferedImagePanel extends JPanel {
     public JComponent $$$getRootComponent$$$() {
         return contentPane;
     }
+
 }
