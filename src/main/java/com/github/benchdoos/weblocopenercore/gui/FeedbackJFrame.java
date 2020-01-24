@@ -14,10 +14,12 @@ import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -51,8 +53,6 @@ import java.util.TooManyListenersException;
 
 @Log4j2
 public class FeedbackJFrame extends JFrame implements Translatable {
-    final Dimension BUFFERED_PANEL_SIZE = new Dimension(55, 55); // size of panel
-
     private JPanel contentPane;
     private JButton sendButton;
     private JButton buttonCancel;
@@ -131,6 +131,12 @@ public class FeedbackJFrame extends JFrame implements Translatable {
             }
         });
         imagesList.setModel(new DefaultListModel<>());
+
+        imagesList.addListSelectionListener(l -> {
+            final Image image = imagesList.getSelectedValue().getImage();
+            final Image scaled = CoreUtils.scaleImageToSize(CoreUtils.toBufferedImage(image), new Dimension(640, 480));
+            JOptionPane.showMessageDialog(this, new ImageIcon(scaled), null, JOptionPane.INFORMATION_MESSAGE, null);
+        });
     }
 
     private void initDropTarget() {
@@ -151,7 +157,7 @@ public class FeedbackJFrame extends JFrame implements Translatable {
                         if (object instanceof File) {
                             final File file = (File) object;
                             final String fileExtension = FileUtils.getFileExtension(file);
-                            if (contains(fileExtension)) {
+                            if (isSupportedImageExtension(fileExtension)) {
                                 files.add(file);
                             }
                         }
@@ -206,43 +212,9 @@ public class FeedbackJFrame extends JFrame implements Translatable {
     }
 
     private void addImageToList(BufferedImage read) {
-        final BufferedImagePanel panel = new BufferedImagePanel(scaleImageToSize(read, BUFFERED_PANEL_SIZE));
+        final BufferedImagePanel panel = new BufferedImagePanel(read);
+        panel.setParentImageList(imagesList);
         ((DefaultListModel) imagesList.getModel()).addElement(panel);
-    }
-
-    /**
-     * Primitive image scale
-     *
-     * @param bufferedImage image to scale
-     * @param size size to scale image into it
-     * @return scaled image
-     */
-    private Image scaleImageToSize(BufferedImage bufferedImage, Dimension size) {
-        final int width = bufferedImage.getWidth(null);
-        final int height = bufferedImage.getHeight(null);
-
-        final double scale;
-
-        if (width >= height) {
-            //will check by height
-            if (height >= size.getHeight()) {
-                scale = size.getHeight() / height;
-            } else {
-                scale = height / size.getHeight();
-            }
-        } else {
-            //will check by
-            if (width >= size.getWidth()) {
-                scale = size.getWidth() / width;
-            } else {
-                scale = width / size.getWidth();
-            }
-        }
-
-        final double scaledWidth = width * scale;
-        final double scaledHeight = height * scale;
-
-        return CoreUtils.resize(bufferedImage, (int) scaledWidth, (int) scaledHeight);
     }
 
     private void initListeners() {
@@ -264,8 +236,8 @@ public class FeedbackJFrame extends JFrame implements Translatable {
         //todo add translation
     }
 
-    private static boolean contains(String extension) {
-        return Arrays.stream(FileExtension.values())
+    private static boolean isSupportedImageExtension(String extension) {
+        return SUPPORTED_IMAGES_EXTENSIONS.stream()
                 .anyMatch(e -> e.getExtensions().contains(extension.toLowerCase()));
     }
 

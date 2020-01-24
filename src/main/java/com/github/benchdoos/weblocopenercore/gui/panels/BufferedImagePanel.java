@@ -1,6 +1,7 @@
 package com.github.benchdoos.weblocopenercore.gui.panels;
 
 import com.github.benchdoos.weblocopenercore.gui.ImagePanel;
+import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
@@ -8,7 +9,6 @@ import com.intellij.uiDesigner.core.Spacer;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import java.awt.Dimension;
@@ -17,31 +17,50 @@ import java.awt.Image;
 import java.awt.Insets;
 
 public class BufferedImagePanel extends JPanel {
+    final Dimension BUFFERED_PANEL_SIZE = new Dimension(55, 55); // size of panel
+
     private JPanel contentPane;
     private JButton removeButton;
     private JPanel imagePanel;
     private Image image;
-    private JList<ImagePanel> parentImageList;
+    private Image scaledImage;
+    private JList<BufferedImagePanel> parentImageList;
 
     public BufferedImagePanel(Image image) {
         this.image = image;
+        this.scaledImage = CoreUtils.scaleImageToSize(CoreUtils.toBufferedImage(image), BUFFERED_PANEL_SIZE);
         $$$setupUI$$$();
+        initGui();
+    }
+
+    private void initGui() {
         setLayout(new GridLayout());
         add(contentPane);
+
+        initListeners();
     }
 
-    private void createUIComponents() {
-        imagePanel = new ImagePanel(image);
+    private void initListeners() {
+        removeButton.addActionListener(e -> remove());
     }
 
-    public void setParentImageList(JList<ImagePanel> imageList) {
+    public Image getImage() {
+        return image;
+    }
+
+    public void setParentImageList(JList<BufferedImagePanel> imageList) {
         this.parentImageList = imageList;
     }
 
     private void remove() {
+        System.out.println("remove");
         if (parentImageList != null) {
             parentImageList.remove(this);
         }
+    }
+
+    private void createUIComponents() {
+        imagePanel = new ImagePanel(scaledImage);
     }
 
     /**

@@ -25,6 +25,7 @@ import org.apache.commons.io.FileExistsException;
 
 import javax.swing.Icon;
 import javax.swing.UIManager;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -277,5 +278,40 @@ public class CoreUtils {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Primitive image scale
+     * //todo fix issues, when image is smaller by both size than initial size dimension
+     * @param bufferedImage image to scale
+     * @param size size to scale image into it
+     * @return scaled image
+     */
+    public static Image scaleImageToSize(BufferedImage bufferedImage, Dimension size) {
+        final int width = bufferedImage.getWidth(null);
+        final int height = bufferedImage.getHeight(null);
+
+        final double scale;
+
+        if (width >= height) {
+            //will check by height
+            if (height >= size.getHeight()) {
+                scale = size.getHeight() / height;
+            } else {
+                scale = height / size.getHeight();
+            }
+        } else {
+            //will check by
+            if (width >= size.getWidth()) {
+                scale = size.getWidth() / width;
+            } else {
+                scale = width / size.getWidth();
+            }
+        }
+
+        final double scaledWidth = width * scale;
+        final double scaledHeight = height * scale;
+
+        return CoreUtils.resize(bufferedImage, (int) scaledWidth, (int) scaledHeight);
     }
 }
