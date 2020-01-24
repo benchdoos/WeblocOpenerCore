@@ -52,7 +52,7 @@ import java.util.List;
 import java.util.TooManyListenersException;
 
 @Log4j2
-public class FeedbackJFrame extends JFrame implements Translatable {
+public class FeedbackDialog extends JFrame implements Translatable {
     private JPanel contentPane;
     private JButton sendButton;
     private JButton buttonCancel;
@@ -61,7 +61,7 @@ public class FeedbackJFrame extends JFrame implements Translatable {
     private JList<BufferedImagePanel> imagesList;
     private static final List<FileExtension> SUPPORTED_IMAGES_EXTENSIONS = Arrays.asList(FileExtension.JPG, FileExtension.PNG);
 
-    public FeedbackJFrame() {
+    public FeedbackDialog() {
         initGui();
     }
 

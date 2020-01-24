@@ -387,14 +387,14 @@ public class SettingsDialog extends JFrame implements Translatable {
     }
 
     private void createFeedBackButton() {
-        final FeedbackJFrame feedbackJFrame = new WindowLauncher<FeedbackJFrame>() {
+        final FeedbackDialog feedbackDialog = new WindowLauncher<FeedbackDialog>() {
             @Override
-            public FeedbackJFrame initWindow() {
-                return new FeedbackJFrame();
+            public FeedbackDialog initWindow() {
+                return new FeedbackDialog();
             }
         }.getWindow();
-        FrameUtils.setWindowOnScreenCenter(feedbackJFrame);
-        feedbackJFrame.setVisible(true);
+        FrameUtils.setWindowOnScreenCenter(feedbackDialog);
+        feedbackDialog.setVisible(true);
     }
 
     private void initSplitPane() {

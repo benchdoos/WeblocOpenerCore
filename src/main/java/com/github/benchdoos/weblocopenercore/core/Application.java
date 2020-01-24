@@ -22,6 +22,7 @@ import com.github.benchdoos.weblocopenercore.core.constants.SettingsConstants;
 import com.github.benchdoos.weblocopenercore.gui.AboutApplicationDialog;
 import com.github.benchdoos.weblocopenercore.gui.ConverterDialog;
 import com.github.benchdoos.weblocopenercore.gui.EditDialog;
+import com.github.benchdoos.weblocopenercore.gui.FeedbackDialog;
 import com.github.benchdoos.weblocopenercore.gui.SettingsDialog;
 import com.github.benchdoos.weblocopenercore.gui.ShowQrDialog;
 import com.github.benchdoos.weblocopenercore.gui.unix.ModeSelectorDialog;
@@ -181,6 +182,9 @@ public class Application {
                     case OPENER_CONVERT_ARGUMENT:
                         runConverterDialog(args);
                         break;
+                    case FEEDBACK_ARGUMENT:
+                        runFeedbackDialog();
+                        break;
                     default:
                         runAnalyzer(arg);
                         break;
@@ -193,6 +197,20 @@ public class Application {
             log.debug("No arguments found, launching settings");
             runSettingsDialog(null);
         }
+    }
+
+    /**
+     * Method runs FeedbackDialog instance
+     */
+    private static void runFeedbackDialog() {
+        final FeedbackDialog feedbackDialog = new WindowLauncher<FeedbackDialog>() {
+            @Override
+            public FeedbackDialog initWindow() {
+                return new FeedbackDialog();
+            }
+        }.initWindow();
+        FrameUtils.setWindowOnScreenCenter(feedbackDialog);
+        feedbackDialog.setVisible(true);
     }
 
     private static void runConverterDialog(String[] args) {

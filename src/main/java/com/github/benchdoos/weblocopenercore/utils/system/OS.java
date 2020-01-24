@@ -16,6 +16,7 @@
 package com.github.benchdoos.weblocopenercore.utils.system;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.tika.utils.SystemUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -23,42 +24,36 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public enum OS {
-    WINDOWS(Collections.singletonList("win")),
-    MAC_OS(Collections.singletonList("mac")),
-    UNIX(Arrays.asList("nix", "nux", "aix")),
-    SOLARIS(Collections.singletonList("sunos")),
-    UNSUPPORTED(Collections.emptyList());
-
-    private final List<String> names;
+    WINDOWS,
+    MAC_OS,
+    UNIX,
+    UNSUPPORTED;
 
     public static String getOsName() {
         return System.getProperty("os.name").toLowerCase();
     }
 
     public static boolean isWindows() {
-        return (WINDOWS.names.contains(getOsName()));
+        return SystemUtils.IS_OS_WINDOWS;
     }
 
     public static boolean isMac() {
-        return (MAC_OS.names.contains(getOsName()));
+        return SystemUtils.IS_OS_MAC || SystemUtils.IS_OS_MAC_OSX;
     }
 
     public static boolean isUnix() {
-        return getCurrentOS() == OS.UNIX;
-    }
-
-    public static boolean isSolaris() {
-        return (SOLARIS.names.contains(getOsName()));
+        return SystemUtils.IS_OS_UNIX;
     }
 
     public static OS getCurrentOS() {
-        for (OS current : OS.values()) {
-            for (String name : current.names) {
-                if (getOsName().toLowerCase().contains(name)) {
-                    return current;
-                }
-            }
+        if (isWindows()) {
+            return WINDOWS;
+        } else if (isMac()) {
+            return MAC_OS;
+        } else if (isUnix()) {
+            return UNIX;
         }
+
         return UNSUPPORTED;
     }
 }

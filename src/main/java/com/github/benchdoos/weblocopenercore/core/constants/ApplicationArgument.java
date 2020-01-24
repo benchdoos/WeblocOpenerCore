@@ -21,6 +21,7 @@ public enum ApplicationArgument {
     OPENER_COPY_QR_ARGUMENT("-copy-qr"),
     OPENER_CONVERT_ARGUMENT("-convert"),
     UPDATE_SILENT_ARGUMENT("-update-silent"),
+    FEEDBACK_ARGUMENT("-feedback"),
     UNIX_DEFAULT_OPEN_MODE_ARGUMENT("default");
 
     private final String argument;
