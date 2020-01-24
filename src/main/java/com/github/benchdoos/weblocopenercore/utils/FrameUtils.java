@@ -19,9 +19,12 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.commons.validator.routines.UrlValidator;
 import org.apache.logging.log4j.Logger;
 
+import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.Timer;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.Dimension;
@@ -38,6 +41,12 @@ import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetAdapter;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
+import java.awt.dnd.DropTargetListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -48,6 +57,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TooManyListenersException;
 
 /**
  * Created by Eugene Zrazhevsky on 30.10.2016.
@@ -230,6 +240,37 @@ public class FrameUtils {
                 }
             }
         };
+    }
+
+    /**
+     * Appends to DropTarget {@link DropTargetListener} that adds border to given panel
+     *
+     * @param dropTarget target
+     * @param panel panel to add red border
+     */
+    public static void appendRedBorderToComponent(DropTarget dropTarget, JPanel panel) {
+        try {
+            dropTarget.addDropTargetListener(new DropTargetAdapter() {
+                @Override
+                public void dragEnter(DropTargetDragEvent dtde) {
+                    panel.setBorder(BorderFactory.createLineBorder(Color.RED));
+                    super.dragEnter(dtde);
+                }
+
+                @Override
+                public void dragExit(DropTargetEvent dte) {
+                    panel.setBorder(null);
+                    super.dragExit(dte);
+                }
+
+                @Override
+                public void drop(DropTargetDropEvent dtde) {
+                    panel.setBorder(null);
+                }
+            });
+        } catch (TooManyListenersException e) {
+            log.warn("Can not init drag and drop dropTarget", e);
+        }
     }
 
     public static void fillTextFieldWithClipboard(JTextField textField) {

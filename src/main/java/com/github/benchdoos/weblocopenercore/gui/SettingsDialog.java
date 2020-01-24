@@ -296,28 +296,7 @@ public class SettingsDialog extends JFrame implements Translatable {
         };
         contentPane.setDropTarget(dropTarget);
 
-        try {
-            dropTarget.addDropTargetListener(new DropTargetAdapter() {
-                @Override
-                public void dragEnter(DropTargetDragEvent dtde) {
-                    contentPane.setBorder(BorderFactory.createLineBorder(Color.RED));
-                    super.dragEnter(dtde);
-                }
-
-                @Override
-                public void dragExit(DropTargetEvent dte) {
-                    contentPane.setBorder(null);
-                    super.dragExit(dte);
-                }
-
-                @Override
-                public void drop(DropTargetDropEvent dtde) {
-                    contentPane.setBorder(null);
-                }
-            });
-        } catch (TooManyListenersException e) {
-            log.warn("Can not init drag and drop dropTarget", e);
-        }
+        FrameUtils.appendRedBorderToComponent(dropTarget, contentPane);
     }
 
     @NotNull
