@@ -259,59 +259,26 @@ public class CoreUtils {
 
     public static String getContentFromResource(String path) {
         final StringBuilder contentBuilder = new StringBuilder();
-        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
-                CoreUtils.class.getResourceAsStream(path)))) {
+
+        try (final InputStreamReader in = new InputStreamReader(CoreUtils.class.getResourceAsStream(path));
+             final BufferedReader bufferedReader = new BufferedReader(in)) {
             String str;
             while ((str = bufferedReader.readLine()) != null) {
                 contentBuilder.append(str);
             }
             return contentBuilder.toString();
-        } catch (IOException ignore) {
+        } catch (IOException e) {
+            log.warn("Could not load content from path: {}. Returning empty string.", path, e);
             return "";
         }
     }
 
     public static Image getImageFromClipboard() throws Exception {
-        Transferable transferable = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
+        final Transferable transferable = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
         if (transferable != null && transferable.isDataFlavorSupported(DataFlavor.imageFlavor)) {
             return (Image) transferable.getTransferData(DataFlavor.imageFlavor);
         } else {
             return null;
         }
-    }
-
-    /**
-     * Primitive image scale
-     * //todo fix issues, when image is smaller by both size than initial size dimension
-     * @param bufferedImage image to scale
-     * @param size size to scale image into it
-     * @return scaled image
-     */
-    public static Image scaleImageToSize(BufferedImage bufferedImage, Dimension size) {
-        final int width = bufferedImage.getWidth(null);
-        final int height = bufferedImage.getHeight(null);
-
-        final double scale;
-
-        if (width >= height) {
-            //will check by height
-            if (height >= size.getHeight()) {
-                scale = size.getHeight() / height;
-            } else {
-                scale = height / size.getHeight();
-            }
-        } else {
-            //will check by
-            if (width >= size.getWidth()) {
-                scale = size.getWidth() / width;
-            } else {
-                scale = width / size.getWidth();
-            }
-        }
-
-        final double scaledWidth = width * scale;
-        final double scaledHeight = height * scale;
-
-        return CoreUtils.resize(bufferedImage, (int) scaledWidth, (int) scaledHeight);
     }
 }

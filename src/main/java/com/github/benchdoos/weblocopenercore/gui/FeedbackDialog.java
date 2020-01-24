@@ -92,6 +92,10 @@ public class FeedbackDialog extends JFrame implements Translatable {
         setMinimumSize(getSize());
     }
 
+    public void setFeedbackText(String text) {
+        feedBackTextArea.setText(text);
+    }
+
     private void initImagePaste() {
         contentPane.registerKeyboardAction(e -> onPaste(),
                 KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_DOWN_MASK),
