@@ -28,6 +28,9 @@ import javax.swing.UIManager;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
@@ -205,7 +208,7 @@ public class CoreUtils {
         return dimg;
     }
 
-    private static BufferedImage toBufferedImage(final Image img) {
+    public static BufferedImage toBufferedImage(final Image img) {
         if (img instanceof BufferedImage) {
             return (BufferedImage) img;
         }
@@ -264,6 +267,15 @@ public class CoreUtils {
             return contentBuilder.toString();
         } catch (IOException ignore) {
             return "";
+        }
+    }
+
+    public static Image getImageFromClipboard() throws Exception {
+        Transferable transferable = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
+        if (transferable != null && transferable.isDataFlavorSupported(DataFlavor.imageFlavor)) {
+            return (Image) transferable.getTransferData(DataFlavor.imageFlavor);
+        } else {
+            return null;
         }
     }
 }

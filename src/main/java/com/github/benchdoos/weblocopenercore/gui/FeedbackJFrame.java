@@ -21,6 +21,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
 import javax.swing.ListSelectionModel;
 import java.awt.Color;
 import java.awt.Component;
@@ -38,6 +39,8 @@ import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -48,6 +51,8 @@ import java.util.TooManyListenersException;
 
 @Log4j2
 public class FeedbackJFrame extends JFrame implements Translatable {
+    final Dimension BUFFERED_PANEL_SIZE = new Dimension(55, 55); // size of panel
+
     private JPanel contentPane;
     private JButton sendButton;
     private JButton buttonCancel;
@@ -71,6 +76,8 @@ public class FeedbackJFrame extends JFrame implements Translatable {
 
         initDropTarget();
 
+        initImagePaste();
+
         initImagesList();
 
         getRootPane().setDefaultButton(sendButton);
@@ -81,12 +88,34 @@ public class FeedbackJFrame extends JFrame implements Translatable {
         setMinimumSize(getSize());
     }
 
+    private void initImagePaste() {
+        contentPane.registerKeyboardAction(e -> onPaste(),
+                KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_DOWN_MASK),
+                JComponent.WHEN_FOCUSED);
+        feedBackTextArea.registerKeyboardAction(e -> onPaste(),
+                KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_DOWN_MASK),
+                JComponent.WHEN_IN_FOCUSED_WINDOW);
+    }
+
+    private void onPaste() {
+        try {
+            log.debug("Pasting image from clipboard");
+            final Image image = CoreUtils.getImageFromClipboard();
+            if (image != null) {
+                final BufferedImage bufferedImage = CoreUtils.toBufferedImage(image);
+                addImageToList(bufferedImage);
+                updatePanel();
+            }
+        } catch (Exception e) {
+            log.warn("Could not paste image from clipboard", e);
+        }
+    }
+
     private void initTextArea() {
         feedBackTextArea.getActionMap().put("paste-from-clipboard", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                final Object source = e.getSource();
-                System.out.println(source);
+                onPaste();
             }
         });
     }
@@ -130,14 +159,10 @@ public class FeedbackJFrame extends JFrame implements Translatable {
 
                     for (File file : files) {
                         final BufferedImage read = ImageIO.read(file);
-                        final Dimension size = new Dimension(55, 55); // size of panel
-                        final BufferedImagePanel panel = new BufferedImagePanel(scaleImageToSize(read, size));
-                        ((DefaultListModel) imagesList.getModel()).addElement(panel);
+                        addImageToList(read);
                     }
 
-                    if (imagesList.getModel().getSize() > 0) {
-                        imagesPanel.setVisible(true);
-                    }
+                    updatePanel();
 
                 } catch (UnsupportedFlavorException | IOException e) {
                     log.warn("Could not append files to drop target", e);
@@ -172,6 +197,17 @@ public class FeedbackJFrame extends JFrame implements Translatable {
         contentPane.setDropTarget(dropTarget);
         feedBackTextArea.setDropTarget(dropTarget);
 
+    }
+
+    private void updatePanel() {
+        if (imagesList.getModel().getSize() > 0) {
+            imagesPanel.setVisible(true);
+        }
+    }
+
+    private void addImageToList(BufferedImage read) {
+        final BufferedImagePanel panel = new BufferedImagePanel(scaleImageToSize(read, BUFFERED_PANEL_SIZE));
+        ((DefaultListModel) imagesList.getModel()).addElement(panel);
     }
 
     /**
