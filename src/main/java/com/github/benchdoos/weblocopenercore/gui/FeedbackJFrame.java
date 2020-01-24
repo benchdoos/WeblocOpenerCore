@@ -2,6 +2,7 @@ package com.github.benchdoos.weblocopenercore.gui;
 
 import com.github.benchdoos.weblocopenercore.gui.panels.BufferedImagePanel;
 import com.github.benchdoos.weblocopenercore.service.feedback.FileExtension;
+import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import com.github.benchdoos.weblocopenercore.utils.FileUtils;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
@@ -9,6 +10,7 @@ import com.intellij.uiDesigner.core.Spacer;
 import lombok.extern.log4j.Log4j2;
 
 import javax.imageio.ImageIO;
+import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
@@ -24,6 +26,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
@@ -34,6 +37,8 @@ import java.awt.dnd.DropTargetAdapter;
 import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
 import java.awt.dnd.DropTargetEvent;
+import java.awt.event.ActionEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -62,6 +67,8 @@ public class FeedbackJFrame extends JFrame implements Translatable {
 
         initListeners();
 
+        initTextArea();
+
         initDropTarget();
 
         initImagesList();
@@ -72,6 +79,16 @@ public class FeedbackJFrame extends JFrame implements Translatable {
 
         pack();
         setMinimumSize(getSize());
+    }
+
+    private void initTextArea() {
+        feedBackTextArea.getActionMap().put("paste-from-clipboard", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                final Object source = e.getSource();
+                System.out.println(source);
+            }
+        });
     }
 
     private void initImagesList() {
@@ -112,7 +129,9 @@ public class FeedbackJFrame extends JFrame implements Translatable {
                     }
 
                     for (File file : files) {
-                        final BufferedImagePanel panel = new BufferedImagePanel(ImageIO.read(file));
+                        final BufferedImage read = ImageIO.read(file);
+                        final Dimension size = new Dimension(55, 55); // size of panel
+                        final BufferedImagePanel panel = new BufferedImagePanel(scaleImageToSize(read, size));
                         ((DefaultListModel) imagesList.getModel()).addElement(panel);
                     }
 
@@ -153,6 +172,41 @@ public class FeedbackJFrame extends JFrame implements Translatable {
         contentPane.setDropTarget(dropTarget);
         feedBackTextArea.setDropTarget(dropTarget);
 
+    }
+
+    /**
+     * Primitive image scale
+     *
+     * @param bufferedImage image to scale
+     * @param size size to scale image into it
+     * @return scaled image
+     */
+    private Image scaleImageToSize(BufferedImage bufferedImage, Dimension size) {
+        final int width = bufferedImage.getWidth(null);
+        final int height = bufferedImage.getHeight(null);
+
+        final double scale;
+
+        if (width >= height) {
+            //will check by height
+            if (height >= size.getHeight()) {
+                scale = size.getHeight() / height;
+            } else {
+                scale = height / size.getHeight();
+            }
+        } else {
+            //will check by
+            if (width >= size.getWidth()) {
+                scale = size.getWidth() / width;
+            } else {
+                scale = width / size.getWidth();
+            }
+        }
+
+        final double scaledWidth = width * scale;
+        final double scaledHeight = height * scale;
+
+        return CoreUtils.resize(bufferedImage, (int) scaledWidth, (int) scaledHeight);
     }
 
     private void initListeners() {
@@ -255,4 +309,5 @@ public class FeedbackJFrame extends JFrame implements Translatable {
     public JComponent $$$getRootComponent$$$() {
         return contentPane;
     }
+
 }
