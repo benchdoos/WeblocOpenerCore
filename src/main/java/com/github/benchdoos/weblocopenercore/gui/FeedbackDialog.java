@@ -62,8 +62,8 @@ import java.util.List;
 public class FeedbackDialog extends JFrame implements Translatable {
     private static final Dimension SCALED_IMAGE_SIZE = new Dimension(640, 480);
     private static final int MAXIMUM_TEXT_LENGTH = 30000;
-    private static final int MAXIMUM_IMAGES_COUNT = 5; //bytes
-    private static final int MAXIMUM_IMAGE_SIZE = 15_000_000; //bytes
+    private static final int MAXIMUM_IMAGES_COUNT = 5;
+    private static final int MAXIMUM_IMAGE_SIZE = 15_000_000; //15 megabytes
     private JPanel contentPane;
     private JButton sendButton;
     private JButton buttonCancel;
