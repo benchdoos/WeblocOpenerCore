@@ -15,7 +15,9 @@
 
 package com.github.benchdoos.weblocopenercore.gui;
 
+import com.github.benchdoos.weblocopenercore.core.Translation;
 import com.github.benchdoos.weblocopenercore.service.UrlsProceed;
+import com.github.benchdoos.weblocopenercore.service.WindowLauncher;
 import com.github.benchdoos.weblocopenercore.utils.FrameUtils;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
@@ -40,11 +42,13 @@ import java.util.ResourceBundle;
 
 import static com.github.benchdoos.weblocopenercore.utils.system.SystemUtils.IS_WINDOWS_XP;
 
-public class InfoDialog extends JDialog {
+public class InfoDialog extends JDialog implements Translatable {
     private String content;
     private JPanel contentPane;
     private JButton buttonOK;
     private JTextPane textPane;
+    private JButton reportButton;
+    private String stackTraceString;
 
     public InfoDialog() {
         initGui();
@@ -68,16 +72,19 @@ public class InfoDialog extends JDialog {
         contentPane = new JPanel();
         contentPane.setLayout(new GridLayoutManager(2, 1, new Insets(10, 10, 10, 10), -1, -1));
         final JPanel panel1 = new JPanel();
-        panel1.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
         contentPane.add(panel1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
         final Spacer spacer1 = new Spacer();
-        panel1.add(spacer1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        panel1.add(spacer1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         final JPanel panel2 = new JPanel();
         panel2.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        panel1.add(panel2, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        panel1.add(panel2, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         buttonOK = new JButton();
         this.$$$loadButtonText$$$(buttonOK, ResourceBundle.getBundle("spelling").getString("buttonOk"));
         panel2.add(buttonOK, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        reportButton = new JButton();
+        this.$$$loadButtonText$$$(reportButton, ResourceBundle.getBundle("translations/CommonsBundle").getString("reportButton"));
+        panel1.add(reportButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel3 = new JPanel();
         panel3.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         contentPane.add(panel3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
@@ -123,22 +130,9 @@ public class InfoDialog extends JDialog {
     }
 
     private void initGui() {
-        //compares, if it is windows xp 32/64bit or server 2003 32/64bit
-        if (IS_WINDOWS_XP) {
-            //for windows xp&server 2003
-            setIconImage(Toolkit.getDefaultToolkit().getImage(AboutApplicationDialog.class.getResource("/images/infoIcon16_white.png")));
-        } else {
-            setIconImage(Toolkit.getDefaultToolkit().getImage(AboutApplicationDialog.class.getResource("/images/infoIcon16.png")));
-        }
         setContentPane(contentPane);
-
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
-
-        buttonOK.addActionListener(e -> onOK());
-
-
-        // call onCancel() when cross is clicked
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
@@ -146,14 +140,61 @@ public class InfoDialog extends JDialog {
             }
         });
 
-        contentPane.registerKeyboardAction(e -> onOK(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-                JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-        contentPane.registerKeyboardAction(e -> onOK(), KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),
-                JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        initWindowIcon();
 
-        textPane.registerKeyboardAction(e -> onOK(), KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),
-                JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        initListeners();
 
+        initKeyBindings();
+
+        initTextPane();
+
+        reportButton.setVisible(false);
+
+        translate();
+
+        setSize(550, 300);
+        setResizable(false);
+        FrameUtils.setWindowOnScreenCenter(this);
+    }
+
+    private void initListeners() {
+        buttonOK.addActionListener(e -> onOK());
+        reportButton.addActionListener(e -> onReport());
+    }
+
+    private void onReport() {
+        dispose();
+        final FeedbackDialog feedbackDialog = new WindowLauncher<FeedbackDialog>() {
+            @Override
+            public FeedbackDialog initWindow() {
+                return new FeedbackDialog();
+            }
+        }.initWindow();
+
+        if (stackTraceString != null) {
+            feedbackDialog.setFeedbackText("\n\n\n\n" +
+                    "------------------STACKTRACE------------------\n" +
+                    stackTraceString);
+        }
+        FrameUtils.setWindowOnScreenCenter(feedbackDialog);
+        feedbackDialog.setVisible(true);
+    }
+
+    private void initWindowIcon() {
+        //compares, if it is windows xp 32/64bit or server 2003 32/64bit
+        if (IS_WINDOWS_XP) {
+            //for windows xp&server 2003
+            setIconImage(Toolkit.getDefaultToolkit().getImage(AboutApplicationDialog.class.getResource("/images/infoIcon16_white.png")));
+        } else {
+            setIconImage(Toolkit.getDefaultToolkit().getImage(AboutApplicationDialog.class.getResource("/images/infoIcon16.png")));
+        }
+    }
+
+    public void setReportButtonVisible(boolean visible) {
+        this.reportButton.setVisible(visible);
+    }
+
+    private void initTextPane() {
         textPane.setEditorKit(JEditorPane.createEditorKitForContentType("text/html"));
         textPane.setEditable(false);
         textPane.addHyperlinkListener(e -> {
@@ -161,10 +202,16 @@ public class InfoDialog extends JDialog {
                 UrlsProceed.openUrl(e.getURL());
             }
         });
+    }
 
-        setSize(550, 300);
-        setResizable(false);
-        FrameUtils.setWindowOnScreenCenter(this);
+    private void initKeyBindings() {
+        contentPane.registerKeyboardAction(e -> onOK(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+                JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        contentPane.registerKeyboardAction(e -> onOK(), KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),
+                JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+        textPane.registerKeyboardAction(e -> onOK(), KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),
+                JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
 
     private void onOK() {
@@ -182,4 +229,13 @@ public class InfoDialog extends JDialog {
         super.setVisible(b);
     }
 
+    public void setStackTrace(String stackTraceString) {
+        this.stackTraceString = stackTraceString;
+    }
+
+    @Override
+    public void translate() {
+        final Translation translation = new Translation("CommonsBundle");
+        reportButton.setText(translation.getTranslatedString("reportButton"));
+    }
 }

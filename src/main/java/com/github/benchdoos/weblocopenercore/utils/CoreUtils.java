@@ -254,6 +254,8 @@ public class CoreUtils {
         e.printStackTrace(printWriter);
 
         infoDialog.setContent(String.format(content, stringWriter.toString()));
+        infoDialog.setReportButtonVisible(true);
+        infoDialog.setStackTrace(stringWriter.toString());
         infoDialog.setVisible(true);
     }
 
