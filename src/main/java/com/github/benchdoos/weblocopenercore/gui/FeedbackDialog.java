@@ -6,6 +6,7 @@ import com.github.benchdoos.weblocopenercore.service.feedback.FileExtension;
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import com.github.benchdoos.weblocopenercore.utils.FileUtils;
 import com.github.benchdoos.weblocopenercore.utils.FrameUtils;
+import com.github.benchdoos.weblocopenercore.utils.ImagesUtils;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
@@ -26,6 +27,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
@@ -60,6 +62,8 @@ import java.util.List;
 public class FeedbackDialog extends JFrame implements Translatable {
     private static final Dimension SCALED_IMAGE_SIZE = new Dimension(640, 480);
     private static final int MAXIMUM_TEXT_LENGTH = 30000;
+    private static final int MAXIMUM_IMAGES_COUNT = 5; //bytes
+    private static final int MAXIMUM_IMAGE_SIZE = 15_000_000; //bytes
     private JPanel contentPane;
     private JButton sendButton;
     private JButton buttonCancel;
@@ -120,12 +124,23 @@ public class FeedbackDialog extends JFrame implements Translatable {
             log.debug("Pasting image from clipboard");
             final Image image = CoreUtils.getImageFromClipboard();
             if (image != null) {
-                final BufferedImage bufferedImage = CoreUtils.toBufferedImage(image);
-                addImageToList(bufferedImage);
-                updatePanel();
+                onImagePaste(image);
             }
         } catch (Exception e) {
             log.warn("Could not paste image from clipboard", e);
+        }
+    }
+
+    private void onImagePaste(Image image) {
+        if (imagesList.getModel().getSize() < MAXIMUM_IMAGES_COUNT) {
+            final BufferedImage bufferedImage = CoreUtils.toBufferedImage(image);
+            addImageToList(bufferedImage);
+            updatePanel();
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "Can not add more images than " + MAXIMUM_IMAGES_COUNT, //todo translate
+                    "Can not add image",//todo translate
+                    JOptionPane.WARNING_MESSAGE);
         }
     }
 
@@ -170,18 +185,25 @@ public class FeedbackDialog extends JFrame implements Translatable {
                     scaled = bufferedImage;
                 }
 
-                showImagePreview(scaled);
+                showImagePreview(scaled, new Dimension(bufferedImage.getWidth(), bufferedImage.getHeight()));
             }
         } catch (Exception e) {
             log.warn("Could not scale image", e);
         }
     }
 
-    private void showImagePreview(BufferedImage scaled) {
+    /**
+     * Shows scaled image to user
+     *
+     * @param scaled image to show
+     * @param dimension dimension of original image
+     */
+    private void showImagePreview(BufferedImage scaled, Dimension dimension) {
         final JDialog dialog = new WindowLauncher<JDialog>() {
             @Override
             public JDialog initWindow() {
                 final JDialog dialog = new JDialog();
+                dialog.setTitle(String.format("Screenshot (%sX%s)", dimension.getWidth(), dimension.getHeight()));//todo translate
                 dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                 dialog.setLayout(new BorderLayout());
                 dialog.add(new JLabel(new ImageIcon(scaled)));
@@ -251,7 +273,7 @@ public class FeedbackDialog extends JFrame implements Translatable {
     private void addImageToList(BufferedImage read) {
         final BufferedImagePanel panel = new BufferedImagePanel(read);
         panel.setParentImageList(imagesList);
-        ((DefaultListModel) imagesList.getModel()).addElement(panel);
+        ((DefaultListModel<BufferedImagePanel>) imagesList.getModel()).addElement(panel);
     }
 
     private void initListeners() {
@@ -281,24 +303,46 @@ public class FeedbackDialog extends JFrame implements Translatable {
     private void sendFeedback() {
         try {
             validateInput();
-        } catch (IllegalArgumentException e) {
-            log.warn("Could not ");
+        } catch (final IllegalArgumentException e) {
+            log.warn("Could not validate input", e);
         }
     }
 
     private void validateInput() {
         validateTextArea();
         validateEmail();
+        validateImages();
+        log.info("All fields are valid, continuing");
+    }
+
+    private void validateImages() {
+        for (int i = 0; i < imagesList.getModel().getSize(); i++) {
+            final BufferedImagePanel panel = imagesList.getModel().getElementAt(i);
+            final Image image = panel.getImage();
+            final int imageWeight = ImagesUtils.getImageWeight(CoreUtils.toBufferedImage(image));
+            if (imageWeight > MAXIMUM_IMAGE_SIZE) {
+                JOptionPane.showMessageDialog(this,
+                        String.format("Image %s is bigger than 15MB", (i + 1)), //todo add translation
+                        "Image size is not valid", //todo add translation
+                        JOptionPane.WARNING_MESSAGE
+                );
+                throw new IllegalArgumentException("Image weight is bigger that maximum value (" + MAXIMUM_IMAGE_SIZE + ") on index: " + i);
+            }
+        }
     }
 
     private void validateTextArea() {
         final String text = feedbackTextArea.getText();
         if (StringUtil.isBlank(text)) {
+            feedbackTextArea.setBorder(BorderFactory.createLineBorder(Color.RED));
             throw new IllegalArgumentException("Feedback text area can not be blank");
         } else {
             if (text.length() > MAXIMUM_TEXT_LENGTH) {
+                feedbackTextArea.setBorder(BorderFactory.createLineBorder(Color.RED));
                 throw new IllegalArgumentException("Feedback text area length (" + text.length() + ") " +
                         "can not be bigger than maximum text length (" + MAXIMUM_TEXT_LENGTH + ")");
+            } else {
+                feedbackTextArea.setBorder(BorderFactory.createEmptyBorder());
             }
         }
     }
@@ -359,8 +403,8 @@ public class FeedbackDialog extends JFrame implements Translatable {
         final JScrollPane scrollPane1 = new JScrollPane();
         panel3.add(scrollPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         feedbackTextArea = new JTextArea();
-        Font feedBackTextAreaFont = this.$$$getFont$$$("Arial", -1, 14, feedbackTextArea.getFont());
-        if (feedBackTextAreaFont != null) feedbackTextArea.setFont(feedBackTextAreaFont);
+        Font feedbackTextAreaFont = this.$$$getFont$$$("Arial", -1, 14, feedbackTextArea.getFont());
+        if (feedbackTextAreaFont != null) feedbackTextArea.setFont(feedbackTextAreaFont);
         scrollPane1.setViewportView(feedbackTextArea);
         imagesPanel = new JPanel();
         imagesPanel.setLayout(new GridLayoutManager(3, 2, new Insets(0, 0, 0, 0), -1, -1));
