@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.awt.Image;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,9 +12,9 @@ import java.util.UUID;
 @AllArgsConstructor
 @Data
 @Builder
-public class FeedbackDto {
+public class Base64Feedback {
     private UUID uuid;
-    private String feedback;
-    private String logFileContent;
-    private List<Image> images;
+    private String base64Feedback;
+    private String base64LogFile;
+    private List<String> base64Images;
 }

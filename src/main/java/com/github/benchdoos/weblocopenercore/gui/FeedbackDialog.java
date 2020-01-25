@@ -5,7 +5,7 @@ import com.github.benchdoos.weblocopenercore.core.constants.PathConstants;
 import com.github.benchdoos.weblocopenercore.gui.panels.BufferedImagePanel;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import com.github.benchdoos.weblocopenercore.service.WindowLauncher;
-import com.github.benchdoos.weblocopenercore.service.feedback.FeedbackDto;
+import com.github.benchdoos.weblocopenercore.service.feedback.Feedback;
 import com.github.benchdoos.weblocopenercore.service.feedback.FeedbackService;
 import com.github.benchdoos.weblocopenercore.service.feedback.FileExtension;
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
@@ -340,9 +340,9 @@ public class FeedbackDialog extends JFrame implements Translatable {
         }
     }
 
-    private FeedbackDto prepareFeedback() {
+    private Feedback prepareFeedback() {
 
-        final FeedbackDto dto = FeedbackDto.builder()
+        final Feedback dto = Feedback.builder()
                 .uuid(PreferencesManager.getApplicationUuid())
                 .feedback(feedbackTextArea.getText())
                 .build();
@@ -371,9 +371,9 @@ public class FeedbackDialog extends JFrame implements Translatable {
 
     private void shareFeedback() {
         sendFeedbackThread = new Thread(() -> {
-            final FeedbackDto feedbackDto = prepareFeedback();
+            final Feedback feedback = prepareFeedback();
 
-            final int code = new FeedbackService().sendFeedback(feedbackDto);
+            final int code = new FeedbackService().sendFeedback(feedback);
             if (HttpStatus.SC_OK == code) {
                 //todo show ok message
                 dispose();

@@ -1,8 +1,12 @@
 package com.github.benchdoos.weblocopenercore.service.feedback;
 
+import com.github.benchdoos.weblocopenercore.service.feedback.images.ImageInfo;
+import com.github.benchdoos.weblocopenercore.service.feedback.images.ImageSender;
+import com.github.benchdoos.weblocopenercore.service.feedback.images.ImgbbImageSender;
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import com.github.benchdoos.weblocopenercore.utils.ImagesUtils;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.collections.CollectionUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jsoup.internal.StringUtil;
 
@@ -15,15 +19,26 @@ import java.util.List;
 @Log4j2
 public class FeedbackService {
 
-    public int sendFeedback(FeedbackDto feedbackDto) {
+    public int sendFeedback(Feedback feedback) {
         final Thread thread = Thread.currentThread();
 
         log.info("Starting sending feedback.");
-        log.debug("Feedback data: {}", feedbackDto);
+        log.debug("Feedback data: {}", feedback);
+
+        final Base64Feedback base64Feedback;
 
         if (!thread.isInterrupted()) {
-            final Base64FeedbackDto base64FeedbackDto = convertToBase64FeedbackDto(feedbackDto);
-            log.debug("Prepared base64 feedback. ({})", base64FeedbackDto);
+            base64Feedback = convertToBase64FeedbackDto(feedback);
+            log.debug("Prepared base64 feedback. ({})", base64Feedback);
+
+            if (!thread.isInterrupted()) {
+                final List<ImageInfo> imageInfoList = sendImages(base64Feedback);
+
+                if (!CollectionUtils.isEmpty(imageInfoList)) {
+                    //todo append to dto
+                }
+
+            }
         }
 
         if (thread.isInterrupted()) {
@@ -32,23 +47,28 @@ public class FeedbackService {
         return -1;
     }
 
-    private Base64FeedbackDto convertToBase64FeedbackDto(@NotNull FeedbackDto feedbackDto) {
+    private List<ImageInfo> sendImages(Base64Feedback base64Feedback) {
+        final ImageSender sender = new ImgbbImageSender();
+        return sender.sendImages(base64Feedback.getBase64Images());
+    }
+
+    private Base64Feedback convertToBase64FeedbackDto(@NotNull Feedback feedback) {
         final Thread thread = Thread.currentThread();
 
-        final Base64FeedbackDto result = new Base64FeedbackDto();
+        final Base64Feedback result = new Base64Feedback();
 
-        if (!thread.isInterrupted() && feedbackDto.getUuid() != null) {
-            result.setUuid(feedbackDto.getUuid());
+        if (!thread.isInterrupted() && feedback.getUuid() != null) {
+            result.setUuid(feedback.getUuid());
         }
 
-        if (!thread.isInterrupted() && feedbackDto.getFeedback() != null) {
-            result.setBase64Feedback(Base64.getEncoder().encodeToString(feedbackDto.getFeedback().getBytes()));
+        if (!thread.isInterrupted() && !StringUtil.isBlank(feedback.getFeedback())) {
+            result.setBase64Feedback(Base64.getEncoder().encodeToString(feedback.getFeedback().getBytes()));
         }
 
-        if (!thread.isInterrupted() && feedbackDto.getImages() != null) {
+        if (!thread.isInterrupted() && !CollectionUtils.isEmpty(feedback.getImages())) {
             final List<String> base64ImagesList = new ArrayList<>();
 
-            for (Image image : feedbackDto.getImages()) {
+            for (Image image : feedback.getImages()) {
                 if (!thread.isInterrupted()) {
                     try {
                         base64ImagesList.add(Base64.getEncoder().encodeToString(ImagesUtils.getBytes(CoreUtils.toBufferedImage(image))));
@@ -60,8 +80,8 @@ public class FeedbackService {
             result.setBase64Images(base64ImagesList);
         }
 
-        if (!thread.isInterrupted() && !StringUtil.isBlank(feedbackDto.getLogFileContent())) {
-            result.setBase64LogFile(Base64.getEncoder().encodeToString(feedbackDto.getLogFileContent().getBytes()));
+        if (!thread.isInterrupted() && !StringUtil.isBlank(feedback.getLogFileContent())) {
+            result.setBase64LogFile(Base64.getEncoder().encodeToString(feedback.getLogFileContent().getBytes()));
         }
 
         return result;
