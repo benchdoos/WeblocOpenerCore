@@ -1,7 +1,12 @@
 package com.github.benchdoos.weblocopenercore.gui;
 
+import com.github.benchdoos.weblocopenercore.core.Translation;
+import com.github.benchdoos.weblocopenercore.core.constants.PathConstants;
 import com.github.benchdoos.weblocopenercore.gui.panels.BufferedImagePanel;
+import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import com.github.benchdoos.weblocopenercore.service.WindowLauncher;
+import com.github.benchdoos.weblocopenercore.service.feedback.FeedbackDto;
+import com.github.benchdoos.weblocopenercore.service.feedback.FeedbackService;
 import com.github.benchdoos.weblocopenercore.service.feedback.FileExtension;
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import com.github.benchdoos.weblocopenercore.utils.FileUtils;
@@ -13,10 +18,12 @@ import com.intellij.uiDesigner.core.Spacer;
 import lombok.extern.log4j.Log4j2;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.validator.routines.EmailValidator;
+import org.apache.http.HttpStatus;
 import org.jsoup.internal.StringUtil;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
+import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -57,6 +64,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ResourceBundle;
 
 @Log4j2
 public class FeedbackDialog extends JFrame implements Translatable {
@@ -77,6 +85,7 @@ public class FeedbackDialog extends JFrame implements Translatable {
     private JProgressBar sendingProgressBar;
     private JLabel appengLogsInfoLabel;
     private static final List<FileExtension> SUPPORTED_IMAGES_EXTENSIONS = Arrays.asList(FileExtension.JPG, FileExtension.PNG);
+    private Thread sendFeedbackThread;
 
     public FeedbackDialog() {
         $$$setupUI$$$();
@@ -102,6 +111,8 @@ public class FeedbackDialog extends JFrame implements Translatable {
         imagesPanel.setVisible(false);
         sendingProgressBar.setVisible(false);
 
+        translate();
+
         pack();
         setMinimumSize(getSize());
     }
@@ -125,6 +136,18 @@ public class FeedbackDialog extends JFrame implements Translatable {
             final Image image = CoreUtils.getImageFromClipboard();
             if (image != null) {
                 onImagePaste(image);
+            } else {
+                final String textFromClipboard = CoreUtils.getTextFromClipboard();
+                if (textFromClipboard != null) {
+                    if (feedbackTextArea.getSelectionStart() == feedbackTextArea.getSelectionEnd()) {
+                        feedbackTextArea.insert(textFromClipboard, feedbackTextArea.getSelectionEnd());
+                    } else {
+                        feedbackTextArea.replaceRange(
+                                textFromClipboard,
+                                feedbackTextArea.getSelectionStart(),
+                                feedbackTextArea.getSelectionEnd());
+                    }
+                }
             }
         } catch (Exception e) {
             log.warn("Could not paste image from clipboard", e);
@@ -250,7 +273,7 @@ public class FeedbackDialog extends JFrame implements Translatable {
 
                     updatePanel();
 
-                } catch (UnsupportedFlavorException | IOException e) {
+                } catch (final UnsupportedFlavorException | IOException e) {
                     log.warn("Could not append files to drop target", e);
                 }
             }
@@ -297,16 +320,78 @@ public class FeedbackDialog extends JFrame implements Translatable {
     }
 
     private void onCancel() {
+        if (sendFeedbackThread != null) {
+            if (sendFeedbackThread.isAlive()) {
+                sendFeedbackThread.interrupt();
+            }
+        }
         dispose();
     }
 
     private void sendFeedback() {
         try {
+            switchInputsEnabled(false);
             validateInput();
+            shareFeedback();
         } catch (final IllegalArgumentException e) {
+            switchInputsEnabled(true);
             log.warn("Could not validate input", e);
             FrameUtils.shakeFrame(this);
         }
+    }
+
+    private FeedbackDto prepareFeedback() {
+
+        final FeedbackDto dto = FeedbackDto.builder()
+                .uuid(PreferencesManager.getApplicationUuid())
+                .feedback(feedbackTextArea.getText())
+                .build();
+
+        if (appendLogsCheckBox.isSelected()) {
+            final String traceLog = PathConstants.APP_LOG_FOLDER_PATH + File.separator + "trace.log";
+            final String contentFromResource = CoreUtils.getContentFromResource(traceLog);
+            if (!StringUtil.isBlank(contentFromResource)) {
+                dto.setLogFileContent(contentFromResource);
+            } else {
+                log.warn("Could not append trace.log file (filepath: {}). Skipping.", traceLog);
+            }
+        }
+
+        if (imagesList.getModel().getSize() > 0) {
+            final List<Image> list = new ArrayList<>();
+            for (int i = 0; i < imagesList.getModel().getSize(); i++) {
+                final BufferedImagePanel panel = imagesList.getModel().getElementAt(i);
+                list.add(panel.getImage());
+            }
+            dto.setImages(list);
+        }
+
+        return dto;
+    }
+
+    private void shareFeedback() {
+        sendFeedbackThread = new Thread(() -> {
+            final FeedbackDto feedbackDto = prepareFeedback();
+
+            final int code = new FeedbackService().sendFeedback(feedbackDto);
+            if (HttpStatus.SC_OK == code) {
+                //todo show ok message
+                dispose();
+            } else {
+                //todo show error message
+            }
+        });
+        sendFeedbackThread.start();
+    }
+
+    private void switchInputsEnabled(boolean enabled) {
+        feedbackTextArea.setEditable(enabled);
+        emailTextField.setEditable(enabled);
+        appendLogsCheckBox.setEnabled(enabled);
+        previewItemButton.setEnabled(enabled);
+        removeItemButton.setEnabled(enabled);
+        imagesList.setEnabled(enabled);
+        sendingProgressBar.setVisible(!enabled);
     }
 
     private void validateInput() {
@@ -365,7 +450,9 @@ public class FeedbackDialog extends JFrame implements Translatable {
 
     @Override
     public void translate() {
-        //todo add translation
+        final Translation translation = new Translation("FeedbackDialogBundle");
+        setTitle(translation.getTranslatedString("windowTitle"));
+        appendLogsCheckBox.setText(translation.getTranslatedString("appendLogsCheckBox"));
     }
 
     private static boolean isSupportedImageExtension(String extension) {
@@ -431,11 +518,13 @@ public class FeedbackDialog extends JFrame implements Translatable {
         imagesPanel.add(spacer2, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         contentPane.add(emailTextField, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         appendLogsCheckBox = new JCheckBox();
-        appendLogsCheckBox.setText("Append logs");
+        this.$$$loadButtonText$$$(appendLogsCheckBox, ResourceBundle.getBundle("translations/FeedbackDialogBundle").getString("appendLogsCheckBox"));
         contentPane.add(appendLogsCheckBox, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         appengLogsInfoLabel = new JLabel();
         appengLogsInfoLabel.setIcon(new ImageIcon(getClass().getResource("/images/infoIcon16.png")));
         appengLogsInfoLabel.setIconTextGap(0);
+        appengLogsInfoLabel.setText("");
+        appengLogsInfoLabel.setToolTipText(ResourceBundle.getBundle("translations/FeedbackDialogBundle").getString("appendLogsInfoLabel"));
         contentPane.add(appengLogsInfoLabel, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         sendingProgressBar = new JProgressBar();
         sendingProgressBar.setIndeterminate(true);
@@ -459,6 +548,33 @@ public class FeedbackDialog extends JFrame implements Translatable {
             }
         }
         return new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
+    }
+
+    /**
+     * @noinspection ALL
+     */
+    private void $$$loadButtonText$$$(AbstractButton component, String text) {
+        StringBuffer result = new StringBuffer();
+        boolean haveMnemonic = false;
+        char mnemonic = '\0';
+        int mnemonicIndex = -1;
+        for (int i = 0; i < text.length(); i++) {
+            if (text.charAt(i) == '&') {
+                i++;
+                if (i == text.length()) break;
+                if (!haveMnemonic && text.charAt(i) != '&') {
+                    haveMnemonic = true;
+                    mnemonic = text.charAt(i);
+                    mnemonicIndex = result.length();
+                }
+            }
+            result.append(text.charAt(i));
+        }
+        component.setText(result.toString());
+        if (haveMnemonic) {
+            component.setMnemonic(mnemonic);
+            component.setDisplayedMnemonicIndex(mnemonicIndex);
+        }
     }
 
     /**

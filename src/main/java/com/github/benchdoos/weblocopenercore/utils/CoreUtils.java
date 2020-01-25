@@ -242,10 +242,8 @@ public class CoreUtils {
     }
 
     public static void showFatalErrorMessage(Exception e) {
-        InfoDialog infoDialog = new InfoDialog();
+        final InfoDialog infoDialog = new InfoDialog();
         infoDialog.setTitle(WEBLOCOPENER_APPLICATION_NAME);
-
-        // todo add reporting errors??? how - hz...
 
         final String content = getContentFromResource("/pages/fatalErrorPage.html");
 
@@ -269,7 +267,7 @@ public class CoreUtils {
                 contentBuilder.append(str);
             }
             return contentBuilder.toString();
-        } catch (IOException e) {
+        } catch (final Exception e) {
             log.warn("Could not load content from path: {}. Returning empty string.", path, e);
             return "";
         }
@@ -279,6 +277,15 @@ public class CoreUtils {
         final Transferable transferable = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
         if (transferable != null && transferable.isDataFlavorSupported(DataFlavor.imageFlavor)) {
             return (Image) transferable.getTransferData(DataFlavor.imageFlavor);
+        } else {
+            return null;
+        }
+    }
+
+    public static String getTextFromClipboard() throws Exception {
+        final Transferable transferable = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
+        if (transferable != null && transferable.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+            return (String) transferable.getTransferData(DataFlavor.stringFlavor);
         } else {
             return null;
         }
