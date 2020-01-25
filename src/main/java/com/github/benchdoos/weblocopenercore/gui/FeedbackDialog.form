@@ -69,7 +69,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="4ae0b" class="javax.swing.JTextArea" binding="feedBackTextArea">
+              <component id="4ae0b" class="javax.swing.JTextArea" binding="feedbackTextArea">
                 <constraints/>
                 <properties>
                   <font name="Arial" size="14"/>

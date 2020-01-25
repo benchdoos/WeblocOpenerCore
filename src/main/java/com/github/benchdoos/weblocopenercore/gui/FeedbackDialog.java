@@ -11,11 +11,12 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import lombok.extern.log4j.Log4j2;
 import net.coobird.thumbnailator.Thumbnails;
+import org.apache.commons.validator.routines.EmailValidator;
+import org.jsoup.internal.StringUtil;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -31,12 +32,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
-import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
@@ -60,10 +59,11 @@ import java.util.List;
 @Log4j2
 public class FeedbackDialog extends JFrame implements Translatable {
     private static final Dimension SCALED_IMAGE_SIZE = new Dimension(640, 480);
+    private static final int MAXIMUM_TEXT_LENGTH = 30000;
     private JPanel contentPane;
     private JButton sendButton;
     private JButton buttonCancel;
-    private JTextArea feedBackTextArea;
+    private JTextArea feedbackTextArea;
     private JPanel imagesPanel;
     private JList<BufferedImagePanel> imagesList;
     private JTextField emailTextField;
@@ -103,14 +103,14 @@ public class FeedbackDialog extends JFrame implements Translatable {
     }
 
     public void setFeedbackText(String text) {
-        feedBackTextArea.setText(text);
+        feedbackTextArea.setText(text);
     }
 
     private void initImagePaste() {
         contentPane.registerKeyboardAction(e -> onPaste(),
                 KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_DOWN_MASK),
                 JComponent.WHEN_FOCUSED);
-        feedBackTextArea.registerKeyboardAction(e -> onPaste(),
+        feedbackTextArea.registerKeyboardAction(e -> onPaste(),
                 KeyStroke.getKeyStroke(KeyEvent.VK_V, InputEvent.CTRL_DOWN_MASK),
                 JComponent.WHEN_IN_FOCUSED_WINDOW);
     }
@@ -130,7 +130,7 @@ public class FeedbackDialog extends JFrame implements Translatable {
     }
 
     private void initTextArea() {
-        feedBackTextArea.getActionMap().put("paste-from-clipboard", new AbstractAction() {
+        feedbackTextArea.getActionMap().put("paste-from-clipboard", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 onPaste();
@@ -238,7 +238,7 @@ public class FeedbackDialog extends JFrame implements Translatable {
 
         imagesPanel.setDropTarget(dropTarget);
         contentPane.setDropTarget(dropTarget);
-        feedBackTextArea.setDropTarget(dropTarget);
+        feedbackTextArea.setDropTarget(dropTarget);
 
     }
 
@@ -279,8 +279,42 @@ public class FeedbackDialog extends JFrame implements Translatable {
     }
 
     private void sendFeedback() {
-        imagesPanel.setVisible(!imagesPanel.isVisible());
-        //todo send feedback
+        try {
+            validateInput();
+        } catch (IllegalArgumentException e) {
+            log.warn("Could not ");
+        }
+    }
+
+    private void validateInput() {
+        validateTextArea();
+        validateEmail();
+    }
+
+    private void validateTextArea() {
+        final String text = feedbackTextArea.getText();
+        if (StringUtil.isBlank(text)) {
+            throw new IllegalArgumentException("Feedback text area can not be blank");
+        } else {
+            if (text.length() > MAXIMUM_TEXT_LENGTH) {
+                throw new IllegalArgumentException("Feedback text area length (" + text.length() + ") " +
+                        "can not be bigger than maximum text length (" + MAXIMUM_TEXT_LENGTH + ")");
+            }
+        }
+    }
+
+    private void validateEmail() {
+        final String email = emailTextField.getText();
+        if (!StringUtil.isBlank(email)) {
+            log.debug("Validating email: {}", email);
+            final boolean emailValid = EmailValidator.getInstance().isValid(email);
+            if (!emailValid) {
+                emailTextField.setBorder(BorderFactory.createLineBorder(Color.RED));
+                throw new IllegalArgumentException("Email is not valid: " + email);
+            } else {
+                emailTextField.setBorder(new JTextField().getBorder());
+            }
+        }
     }
 
     @Override
@@ -324,10 +358,10 @@ public class FeedbackDialog extends JFrame implements Translatable {
         contentPane.add(panel3, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(300, 110), new Dimension(300, 180), null, 0, false));
         final JScrollPane scrollPane1 = new JScrollPane();
         panel3.add(scrollPane1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        feedBackTextArea = new JTextArea();
-        Font feedBackTextAreaFont = this.$$$getFont$$$("Arial", -1, 14, feedBackTextArea.getFont());
-        if (feedBackTextAreaFont != null) feedBackTextArea.setFont(feedBackTextAreaFont);
-        scrollPane1.setViewportView(feedBackTextArea);
+        feedbackTextArea = new JTextArea();
+        Font feedBackTextAreaFont = this.$$$getFont$$$("Arial", -1, 14, feedbackTextArea.getFont());
+        if (feedBackTextAreaFont != null) feedbackTextArea.setFont(feedBackTextAreaFont);
+        scrollPane1.setViewportView(feedbackTextArea);
         imagesPanel = new JPanel();
         imagesPanel.setLayout(new GridLayoutManager(3, 2, new Insets(0, 0, 0, 0), -1, -1));
         contentPane.add(imagesPanel, new GridConstraints(3, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
