@@ -23,7 +23,7 @@ import java.io.IOException;
 
 @Log4j2
 public class BufferedImagePanel extends JPanel {
-    final Dimension BUFFERED_PANEL_SIZE = new Dimension(55, 55); // size of panel
+    private final Dimension BUFFERED_PANEL_SIZE = new Dimension(55, 55); // size of panel
 
     private JPanel contentPane;
     private JButton removeButton;
@@ -35,7 +35,9 @@ public class BufferedImagePanel extends JPanel {
     public BufferedImagePanel(Image image) {
         this.image = image;
         try {
-            this.scaledImage = Thumbnails.of(CoreUtils.toBufferedImage(image)).size(BUFFERED_PANEL_SIZE.width, BUFFERED_PANEL_SIZE.height).asBufferedImage();
+            this.scaledImage = Thumbnails.of(CoreUtils.toBufferedImage(image))
+                    .size(BUFFERED_PANEL_SIZE.width, BUFFERED_PANEL_SIZE.height)
+                    .asBufferedImage();
         } catch (IOException e) {
             log.warn("Could not scale image");
         }
@@ -47,6 +49,7 @@ public class BufferedImagePanel extends JPanel {
         setLayout(new GridLayout());
         add(contentPane);
 
+        removeButton.setVisible(false);
     }
 
     public Image getImage() {
