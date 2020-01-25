@@ -305,10 +305,12 @@ public class FeedbackDialog extends JFrame implements Translatable {
             validateInput();
         } catch (final IllegalArgumentException e) {
             log.warn("Could not validate input", e);
+            FrameUtils.shakeFrame(this);
         }
     }
 
     private void validateInput() {
+        log.info("Validating all fields");
         validateTextArea();
         validateEmail();
         validateImages();
