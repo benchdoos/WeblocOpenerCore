@@ -31,13 +31,22 @@ public class FeedbackService {
             base64Feedback = convertToBase64FeedbackDto(feedback);
             log.debug("Prepared base64 feedback. ({})", base64Feedback);
 
+            final FeedbackDto feedbackDto = new FeedbackDto();
+
             if (!thread.isInterrupted()) {
                 final List<ImageInfo> imageInfoList = sendImages(base64Feedback);
 
                 if (!CollectionUtils.isEmpty(imageInfoList)) {
-                    //todo append to dto
+                    feedbackDto.setImages(imageInfoList);
                 }
+            }
 
+            feedback.setFeedback(base64Feedback.getBase64Feedback());
+            feedback.setLogFileContent(base64Feedback.getBase64LogFile());
+            feedback.setUuid(base64Feedback.getUuid());
+
+            if (!thread.isInterrupted()) {
+                //todo send dto to server here
             }
         }
 
