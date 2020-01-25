@@ -14,6 +14,7 @@ import net.coobird.thumbnailator.Thumbnails;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -30,9 +31,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -139,15 +142,15 @@ public class FeedbackDialog extends JFrame implements Translatable {
         imagesList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         imagesList.setVisibleRowCount(-1);
         imagesList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-        imagesList.setCellRenderer(new DefaultListCellRenderer() {
-            @Override
-            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                return (Component) value;
+        imagesList.setCellRenderer((jList, bufferedImagePanel, index, isSelected, cellHasFocus) -> {
+            if (isSelected) {
+                bufferedImagePanel.setBorder(BorderFactory.createLineBorder(Color.BLUE));
+            } else {
+                bufferedImagePanel.setBorder(BorderFactory.createEmptyBorder());
             }
+            return bufferedImagePanel;
         });
         imagesList.setModel(new DefaultListModel<>());
-
-        imagesList.addListSelectionListener(l -> openImage());
     }
 
     private void openImage() {
@@ -179,7 +182,7 @@ public class FeedbackDialog extends JFrame implements Translatable {
             @Override
             public JDialog initWindow() {
                 final JDialog dialog = new JDialog();
-                dialog.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                 dialog.setLayout(new BorderLayout());
                 dialog.add(new JLabel(new ImageIcon(scaled)));
                 dialog.setModal(true);
@@ -252,8 +255,23 @@ public class FeedbackDialog extends JFrame implements Translatable {
     }
 
     private void initListeners() {
+
+        previewItemButton.addActionListener(e -> openImage());
+        removeItemButton.addActionListener(e -> onRemove());
+
         sendButton.addActionListener(e -> sendFeedback());
         buttonCancel.addActionListener(e -> onCancel());
+    }
+
+    private void onRemove() {
+        if (imagesList.getSelectedValue() != null) {
+            for (BufferedImagePanel panel : imagesList.getSelectedValuesList()) {
+                ((DefaultListModel) imagesList.getModel()).removeElement(panel);
+            }
+        }
+        if (imagesList.getModel().getSize() == 0) {
+            imagesPanel.setVisible(false);
+        }
     }
 
     private void onCancel() {
@@ -322,13 +340,13 @@ public class FeedbackDialog extends JFrame implements Translatable {
         previewItemButton.setBorderPainted(false);
         previewItemButton.setIcon(new ImageIcon(getClass().getResource("/images/icons/imagePreview16.png")));
         previewItemButton.setOpaque(false);
-        imagesPanel.add(previewItemButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(16, 16), new Dimension(16, 16), new Dimension(16, 16), 0, false));
+        imagesPanel.add(previewItemButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(25, 25), new Dimension(25, 25), new Dimension(25, 25), 0, false));
         removeItemButton = new JButton();
         removeItemButton.setBorderPainted(false);
         removeItemButton.setIcon(new ImageIcon(getClass().getResource("/images/emojiCross16.png")));
         removeItemButton.setIconTextGap(0);
         removeItemButton.setOpaque(false);
-        imagesPanel.add(removeItemButton, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(16, 16), new Dimension(16, 16), new Dimension(16, 16), 0, false));
+        imagesPanel.add(removeItemButton, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(25, 25), new Dimension(25, 25), new Dimension(25, 25), 0, false));
         final Spacer spacer2 = new Spacer();
         imagesPanel.add(spacer2, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         contentPane.add(emailTextField, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
