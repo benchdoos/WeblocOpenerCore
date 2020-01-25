@@ -31,8 +31,8 @@ public interface StringConstants {
     String DONATE_DONATION_ALERTS_URL = "https://www.donationalerts.com/r/benchdoos";
     String WINDOWS_WEBLOCOPENER_SETUP_NAME = "WeblocOpenerSetupV";
     String FAVICON_GETTER_URL = "https://besticon-demo.herokuapp.com/allicons.json?url=";
-    String SHARE_USER_INFO_URL = "https://weblocopener-statistics.herokuapp.com/notify/%s";
-    String SHARE_USER_INFO_DEV_MODE_URL = "http://localhost:8022/notify/%s";
+    String SHARE_USER_INFO_URL = "https://weblocopener-statistics.herokuapp.com/users/notify/%s";
+    String SHARE_USER_INFO_DEV_MODE_URL = "http://localhost:8022/users/notify/%s";
 
     String IMGBB_API_KEY = "71b8d5b5275a7aae78efc21d55be19bf";
 }
