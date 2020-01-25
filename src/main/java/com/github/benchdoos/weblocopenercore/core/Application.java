@@ -43,7 +43,6 @@ import com.github.benchdoos.weblocopenercore.utils.FileUtils;
 import com.github.benchdoos.weblocopenercore.utils.FrameUtils;
 import com.github.benchdoos.weblocopenercore.utils.browser.BrowserManager;
 import com.github.benchdoos.weblocopenercore.utils.system.OS;
-import com.github.benchdoos.weblocopenercore.utils.system.SystemUtils;
 import lombok.extern.log4j.Log4j2;
 
 import java.awt.Dimension;
@@ -67,9 +66,9 @@ public class Application {
         printDevMode();
         log.info("{} starts with arguments: {}", ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME, Arrays.toString(args));
 
-        BrowserManager.loadBrowserList();
-
         CoreUtils.enableLookAndFeel();
+
+        BrowserManager.loadBrowserList();
 
         shareUserInfo();
 
