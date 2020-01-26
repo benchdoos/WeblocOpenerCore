@@ -86,6 +86,7 @@ public class FeedbackDialog extends JFrame implements Translatable {
     private JLabel appengLogsInfoLabel;
     private static final List<FileExtension> SUPPORTED_IMAGES_EXTENSIONS = Arrays.asList(FileExtension.JPG, FileExtension.PNG);
     private Thread sendFeedbackThread;
+    private boolean imageAddingEnabled;
 
     public FeedbackDialog() {
         $$$setupUI$$$();
@@ -131,26 +132,28 @@ public class FeedbackDialog extends JFrame implements Translatable {
     }
 
     private void onPaste() {
-        try {
-            log.debug("Pasting image from clipboard");
-            final Image image = CoreUtils.getImageFromClipboard();
-            if (image != null) {
-                onImagePaste(image);
-            } else {
-                final String textFromClipboard = CoreUtils.getTextFromClipboard();
-                if (textFromClipboard != null) {
-                    if (feedbackTextArea.getSelectionStart() == feedbackTextArea.getSelectionEnd()) {
-                        feedbackTextArea.insert(textFromClipboard, feedbackTextArea.getSelectionEnd());
-                    } else {
-                        feedbackTextArea.replaceRange(
-                                textFromClipboard,
-                                feedbackTextArea.getSelectionStart(),
-                                feedbackTextArea.getSelectionEnd());
+        if (imageAddingEnabled) {
+            try {
+                log.debug("Pasting image from clipboard");
+                final Image image = CoreUtils.getImageFromClipboard();
+                if (image != null) {
+                    onImagePaste(image);
+                } else {
+                    final String textFromClipboard = CoreUtils.getTextFromClipboard();
+                    if (textFromClipboard != null) {
+                        if (feedbackTextArea.getSelectionStart() == feedbackTextArea.getSelectionEnd()) {
+                            feedbackTextArea.insert(textFromClipboard, feedbackTextArea.getSelectionEnd());
+                        } else {
+                            feedbackTextArea.replaceRange(
+                                    textFromClipboard,
+                                    feedbackTextArea.getSelectionStart(),
+                                    feedbackTextArea.getSelectionEnd());
+                        }
                     }
                 }
+            } catch (final Exception e) {
+                log.warn("Could not paste image from clipboard", e);
             }
-        } catch (Exception e) {
-            log.warn("Could not paste image from clipboard", e);
         }
     }
 
@@ -210,7 +213,7 @@ public class FeedbackDialog extends JFrame implements Translatable {
 
                 showImagePreview(scaled, new Dimension(bufferedImage.getWidth(), bufferedImage.getHeight()));
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             log.warn("Could not scale image", e);
         }
     }
@@ -248,30 +251,32 @@ public class FeedbackDialog extends JFrame implements Translatable {
             public synchronized void drop(DropTargetDropEvent evt) {
 
                 try {
-                    contentPane.setBorder(null);
+                    if (imageAddingEnabled) {
+                        contentPane.setBorder(null);
 
-                    evt.acceptDrop(DnDConstants.ACTION_COPY);
+                        evt.acceptDrop(DnDConstants.ACTION_COPY);
 
-                    final Object transferData = evt.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
-                    final List<?> list = (List<?>) transferData;
-                    final ArrayList<File> files = new ArrayList<>(list.size());
+                        final Object transferData = evt.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
+                        final List<?> list = (List<?>) transferData;
+                        final ArrayList<File> files = new ArrayList<>(list.size());
 
-                    for (final Object object : list) {
-                        if (object instanceof File) {
-                            final File file = (File) object;
-                            final String fileExtension = FileUtils.getFileExtension(file);
-                            if (isSupportedImageExtension(fileExtension)) {
-                                files.add(file);
+                        for (final Object object : list) {
+                            if (object instanceof File) {
+                                final File file = (File) object;
+                                final String fileExtension = FileUtils.getFileExtension(file);
+                                if (isSupportedImageExtension(fileExtension)) {
+                                    files.add(file);
+                                }
                             }
                         }
-                    }
 
-                    for (File file : files) {
-                        final BufferedImage read = ImageIO.read(file);
-                        addImageToList(read);
-                    }
+                        for (File file : files) {
+                            final BufferedImage read = ImageIO.read(file);
+                            addImageToList(read);
+                        }
 
-                    updatePanel();
+                        updatePanel();
+                    }
 
                 } catch (final UnsupportedFlavorException | IOException e) {
                     log.warn("Could not append files to drop target", e);
@@ -374,28 +379,35 @@ public class FeedbackDialog extends JFrame implements Translatable {
     }
 
     private void shareFeedback() {
-        sendFeedbackThread = new Thread(() -> {
-            final Feedback feedback = prepareFeedback();
+        if (sendFeedbackThread == null) {
+            sendFeedbackThread = new Thread(() -> {
 
-            final int code;
-            try {
-                code = new FeedbackService().sendFeedback(feedback);
-                if (HttpStatus.SC_OK == code) {
-                    log.info("Feedback was sent successfully");
-                    dispose();
-                } else {
-                    JOptionPane.showMessageDialog(this,
-                            "Feedback was not sent", //todo translate this
-                            "Error", //todo translate this
-                            JOptionPane.WARNING_MESSAGE);
-                    switchInputsEnabled(true);
+                imageAddingEnabled = false;
+
+                final Feedback feedback = prepareFeedback();
+
+                try {
+                    final int code = new FeedbackService().sendFeedback(feedback);
+                    if (HttpStatus.SC_OK == code) {
+                        log.info("Feedback was sent successfully");
+                        dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(this,
+                                "Feedback was not sent", //todo translate this
+                                "Error", //todo translate this
+                                JOptionPane.WARNING_MESSAGE);
+                        imageAddingEnabled = true;
+                        switchInputsEnabled(true);
+                    }
+                } catch (final IOException e) {
+                    log.warn("Could not send feedback", e);
                 }
-            } catch (IOException e) {
-                log.warn("Could not send feedback", e);
-            }
+            });
+        }
 
-        });
-        sendFeedbackThread.start();
+        if (!sendFeedbackThread.isAlive()) {
+            sendFeedbackThread.start();
+        }
     }
 
     private void switchInputsEnabled(boolean enabled) {
