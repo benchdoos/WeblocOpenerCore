@@ -40,7 +40,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
-import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -65,10 +64,7 @@ import java.awt.Window;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
-import java.awt.dnd.DropTargetAdapter;
-import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
-import java.awt.dnd.DropTargetEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -79,7 +75,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.TooManyListenersException;
 
 import static com.github.benchdoos.weblocopenercore.utils.FrameUtils.setWindowOnScreenCenter;
 
@@ -264,7 +259,7 @@ public class SettingsDialog extends JFrame implements Translatable {
             }
 
             private void onDrop(DropTargetDropEvent evt) {
-                Translation translation = new Translation("SettingsDialogBundle");
+                final Translation translation = new Translation("SettingsDialogBundle");
                 try {
                     contentPane.setBorder(null);
                     evt.acceptDrop(DnDConstants.ACTION_COPY);
@@ -286,7 +281,7 @@ public class SettingsDialog extends JFrame implements Translatable {
                     }.getWindow();
                     FrameUtils.setWindowOnParentWindowCenter(getCurrentWindow(), converterDialog);
                     converterDialog.setVisible(true);
-                } catch (Exception ex) {
+                } catch (final Exception ex) {
                     log.warn("Can not open files from drop", ex);
                     NotificationManager.getNotificationForCurrentOS().showErrorNotification(
                             ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME,
@@ -301,13 +296,12 @@ public class SettingsDialog extends JFrame implements Translatable {
 
     @NotNull
     private Window getCurrentWindow() {
-        return (Window) this;
+        return this;
     }
 
     private void initGui() {
         setContentPane(contentPane);
         setTitle(Translation.getTranslatedString("SettingsDialogBundle", "windowTitle"));
-
 
         getRootPane().setDefaultButton(buttonOK);
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/balloonIcon256.png")));
@@ -322,21 +316,7 @@ public class SettingsDialog extends JFrame implements Translatable {
 
         initButtons();
 
-
-        // call onCancel() when cross is clicked
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                onCancel();
-            }
-        });
-
-        // call onCancel() on ESCAPE
-        contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
-                JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-
-        contentPane.registerKeyboardAction(e -> createNewFile(), KeyStroke.getKeyStroke("control N"),
-                JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        initKeyListeners();
 
         scrollpane.setBorder(null);
 
@@ -346,11 +326,27 @@ public class SettingsDialog extends JFrame implements Translatable {
 
         browserSetterPanel.init(); //don't forget it or it will crash fileBrowser
 
-
         pack();
         setMinimumSize(new Dimension(768, 400));
         setWindowOnScreenCenter(this);
         translate();
+    }
+
+    private void initKeyListeners() {
+        // call onCancel() on ESCAPE
+        contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+                JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+        contentPane.registerKeyboardAction(e -> createNewFile(), KeyStroke.getKeyStroke("control N"),
+                JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
+        // call onCancel() when cross is clicked
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                onCancel();
+            }
+        });
     }
 
     private void initButtons() {
@@ -495,7 +491,7 @@ public class SettingsDialog extends JFrame implements Translatable {
             final BufferedImage selected = ImageIO.read(SettingsDialog.class.getResourceAsStream(selectedImageUrl));
             final BufferedImage unselected = ImageIO.read(SettingsDialog.class.getResourceAsStream(unselectedImageUrl));
             model.addElement(new IconJList.IconObject<>(selected, unselected, panel));
-        } catch (IOException e) {
+        } catch (final IOException e) {
             log.warn("Can not load images from given source: '{}','{}'", selectedImageUrl, unselectedImageUrl);
             model.addElement(new IconJList.IconObject<>(null, null, panel));
         }
@@ -513,7 +509,7 @@ public class SettingsDialog extends JFrame implements Translatable {
 
     @Override
     public void translate() {
-        Translation translation = new Translation("SettingsDialogBundle");
+        final Translation translation = new Translation("SettingsDialogBundle");
         setTitle(translation.getTranslatedString("windowTitle"));
         settingsSavedLabel.setToolTipText(translation.getTranslatedString("settingsSaved"));
         buttonApply.setText(translation.getTranslatedString("buttonApply"));
@@ -545,7 +541,7 @@ public class SettingsDialog extends JFrame implements Translatable {
                 final SettingsPanel object = elementAt.getObject();
 
                 if (object instanceof Translatable) {
-                    Translatable translatable = ((Translatable) object);
+                    final Translatable translatable = ((Translatable) object);
                     translatable.translate();
                 }
             }
@@ -558,12 +554,12 @@ public class SettingsDialog extends JFrame implements Translatable {
                 (DefaultListModel<IconJList.IconObject<SettingsPanel>>) settingsList.getModel();
 
         for (int i = 0; i < model.size(); i++) {
-            SettingsPanel panel = model.get(i).getObject();
+            final SettingsPanel panel = model.get(i).getObject();
             if (panel instanceof Closeable) {
                 try {
                     log.debug("Closing operations for panel: {}", panel.getClass().getName());
                     ((Closeable) panel).close();
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     log.warn("Can not close operations at panel: {}", panel.getClass().getName(), e);
                 }
             }
@@ -597,7 +593,7 @@ public class SettingsDialog extends JFrame implements Translatable {
     }
 
     private void saveSettings() {
-        ListModel<IconJList.IconObject<SettingsPanel>> model = settingsList.getModel();
+        final ListModel<IconJList.IconObject<SettingsPanel>> model = settingsList.getModel();
 
         for (int i = 0; i < model.getSize(); i++) {
             final SettingsPanel panel = model.getElementAt(i).getObject();
@@ -612,15 +608,15 @@ public class SettingsDialog extends JFrame implements Translatable {
                 final JColorful colorful = new JColorful(ApplicationConstants.DARK_MODE_THEME);
                 colorful.colorize(this);
 
-                ListModel<IconJList.IconObject<SettingsPanel>> model = settingsList.getModel();
+                final ListModel<IconJList.IconObject<SettingsPanel>> model = settingsList.getModel();
 
                 for (int i = 0; i < model.getSize(); i++) {
-                    Object o = model.getElementAt(i).getObject();
+                    final Object o = model.getElementAt(i).getObject();
                     if (o instanceof Component) {
                         colorful.colorize(((Component) o));
                     }
                 }
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 log.warn("Could not colorize component", e);
             }
         }
