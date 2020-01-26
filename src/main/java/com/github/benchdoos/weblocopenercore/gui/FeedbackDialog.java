@@ -347,6 +347,10 @@ public class FeedbackDialog extends JFrame implements Translatable {
                 .feedback(feedbackTextArea.getText())
                 .build();
 
+        if (!StringUtil.isBlank(emailTextField.getText())) {
+            dto.setEmail(emailTextField.getText());
+        }
+
         if (appendLogsCheckBox.isSelected()) {
             final String traceLog = PathConstants.APP_LOG_FOLDER_PATH + File.separator + "trace.log";
             final String contentFromResource = CoreUtils.getContentFromResource(traceLog);

@@ -1,8 +1,10 @@
 package com.github.benchdoos.weblocopenercore.service.feedback;
 
+import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import com.github.benchdoos.weblocopenercore.service.feedback.images.ImageInfo;
 import com.github.benchdoos.weblocopenercore.service.feedback.images.ImageSender;
 import com.github.benchdoos.weblocopenercore.service.feedback.images.ImgbbImageSender;
+import com.github.benchdoos.weblocopenercore.service.feedback.images.LocalSenderImageSender;
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import com.github.benchdoos.weblocopenercore.utils.ImagesUtils;
 import lombok.extern.log4j.Log4j2;
@@ -34,18 +36,20 @@ public class FeedbackService {
             final FeedbackDto feedbackDto = new FeedbackDto();
 
             if (!thread.isInterrupted()) {
-                final List<ImageInfo> imageInfoList = sendImages(base64Feedback);
+                final List<ImageInfo> imageInfoList = PreferencesManager.isDevMode() ? sendFakeImages(base64Feedback) : sendImages(base64Feedback);
 
                 if (!CollectionUtils.isEmpty(imageInfoList)) {
                     feedbackDto.setImages(imageInfoList);
                 }
             }
 
-            feedback.setFeedback(base64Feedback.getBase64Feedback());
-            feedback.setLogFileContent(base64Feedback.getBase64LogFile());
-            feedback.setUuid(base64Feedback.getUuid());
+            feedbackDto.setEmail(base64Feedback.getEmail());
+            feedbackDto.setBase64FeedbackMessage(base64Feedback.getBase64Feedback());
+            feedbackDto.setBase64LogFile(base64Feedback.getBase64LogFile());
+            feedbackDto.setUserUuid(base64Feedback.getUuid());
 
             if (!thread.isInterrupted()) {
+                log.info("Preparing to send feedback: {}", feedbackDto);
                 //todo send dto to server here
             }
         }
@@ -54,6 +58,11 @@ public class FeedbackService {
             log.warn("Feedback sending was interrupted.");
         }
         return -1;
+    }
+
+    private List<ImageInfo> sendFakeImages(Base64Feedback base64Feedback) {
+        log.warn("[DEV MODE ENABLED] sending fake images");
+        return new LocalSenderImageSender().sendImages(base64Feedback.getBase64Images());
     }
 
     private List<ImageInfo> sendImages(Base64Feedback base64Feedback) {
@@ -72,6 +81,10 @@ public class FeedbackService {
 
         if (!thread.isInterrupted() && !StringUtil.isBlank(feedback.getFeedback())) {
             result.setBase64Feedback(Base64.getEncoder().encodeToString(feedback.getFeedback().getBytes()));
+        }
+
+        if (!thread.isInterrupted() && !StringUtil.isBlank(feedback.getEmail())) {
+            result.setEmail(feedback.getEmail());
         }
 
         if (!thread.isInterrupted() && !CollectionUtils.isEmpty(feedback.getImages())) {

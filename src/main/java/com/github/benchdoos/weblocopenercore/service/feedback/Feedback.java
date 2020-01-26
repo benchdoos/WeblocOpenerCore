@@ -16,6 +16,7 @@ import java.util.UUID;
 public class Feedback {
     private UUID uuid;
     private String feedback;
+    private String email;
     private String logFileContent;
     private List<Image> images;
 }

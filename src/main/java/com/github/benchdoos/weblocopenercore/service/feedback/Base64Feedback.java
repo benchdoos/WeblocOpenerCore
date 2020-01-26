@@ -15,6 +15,7 @@ import java.util.UUID;
 public class Base64Feedback {
     private UUID uuid;
     private String base64Feedback;
+    private String email;
     private String base64LogFile;
     private List<String> base64Images;
 }

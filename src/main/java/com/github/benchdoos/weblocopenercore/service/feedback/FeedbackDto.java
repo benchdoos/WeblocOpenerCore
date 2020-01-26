@@ -14,8 +14,9 @@ import java.util.UUID;
 @Data
 @Builder
 public class FeedbackDto {
-    private UUID uuid;
+    private UUID userUuid;
     private String base64FeedbackMessage;
     private String base64LogFile;
+    private String email;
     private List<ImageInfo> images;
 }
