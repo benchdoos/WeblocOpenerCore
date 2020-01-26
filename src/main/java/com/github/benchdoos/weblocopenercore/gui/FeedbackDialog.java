@@ -8,6 +8,7 @@ import com.github.benchdoos.weblocopenercore.service.WindowLauncher;
 import com.github.benchdoos.weblocopenercore.service.feedback.Feedback;
 import com.github.benchdoos.weblocopenercore.service.feedback.FeedbackService;
 import com.github.benchdoos.weblocopenercore.service.feedback.FileExtension;
+import com.github.benchdoos.weblocopenercore.service.notification.NotificationManager;
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import com.github.benchdoos.weblocopenercore.utils.FileUtils;
 import com.github.benchdoos.weblocopenercore.utils.FrameUtils;
@@ -415,6 +416,10 @@ public class FeedbackDialog extends JFrame implements Translatable {
                 final int code = new FeedbackService().sendFeedback(feedback);
                 if (HttpStatus.SC_OK == code) {
                     log.info("Feedback was sent successfully");
+                    NotificationManager.getNotificationForCurrentOS().showInfoNotification(
+                            "Feedback", // todo show this
+                            "Feedback has been sent"//todo translate this
+                    );
                     dispose();
                 } else if (-1 == code) {
                     switchInputsEnabled(true);
