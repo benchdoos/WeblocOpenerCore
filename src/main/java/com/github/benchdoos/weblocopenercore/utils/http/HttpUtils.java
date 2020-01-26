@@ -1,6 +1,7 @@
 package com.github.benchdoos.weblocopenercore.utils.http;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -39,6 +40,7 @@ public class HttpUtils<T> {
             }
 
             final ObjectMapper mapper = new ObjectMapper();
+            mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
             @Nullable final T value;
             if (!StringUtil.isBlank(responseString)) {

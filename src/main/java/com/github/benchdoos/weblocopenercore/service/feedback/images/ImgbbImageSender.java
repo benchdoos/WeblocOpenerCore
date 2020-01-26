@@ -65,7 +65,7 @@ public class ImgbbImageSender implements ImageSender {
 
     /**
      * Sends request and return
-     *
+     * //todo use HttpUtils (something went wrong with LinkedHashMap
      * @param post method
      * @return response from ImgBB
      * @throws IOException if something is wrong
