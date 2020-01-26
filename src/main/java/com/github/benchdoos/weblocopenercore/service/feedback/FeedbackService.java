@@ -1,5 +1,8 @@
 package com.github.benchdoos.weblocopenercore.service.feedback;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.benchdoos.weblocopenercore.core.constants.StringConstants;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import com.github.benchdoos.weblocopenercore.service.feedback.images.ImageInfo;
 import com.github.benchdoos.weblocopenercore.service.feedback.images.ImageSender;
@@ -7,21 +10,29 @@ import com.github.benchdoos.weblocopenercore.service.feedback.images.ImgbbImageS
 import com.github.benchdoos.weblocopenercore.service.feedback.images.LocalSenderImageSender;
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import com.github.benchdoos.weblocopenercore.utils.ImagesUtils;
+import com.github.benchdoos.weblocopenercore.utils.http.HttpUtils;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpHeaders;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.BasicHttpEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jsoup.internal.StringUtil;
 
 import java.awt.Image;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.UUID;
 
 @Log4j2
 public class FeedbackService {
+    private final HttpUtils<UUID> httpUtils = new HttpUtils<>();
 
-    public int sendFeedback(Feedback feedback) {
+    public int sendFeedback(Feedback feedback) throws IOException {
         final Thread thread = Thread.currentThread();
 
         log.info("Starting sending feedback.");
@@ -50,14 +61,47 @@ public class FeedbackService {
 
             if (!thread.isInterrupted()) {
                 log.info("Preparing to send feedback: {}", feedbackDto);
-                //todo send dto to server here
+                return sendFeedback(feedbackDto);
             }
         }
 
-        if (thread.isInterrupted()) {
-            log.warn("Feedback sending was interrupted.");
-        }
+        log.warn("Feedback sending was interrupted.");
         return -1;
+    }
+
+    private int sendFeedback(FeedbackDto feedbackDto) throws IOException {
+        final HttpPost post = preparePostRequest(feedbackDto);
+        final HttpUtils.HttpResponse<UUID> httpResponse = httpUtils.sendHttpRequest(post);
+        log.info("Response for sending feedback: {}", httpResponse);
+        return httpResponse.getCode();
+    }
+
+    private HttpPost preparePostRequest(FeedbackDto feedbackDto) throws IOException {
+        final HttpPost post = new HttpPost(getUrl());
+        post.setEntity(preparePostEntity(feedbackDto));
+        post.setHeader(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8");
+
+        return post;
+    }
+
+    private HttpEntity preparePostEntity(FeedbackDto feedbackDto) throws JsonProcessingException {
+        final BasicHttpEntity result = new BasicHttpEntity();
+
+        final ObjectMapper mapper = new ObjectMapper();
+        final byte[] bytes = mapper.writeValueAsBytes(feedbackDto);
+
+        final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+
+        result.setContent(byteArrayInputStream);
+        return result;
+    }
+
+    private String getUrl() {
+        if (!PreferencesManager.isDevMode()) {
+            return StringConstants.SEND_FEEDBACK_URL;
+        } else {
+            return StringConstants.SEND_FEEDBACK_DEV_MODE_URL;
+        }
     }
 
     private List<ImageInfo> sendFakeImages(Base64Feedback base64Feedback) {

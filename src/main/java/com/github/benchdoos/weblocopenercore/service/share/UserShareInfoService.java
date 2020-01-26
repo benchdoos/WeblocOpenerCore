@@ -4,14 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.benchdoos.weblocopenercore.core.constants.StringConstants;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
+import com.github.benchdoos.weblocopenercore.utils.http.HttpUtils;
 import lombok.extern.log4j.Log4j2;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
-import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.BasicHttpEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayInputStream;
@@ -22,6 +20,8 @@ import java.util.UUID;
 @Log4j2
 public class UserShareInfoService {
 
+    private final HttpUtils httpUtils = new HttpUtils<>();
+
     public void sendInfo(@NotNull UUID uuid) throws IOException {
         log.info("Sharing user info. UUID: {}", uuid);
         final String shareUserInfoUrl = getShareUserInfoUrl();
@@ -31,29 +31,13 @@ public class UserShareInfoService {
         post.setHeader(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8");
         post.setEntity(entity);
 
-        sendHttpRequest(post);
+        final HttpUtils.HttpResponse uuidHttpResponse = httpUtils.sendHttpRequest(post);
+        log.info("Shared info about application. Status code: {}", uuidHttpResponse.getCode());
     }
 
     @NotNull
     private String getShareUserInfoUrl() {
         return PreferencesManager.isDevMode() ? StringConstants.SHARE_USER_INFO_DEV_MODE_URL : StringConstants.SHARE_USER_INFO_URL;
-    }
-
-    private void sendHttpRequest(HttpPost post) throws IOException {
-        try (final CloseableHttpClient httpClient = HttpClients.createDefault();
-             final CloseableHttpResponse response = httpClient.execute(post)) {
-
-            final int statusCode = response.getStatusLine().getStatusCode();
-            if (statusCode == 200) {
-                log.info("Http request was send successfully. (code: {}, response: {})",
-                        statusCode,
-                        response.getEntity());
-            } else {
-                log.warn("Http request received wrong code. (code: {}, response: {})",
-                        statusCode,
-                        response.getEntity());
-            }
-        }
     }
 
     private HttpEntity prepareUserInfo() throws IOException {

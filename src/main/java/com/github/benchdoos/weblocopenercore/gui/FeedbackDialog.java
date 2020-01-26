@@ -377,13 +377,23 @@ public class FeedbackDialog extends JFrame implements Translatable {
         sendFeedbackThread = new Thread(() -> {
             final Feedback feedback = prepareFeedback();
 
-            final int code = new FeedbackService().sendFeedback(feedback);
-            if (HttpStatus.SC_OK == code) {
-                //todo show ok message
-                dispose();
-            } else {
-                //todo show error message
+            final int code;
+            try {
+                code = new FeedbackService().sendFeedback(feedback);
+                if (HttpStatus.SC_OK == code) {
+                    log.info("Feedback was sent successfully");
+                    dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "Feedback was not sent", //todo translate this
+                            "Error", //todo translate this
+                            JOptionPane.WARNING_MESSAGE);
+                    switchInputsEnabled(true);
+                }
+            } catch (IOException e) {
+                log.warn("Could not send feedback", e);
             }
+
         });
         sendFeedbackThread.start();
     }
@@ -396,6 +406,7 @@ public class FeedbackDialog extends JFrame implements Translatable {
         removeItemButton.setEnabled(enabled);
         imagesList.setEnabled(enabled);
         sendingProgressBar.setVisible(!enabled);
+        sendButton.setEnabled(enabled);
     }
 
     private void validateInput() {
