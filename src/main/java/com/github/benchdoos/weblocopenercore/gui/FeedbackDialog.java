@@ -337,9 +337,12 @@ public class FeedbackDialog extends JFrame implements Translatable {
         if (sendFeedbackThread != null) {
             if (sendFeedbackThread.isAlive()) {
                 sendFeedbackThread.interrupt();
+            } else {
+                dispose();
             }
+        } else {
+            dispose();
         }
-        dispose();
     }
 
     private void sendFeedback() {
@@ -389,34 +392,44 @@ public class FeedbackDialog extends JFrame implements Translatable {
 
     private void shareFeedback() {
         if (sendFeedbackThread == null) {
-            sendFeedbackThread = new Thread(() -> {
-
-                imageAddingEnabled = false;
-
-                final Feedback feedback = prepareFeedback();
-
-                try {
-                    final int code = new FeedbackService().sendFeedback(feedback);
-                    if (HttpStatus.SC_OK == code) {
-                        log.info("Feedback was sent successfully");
-                        dispose();
-                    } else {
-                        JOptionPane.showMessageDialog(this,
-                                "Feedback was not sent", //todo translate this
-                                "Error", //todo translate this
-                                JOptionPane.WARNING_MESSAGE);
-                        imageAddingEnabled = true;
-                        switchInputsEnabled(true);
-                    }
-                } catch (final IOException e) {
-                    log.warn("Could not send feedback", e);
-                }
-            });
+            createFeedbackThread();
+        } else {
+            if (!sendFeedbackThread.isAlive()) {
+                createFeedbackThread();
+            }
         }
 
         if (!sendFeedbackThread.isAlive()) {
             sendFeedbackThread.start();
         }
+    }
+
+    private void createFeedbackThread() {
+        sendFeedbackThread = new Thread(() -> {
+
+            imageAddingEnabled = false;
+
+            final Feedback feedback = prepareFeedback();
+
+            try {
+                final int code = new FeedbackService().sendFeedback(feedback);
+                if (HttpStatus.SC_OK == code) {
+                    log.info("Feedback was sent successfully");
+                    dispose();
+                } else if (-1 == code) {
+                    switchInputsEnabled(true);
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "Feedback was not sent", //todo translate this
+                            "Error", //todo translate this
+                            JOptionPane.WARNING_MESSAGE);
+                    imageAddingEnabled = true;
+                    switchInputsEnabled(true);
+                }
+            } catch (final IOException e) {
+                log.warn("Could not send feedback", e);
+            }
+        });
     }
 
     private void switchInputsEnabled(boolean enabled) {

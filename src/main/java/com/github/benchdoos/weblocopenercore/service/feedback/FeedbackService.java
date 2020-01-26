@@ -49,8 +49,10 @@ public class FeedbackService {
             if (!thread.isInterrupted()) {
                 final List<ImageInfo> imageInfoList = sendImages(base64Feedback);
 
-                if (!CollectionUtils.isEmpty(imageInfoList)) {
-                    feedbackDto.setImages(imageInfoList);
+                if (!thread.isInterrupted()) {
+                    if (!CollectionUtils.isEmpty(imageInfoList)) {
+                        feedbackDto.setImages(imageInfoList);
+                    }
                 }
             }
 

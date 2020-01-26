@@ -31,27 +31,31 @@ public class ImgbbImageSender implements ImageSender {
                 final String url = new URIBuilder(rootUrl).addParameter("key", StringConstants.IMGBB_API_KEY).toString();
 
                 for (String base64Image : base64ImagesList) {
-                    final HttpPost post = new HttpPost(url);
-                    final List<NameValuePair> postParameters = new ArrayList<>();
-                    postParameters.add(new BasicNameValuePair("image", base64Image));
-                    post.setEntity(new UrlEncodedFormEntity(postParameters, StandardCharsets.UTF_8));
+                    if (!Thread.currentThread().isInterrupted()) {
+                        final HttpPost post = new HttpPost(url);
+                        final List<NameValuePair> postParameters = new ArrayList<>();
+                        postParameters.add(new BasicNameValuePair("image", base64Image));
+                        post.setEntity(new UrlEncodedFormEntity(postParameters, StandardCharsets.UTF_8));
 
-                    try {
-                        final ImgbbResponseDto imgbbResponseDto = sendRequest(post);
-                        log.info("Image was sent. Status: {}", imgbbResponseDto.getStatus());
+                        try {
+                            if (!Thread.currentThread().isInterrupted()) {
+                                final ImgbbResponseDto imgbbResponseDto = sendRequest(post);
+                                log.info("Image was sent. Status: {}", imgbbResponseDto.getStatus());
 
-                        if (imgbbResponseDto.getData() != null) {
-                            final String imageUrl = imgbbResponseDto.getData().getUrlViewer();
-                            final String imageDeleteUrl = imgbbResponseDto.getData().getDeleteUrl();
-                            final ImageInfo imageInfo = new ImageInfo(imageUrl, imageDeleteUrl);
+                                if (imgbbResponseDto.getData() != null) {
+                                    final String imageUrl = imgbbResponseDto.getData().getUrlViewer();
+                                    final String imageDeleteUrl = imgbbResponseDto.getData().getDeleteUrl();
+                                    final ImageInfo imageInfo = new ImageInfo(imageUrl, imageDeleteUrl);
 
-                            result.add(imageInfo);
+                                    result.add(imageInfo);
+                                }
+                            }
+                        } catch (final IOException e) {
+                            log.warn("Could not send image", e);
                         }
-                    } catch (IOException e) {
-                        log.warn("Could not send image", e);
                     }
                 }
-            } catch (URISyntaxException e) {
+            } catch (final URISyntaxException e) {
                 log.warn("Could not prepare url", e);
             }
         }
