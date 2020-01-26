@@ -88,7 +88,7 @@ public class FeedbackDialog extends JFrame implements Translatable {
     private JLabel appengLogsInfoLabel;
     private static final List<FileExtension> SUPPORTED_IMAGES_EXTENSIONS = Arrays.asList(FileExtension.JPG, FileExtension.PNG);
     private Thread sendFeedbackThread;
-    private boolean imageAddingEnabled;
+    private boolean imageAddingEnabled = true;
 
     public FeedbackDialog() {
         $$$setupUI$$$();

@@ -47,7 +47,7 @@ public class FeedbackService {
             final FeedbackDto feedbackDto = new FeedbackDto();
 
             if (!thread.isInterrupted()) {
-                final List<ImageInfo> imageInfoList = PreferencesManager.isDevMode() ? sendFakeImages(base64Feedback) : sendImages(base64Feedback);
+                final List<ImageInfo> imageInfoList = sendImages(base64Feedback);
 
                 if (!CollectionUtils.isEmpty(imageInfoList)) {
                     feedbackDto.setImages(imageInfoList);
