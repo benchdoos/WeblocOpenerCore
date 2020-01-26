@@ -442,6 +442,7 @@ public class FeedbackDialog extends JFrame implements Translatable {
         imagesList.setEnabled(enabled);
         sendingProgressBar.setVisible(!enabled);
         sendButton.setEnabled(enabled);
+        pack();
     }
 
     private void validateInput() {
