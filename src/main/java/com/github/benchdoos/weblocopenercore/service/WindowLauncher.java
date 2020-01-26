@@ -7,7 +7,7 @@ import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import java.awt.Window;
 
 public abstract class WindowLauncher<Child extends Window> {
-    final Child window;
+    private final Child window;
 
     public WindowLauncher() {
         if (PreferencesManager.isDarkModeEnabledNow()) {
@@ -21,6 +21,12 @@ public abstract class WindowLauncher<Child extends Window> {
         }
     }
 
+    /**
+     * Method creates instance of {@link WindowLauncher<Child>}.
+     * DO NOT USE this method, use {@link #getWindow()} instead.
+     *
+     * @return instance of {@link WindowLauncher<Child>}.
+     */
     public abstract Child initWindow();
 
     public Child getWindow() {

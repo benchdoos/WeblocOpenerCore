@@ -150,7 +150,7 @@ public class Application {
                     case OPENER_CREATE_ARGUMENT:
                         try {
                             manageCreateArgument(args);
-                        } catch (Exception e) {
+                        } catch (final Exception e) {
                             log.warn("Can not create .webloc file (" + CORRECT_CREATION_SYNTAX + "): "
                                     + Arrays.toString(args), e);
                         }
@@ -207,7 +207,7 @@ public class Application {
             public FeedbackDialog initWindow() {
                 return new FeedbackDialog();
             }
-        }.initWindow();
+        }.getWindow();
         FrameUtils.setWindowOnScreenCenter(feedbackDialog);
         feedbackDialog.setVisible(true);
     }
@@ -255,7 +255,7 @@ public class Application {
             } else {
                 runEditDialog(arg);
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             log.warn("Could not open file: {}", arg, e);
             final File file = new File(arg);
 
@@ -266,7 +266,7 @@ public class Application {
                                     "Opening in nautilus");
                     try {
                         FileUtils.openFileInNautilusUnix(file);
-                    } catch (IOException ex) {
+                    } catch (final IOException ex) {
                         log.warn("Can not open file in nautilus", ex);
                     }
                 }
@@ -286,8 +286,8 @@ public class Application {
     }
 
     private static void manageCreateArgument(String[] args) throws Exception {
-        String filePath;
-        String url;
+        final String filePath;
+        final String url;
         if (args.length > 2) {
             filePath = args[1];
             url = args[2];
@@ -319,7 +319,7 @@ public class Application {
 
                     runEditDialog(file.getAbsolutePath());
                 }
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 log.warn("Could not edit file: {}", path, e);
             }
         } else {
@@ -337,7 +337,7 @@ public class Application {
     }
 
     private static void showIncorrectArgumentMessage(String argument) {
-        Translation translation = new Translation("CommonsBundle");
+        final Translation translation = new Translation("CommonsBundle");
         final String message = translation.getTranslatedString("incorrectArgument").replace("{}", argument);
         NotificationManager.getForcedNotification(null).showErrorNotification(
                 translation.getTranslatedString("errorTitle"),
@@ -345,7 +345,7 @@ public class Application {
     }
 
     private static void runCopyLink(String path) {
-        String url;
+        final String url;
         try {
             final LinkFile linkFile = new ExtendedFileAnalyzer(path).getLinkFile();
 
@@ -359,10 +359,10 @@ public class Application {
                 NotificationManager.getNotificationForCurrentOS().showInfoNotification(
                         ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME,
                         Translation.getTranslatedString("CommonsBundle", "linkCopied"));
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 log.warn("Could not show message for user", e);
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             log.warn("Could not copy url from file: {}", path, e);
         }
     }
@@ -371,7 +371,7 @@ public class Application {
         try {
             if (args.length > 1) {
                 final String path = args[1];
-                String url;
+                final String url;
                 final LinkFile linkFile = new ExtendedFileAnalyzer(path).getLinkFile();
 
                 saveRecentFileRecord(linkFile.getFile());
@@ -384,7 +384,7 @@ public class Application {
                 NotificationManager.getNotificationForCurrentOS().showInfoNotification(ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME,
                         Translation.getTranslatedString("ShowQrDialogBundle", "successCopyImage"));
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             log.warn("Could not copy qr code for {}", args[1], e);
             NotificationManager.getNotificationForCurrentOS().showErrorNotification(ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME,
                     Translation.getTranslatedString("ShowQrDialogBundle", "errorCopyImage"));
@@ -424,7 +424,7 @@ public class Application {
                 }
             }.getWindow();
             qrDialog.setVisible(true);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             log.warn("Can not create a qr-code from url: [" + arg + "]", e);
         }
     }
@@ -457,7 +457,7 @@ public class Application {
             Runtime.getRuntime().exec("chmod u+x " + applicationPath);
             final ProcessBuilder processBuilder = new ProcessBuilder(allArguments);
             processBuilder.start();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             log.warn("Can not launch application: {}", applicationPath, e);
         }
     }
@@ -479,14 +479,14 @@ public class Application {
         if (unixOpeningMode.equals(SettingsConstants.OPENER_UNIX_DEFAULT_SELECTOR_MODE)) {
             runModeSelectorWindow(args);
         } else {
-            String[] unixArgs = new String[]{unixOpeningMode.getArgument(), args[0]};
+            final String[] unixArgs = new String[]{unixOpeningMode.getArgument(), args[0]};
             manageArguments(unixArgs);
         }
     }
 
     private void runModeSelectorWindow(String[] args) {
-        String filePath = args[0];
-        ModeSelectorDialog modeSelectorDialog = new ModeSelectorDialog(new File(filePath));
+        final String filePath = args[0];
+        final ModeSelectorDialog modeSelectorDialog = new ModeSelectorDialog(new File(filePath));
         modeSelectorDialog.setVisible(true);
     }
 
