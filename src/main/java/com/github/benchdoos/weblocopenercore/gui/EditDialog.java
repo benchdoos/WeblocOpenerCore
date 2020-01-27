@@ -503,17 +503,17 @@ public class EditDialog extends JFrame implements Translatable {
                     if (!urlPageTitle.getText().isEmpty()) {
                         File file = getCreatingFileName(pathToEditingFile);
                         if (!file.exists()) {
-                            autoRenameFileCheckBox.setToolTipText("<html>" + translation.getTranslatedString("autoRenameToolTip")
+                            autoRenameFileCheckBox.setToolTipText("<html>" + translation.get("autoRenameToolTip")
                                     + "<br>" + urlPageTitle.getToolTipText() + "</html>");
                         } else {
-                            autoRenameFileCheckBox.setToolTipText(translation.getTranslatedString("canNotRenameExistsToolTip"));
+                            autoRenameFileCheckBox.setToolTipText(translation.get("canNotRenameExistsToolTip"));
 
                         }
                     } else {
-                        autoRenameFileCheckBox.setToolTipText(translation.getTranslatedString("canNotRenameToolTip"));
+                        autoRenameFileCheckBox.setToolTipText(translation.get("canNotRenameToolTip"));
                     }
                 } else {
-                    autoRenameFileCheckBox.setToolTipText(translation.getTranslatedString("canNotRenameToolTip"));
+                    autoRenameFileCheckBox.setToolTipText(translation.get("canNotRenameToolTip"));
                 }
             }
 
@@ -560,16 +560,16 @@ public class EditDialog extends JFrame implements Translatable {
         Translation translation = new Translation("EditDialogBundle");
         try {
             final Link linkForFile = Link.getLinkForFile(new File(pathToEditingFile));
-            editLinkLabel.setText(String.format(translation.getTranslatedString("editLink"), linkForFile.getExtension()));
+            editLinkLabel.setText(String.format(translation.get("editLink"), linkForFile.getExtension()));
         } catch (Exception e) {
             log.warn("Could not load link for file: {} to translate editLinkLabel.", pathToEditingFile);
-            editLinkLabel.setText(String.format(translation.getTranslatedString("editLink"), ""));
+            editLinkLabel.setText(String.format(translation.get("editLink"), ""));
         }
-        clearTextButton.setToolTipText(translation.getTranslatedString("clearTextToolTip"));
-        autoRenameFileCheckBox.setText(translation.getTranslatedString("autoRenameFile"));
-        autoRenameFileCheckBox.setToolTipText(translation.getTranslatedString("canNotRenameToolTip"));
-        buttonOK.setText(translation.getTranslatedString("buttonOk"));
-        buttonCancel.setText(translation.getTranslatedString("buttonCancel"));
+        clearTextButton.setToolTipText(translation.get("clearTextToolTip"));
+        autoRenameFileCheckBox.setText(translation.get("autoRenameFile"));
+        autoRenameFileCheckBox.setToolTipText(translation.get("canNotRenameToolTip"));
+        buttonOK.setText(translation.get("buttonOk"));
+        buttonCancel.setText(translation.get("buttonCancel"));
 
     }
 
@@ -618,7 +618,7 @@ public class EditDialog extends JFrame implements Translatable {
             log.warn("Could not rename file {} to {}", pathToEditingFile, fileName, e);
             NotificationManager.getNotificationForCurrentOS().showWarningNotification(
                     ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME,
-                    Translation.getTranslatedString(
+                    Translation.get(
                             "EditDialogBundle", "canNotRenameFileMessage") + " " + fileName);
         }
     }
@@ -651,7 +651,7 @@ public class EditDialog extends JFrame implements Translatable {
                 } else {
                     log.warn("Could not get Link for file: {}", pathToEditingFile);
 
-                    final String message = Translation.getTranslatedString("EditDialogBundle", "canNotSaveFile")
+                    final String message = Translation.get("EditDialogBundle", "canNotSaveFile")
                             + file.getName();
                     NotificationManager.getNotificationForCurrentOS().showErrorNotification(
                             WEBLOCOPENER_APPLICATION_NAME,
@@ -667,22 +667,22 @@ public class EditDialog extends JFrame implements Translatable {
             log.warn("Can not parse URL: [" + urlText + "]", e);
 
 
-            String message = Translation.getTranslatedString(
+            String message = Translation.get(
                     "EditDialogBundle", "incorrectUrlMessage") + ": [";
 
             message += (urlText.length() > 0 ? urlText : "&laquo;empty&raquo;") + "]";
 
 
             NotificationManager.getForcedNotification(this).showErrorNotification(
-                    Translation.getTranslatedString("EditDialogBundle", "errorTitle"),
+                    Translation.get("EditDialogBundle", "errorTitle"),
                     message);
         } catch (IOException e) {
             log.warn("Can not create file at: " + pathToEditingFile + " with url: " + urlText, e);
 
-            String message = Translation.getTranslatedString(
+            String message = Translation.get(
                     "EditDialogBundle", "canNotSaveFile") + "<br>" + e.getMessage();
             NotificationManager.getForcedNotification(this).showWarningNotification(
-                    Translation.getTranslatedString("EditDialogBundle", "errorTitle"),
+                    Translation.get("EditDialogBundle", "errorTitle"),
                     "<html>" + message + "</html>");
         }
 
@@ -695,7 +695,7 @@ public class EditDialog extends JFrame implements Translatable {
 
             final File file = CoreUtils.renameFile(new File(pathToEditingFile), fileName);
             if (file.exists()) {
-                final String successMessage = Translation.getTranslatedString("EditDialogBundle",
+                final String successMessage = Translation.get("EditDialogBundle",
                         "fileSuccessfullyRenamedMessage");
 
                 NotificationManager.getNotificationForCurrentOS().showInfoNotification(

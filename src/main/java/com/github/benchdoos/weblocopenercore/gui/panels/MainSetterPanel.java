@@ -75,7 +75,7 @@ public class MainSetterPanel extends JPanel implements SettingsPanel, Translatab
 
     @Override
     public String getName() {
-        return Translation.getTranslatedString("SettingsDialogBundle", "settingsMainPanelName");
+        return Translation.get("SettingsDialogBundle", "settingsMainPanelName");
     }
 
     @Override
@@ -85,7 +85,7 @@ public class MainSetterPanel extends JPanel implements SettingsPanel, Translatab
     }
 
     private void fillLocaleComboBox() {
-        String sysLocale = Translation.getTranslatedString("LocaleSetterPanelBundle", "languageDefault");
+        String sysLocale = Translation.get("LocaleSetterPanelBundle", "languageDefault");
         DefaultComboBoxModel<Object> model = new DefaultComboBoxModel<>();
         model.addElement(sysLocale);
 
@@ -379,31 +379,31 @@ public class MainSetterPanel extends JPanel implements SettingsPanel, Translatab
     @Override
     public void translate() {
         final Translation translation = new Translation("MainSetterPanelBundle");
-        versionStringLabel.setText(translation.getTranslatedString("versionString"));
+        versionStringLabel.setText(translation.get("versionString"));
         versionLabel.setText(CoreUtils.getApplicationVersionString());
-        aboutButton.setText(Translation.getTranslatedString("SettingsDialogBundle", "buttonAbout"));
+        aboutButton.setText(Translation.get("SettingsDialogBundle", "buttonAbout"));
 
-        autoUpdateEnabledCheckBox.setText(translation.getTranslatedString("autoUpdateEnabledCheckBox"));
-        checkUpdatesButton.setText(translation.getTranslatedString("checkUpdatesButton"));
-        openFolderForQRCheckBox.setText(translation.getTranslatedString("openFolderForQRCheckBox"));
-        showNotificationsToUserCheckBox.setText(translation.getTranslatedString("showNotificationsCheckBox"));
-        savePreviouslyOpenedFilesCheckBox.setText(translation.getTranslatedString("savePreviouslyOpenedFilesCheckBox"));
+        autoUpdateEnabledCheckBox.setText(translation.get("autoUpdateEnabledCheckBox"));
+        checkUpdatesButton.setText(translation.get("checkUpdatesButton"));
+        openFolderForQRCheckBox.setText(translation.get("openFolderForQRCheckBox"));
+        showNotificationsToUserCheckBox.setText(translation.get("showNotificationsCheckBox"));
+        savePreviouslyOpenedFilesCheckBox.setText(translation.get("savePreviouslyOpenedFilesCheckBox"));
 
-        betaInstallCheckBox.setText(translation.getTranslatedString("betaUpdateInstallCheckBox"));
-        betaInstallCheckBox.setToolTipText(translation.getTranslatedString("betaUpdateTooltip"));
+        betaInstallCheckBox.setText(translation.get("betaUpdateInstallCheckBox"));
+        betaInstallCheckBox.setToolTipText(translation.get("betaUpdateTooltip"));
 
-        cleanupRecentFilesButton.setText(translation.getTranslatedString("cleanRecentFilesButtonText"));
-        cleanupRecentFilesButton.setToolTipText(translation.getTranslatedString("cleanRecentFilesButtonToolTip"));
+        cleanupRecentFilesButton.setText(translation.get("cleanRecentFilesButtonText"));
+        cleanupRecentFilesButton.setToolTipText(translation.get("cleanRecentFilesButtonToolTip"));
 
-        shareInfoCheckBox.setText(Translation.getTranslatedString("ShareAnonymousInfoBundle", "shareUserInfoLabel"));
-        shareInfoCheckBox.setToolTipText(Translation.getTranslatedString("ShareAnonymousInfoBundle", "message"));
+        shareInfoCheckBox.setText(Translation.get("ShareAnonymousInfoBundle", "shareUserInfoLabel"));
+        shareInfoCheckBox.setToolTipText(Translation.get("ShareAnonymousInfoBundle", "message"));
 
         translateLanguagePanel();
     }
 
     private void translateLanguagePanel() {
         final Translation translation = new Translation("LocaleSetterPanelBundle");
-        languageLabel.setText(translation.getTranslatedString("language"));
+        languageLabel.setText(translation.get("language"));
         fillLocaleComboBox();
         localeComboBox.setSelectedItem(PreferencesManager.getLocale());
     }

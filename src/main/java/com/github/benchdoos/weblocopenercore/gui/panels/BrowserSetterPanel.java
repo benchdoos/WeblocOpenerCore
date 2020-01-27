@@ -78,7 +78,7 @@ public class BrowserSetterPanel extends JPanel implements SettingsPanel, Transla
 
     @Override
     public String getName() {
-        return Translation.getTranslatedString("SettingsDialogBundle", "settingsBrowserPanelName");
+        return Translation.get("SettingsDialogBundle", "settingsBrowserPanelName");
     }
 
     {
@@ -231,7 +231,7 @@ public class BrowserSetterPanel extends JPanel implements SettingsPanel, Transla
         ArrayList<Browser> browsers = BrowserManager.getBrowserList();
 
         Browser others = new Browser(
-                Translation.getTranslatedString("SettingsDialogBundle", "customBrowserName"), null);
+                Translation.get("SettingsDialogBundle", "customBrowserName"), null);
         browsers.add(others);
 
         browserComboBox.setModel(new DefaultComboBoxModel<Browser>(toBrowsersArray(browsers.toArray())));
@@ -361,7 +361,7 @@ public class BrowserSetterPanel extends JPanel implements SettingsPanel, Transla
         log.debug("Opening File Browser");
 
         FileDialog fd = new FileDialog(FrameUtils.findDialog(this),
-                Translation.getTranslatedString("SettingsDialogBundle", "chooseAFile"),
+                Translation.get("SettingsDialogBundle", "chooseAFile"),
                 FileDialog.LOAD);
         try {
             fd.setIconImage(Toolkit.getDefaultToolkit()
@@ -419,7 +419,7 @@ public class BrowserSetterPanel extends JPanel implements SettingsPanel, Transla
         syntaxInfoLabel.addMouseListener(new MouseAdapter() {
             final int DEFAULT_TIME = 10_000;
             final int SHORT_TIME = 6_000;
-            private final String translatedBalloonTip = Translation.getTranslatedString("SettingsDialogBundle", "toolTipText");
+            private final String translatedBalloonTip = Translation.get("SettingsDialogBundle", "toolTipText");
             BalloonTip balloonTip = generateBalloonTip(translatedBalloonTip);
 
             @Override
@@ -456,8 +456,8 @@ public class BrowserSetterPanel extends JPanel implements SettingsPanel, Transla
     @Override
     public void translate() {
         Translation translation = new Translation("BrowserSetterPanelBundle");
-        openInLabel.setText(translation.getTranslatedString("openInBrowser"));
-        callLabel.setText(translation.getTranslatedString("customCallLabel"));
+        openInLabel.setText(translation.get("openInBrowser"));
+        callLabel.setText(translation.get("customCallLabel"));
 
         translateComboBox();
     }
@@ -466,11 +466,11 @@ public class BrowserSetterPanel extends JPanel implements SettingsPanel, Transla
         DefaultComboBoxModel<Browser> model = ((DefaultComboBoxModel<Browser>) browserComboBox.getModel());
         final Browser defaultBrowser = model.getElementAt(0);
         if (defaultBrowser != null) {
-            defaultBrowser.setName(Translation.getTranslatedString("CommonsBundle", "defaultBrowserName"));
+            defaultBrowser.setName(Translation.get("CommonsBundle", "defaultBrowserName"));
         }
         final Browser customBrowser = model.getElementAt(model.getSize() - 1);
         if (customBrowser != null) {
-            customBrowser.setName(Translation.getTranslatedString("SettingsDialogBundle", "customBrowserName"));
+            customBrowser.setName(Translation.get("SettingsDialogBundle", "customBrowserName"));
         }
     }
 }

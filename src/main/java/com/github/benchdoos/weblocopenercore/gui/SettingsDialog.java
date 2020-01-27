@@ -285,7 +285,7 @@ public class SettingsDialog extends JFrame implements Translatable {
                     log.warn("Can not open files from drop", ex);
                     NotificationManager.getNotificationForCurrentOS().showErrorNotification(
                             ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME,
-                            translation.getTranslatedString("couldNotConvertFiles"));
+                            translation.get("couldNotConvertFiles"));
                 }
             }
         };
@@ -301,7 +301,7 @@ public class SettingsDialog extends JFrame implements Translatable {
 
     private void initGui() {
         setContentPane(contentPane);
-        setTitle(Translation.getTranslatedString("SettingsDialogBundle", "windowTitle"));
+        setTitle(Translation.get("SettingsDialogBundle", "windowTitle"));
 
         getRootPane().setDefaultButton(buttonOK);
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/balloonIcon256.png")));
@@ -510,15 +510,15 @@ public class SettingsDialog extends JFrame implements Translatable {
     @Override
     public void translate() {
         final Translation translation = new Translation("SettingsDialogBundle");
-        setTitle(translation.getTranslatedString("windowTitle"));
-        settingsSavedLabel.setToolTipText(translation.getTranslatedString("settingsSaved"));
-        buttonApply.setText(translation.getTranslatedString("buttonApply"));
-        buttonOK.setText(translation.getTranslatedString("buttonOk"));
-        buttonCancel.setText(translation.getTranslatedString("buttonCancel"));
+        setTitle(translation.get("windowTitle"));
+        settingsSavedLabel.setToolTipText(translation.get("settingsSaved"));
+        buttonApply.setText(translation.get("buttonApply"));
+        buttonOK.setText(translation.get("buttonOk"));
+        buttonCancel.setText(translation.get("buttonCancel"));
 
-        createNewFileButton.setToolTipText(translation.getTranslatedString("createNewFile"));
+        createNewFileButton.setToolTipText(translation.get("createNewFile"));
 
-        dragAndDropNotice.setText(translation.getTranslatedString("dragAndDropNotice"));
+        dragAndDropNotice.setText(translation.get("dragAndDropNotice"));
 
         refreshSettingsList();
         settingsList.updateUI();
@@ -576,7 +576,7 @@ public class SettingsDialog extends JFrame implements Translatable {
     private void showOnApplyMessage() {
         if (PreferencesManager.isNotificationsShown()) {
             NotificationManager.getNotificationForCurrentOS().showInfoNotification(
-                    Translation.getTranslatedString(
+                    Translation.get(
                             "SettingsDialogBundle", "settingsSaved"), null);
         } else {
             showInsideSettingsWindowApplyMessage();

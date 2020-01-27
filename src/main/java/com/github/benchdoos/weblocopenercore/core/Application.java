@@ -236,7 +236,7 @@ public class Application {
             converterDialog.setLocationRelativeTo(null);
         } else {
             log.warn("Converter need some files! Args: {}", Arrays.asList(args));
-            final String notificationString = Translation.getTranslatedString("ConvertDialogBundle", "convertError");
+            final String notificationString = Translation.get("ConvertDialogBundle", "convertError");
             NotificationManager.getNotificationForCurrentOS()
                     .showErrorNotification(ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME, notificationString);
         }
@@ -338,9 +338,9 @@ public class Application {
 
     private static void showIncorrectArgumentMessage(String argument) {
         final Translation translation = new Translation("CommonsBundle");
-        final String message = translation.getTranslatedString("incorrectArgument").replace("{}", argument);
+        final String message = translation.get("incorrectArgument").replace("{}", argument);
         NotificationManager.getForcedNotification(null).showErrorNotification(
-                translation.getTranslatedString("errorTitle"),
+                translation.get("errorTitle"),
                 message);
     }
 
@@ -358,7 +358,7 @@ public class Application {
             try {
                 NotificationManager.getNotificationForCurrentOS().showInfoNotification(
                         ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME,
-                        Translation.getTranslatedString("CommonsBundle", "linkCopied"));
+                        Translation.get("CommonsBundle", "linkCopied"));
             } catch (final Exception e) {
                 log.warn("Could not show message for user", e);
             }
@@ -382,12 +382,12 @@ public class Application {
                 ClipboardManager.getClipboardForSystem().copy(image);
 
                 NotificationManager.getNotificationForCurrentOS().showInfoNotification(ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME,
-                        Translation.getTranslatedString("ShowQrDialogBundle", "successCopyImage"));
+                        Translation.get("ShowQrDialogBundle", "successCopyImage"));
             }
         } catch (final Exception e) {
             log.warn("Could not copy qr code for {}", args[1], e);
             NotificationManager.getNotificationForCurrentOS().showErrorNotification(ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME,
-                    Translation.getTranslatedString("ShowQrDialogBundle", "errorCopyImage"));
+                    Translation.get("ShowQrDialogBundle", "errorCopyImage"));
         }
     }
 

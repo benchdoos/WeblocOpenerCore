@@ -143,7 +143,7 @@ public class DisabledResentFilesPanel extends JPanel implements Translatable {
     @Override
     public void translate() {
         final Translation translation = new Translation("DisabledRecentFilesPanelBundle");
-        enableButton.setText(translation.getTranslatedString("button"));
-        label.setText(translation.getTranslatedString("label"));
+        enableButton.setText(translation.get("button"));
+        label.setText(translation.get("label"));
     }
 }

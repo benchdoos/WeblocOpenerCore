@@ -29,7 +29,7 @@ public class Main {
             new Application(args);
         } catch (UnsupportedSystemException e) {
             log.fatal("System not supported", e);
-            final String translatedString = Translation.getTranslatedString("CommonsBundle", "systemNotSupported");
+            final String translatedString = Translation.get("CommonsBundle", "systemNotSupported");
             final String message = translatedString + " " + OS.getCurrentOS().name();
 
             NotificationManager.getForcedNotification(null).showErrorNotification(message, message);

@@ -26,7 +26,6 @@ import com.github.benchdoos.weblocopenercore.service.links.LinkFactory;
 import lombok.extern.log4j.Log4j2;
 
 import javax.swing.JOptionPane;
-import java.awt.HeadlessException;
 import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -305,16 +304,16 @@ public class PreferencesManager {
                     Translation translation = new Translation("ShareAnonymousInfoBundle");
                     final int selected = JOptionPane.showOptionDialog(
                             null,
-                            translation.getTranslatedString("message"),
+                            translation.get("message"),
                             ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME,
                             JOptionPane.YES_NO_OPTION,
                             JOptionPane.WARNING_MESSAGE,
                             null,
                             new String[]{
-                                    translation.getTranslatedString("disableButton"),
-                                    translation.getTranslatedString("enableButton")
+                                    translation.get("disableButton"),
+                                    translation.get("enableButton")
                             },
-                            translation.getTranslatedString("enableButton"));
+                            translation.get("enableButton"));
 
                     final boolean enabled = selected == 1;
 

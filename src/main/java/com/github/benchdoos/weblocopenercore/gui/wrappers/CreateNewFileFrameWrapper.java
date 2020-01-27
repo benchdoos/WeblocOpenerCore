@@ -62,7 +62,7 @@ public class CreateNewFileFrameWrapper extends JFrame {
         setLayout(new GridLayout());
         add(contentPane);
 
-        setTitle(Translation.getTranslatedString("CreateNewFileBundle", "windowTitle"));
+        setTitle(Translation.get("CreateNewFileBundle", "windowTitle"));
 
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/balloonIcon256.png")));
 

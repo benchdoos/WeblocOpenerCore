@@ -21,7 +21,6 @@ import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import com.github.benchdoos.weblocopenercore.utils.QrCodeUtils;
 import com.github.benchdoos.weblocopenercore.service.notification.NotificationManager;
 import com.github.benchdoos.weblocopenercore.utils.system.OS;
-import com.github.benchdoos.weblocopenercore.utils.system.SystemUtils;
 import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageConfig;
 import lombok.extern.log4j.Log4j2;
@@ -94,7 +93,7 @@ public class UrlsProceed {
             log.warn("Can not open url: " + url, e);
             NotificationManager
                     .getForcedNotification(null).showErrorNotification(
-                    null, Translation.getTranslatedString(
+                    null, Translation.get(
                             "CommonsBundle", "urlIsCorruptMessage") + url);
         }
     }

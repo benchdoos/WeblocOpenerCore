@@ -178,11 +178,11 @@ public class ShowQrDialog extends JFrame implements Translatable {
                 ClipboardManager.getClipboardForSystem().copy(image);
 
                 NotificationManager.getNotificationForCurrentOS().showInfoNotification(ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME,
-                        Translation.getTranslatedString("ShowQrDialogBundle", "successCopyImage"));
+                        Translation.get("ShowQrDialogBundle", "successCopyImage"));
             } catch (IOException | WriterException ex) {
                 log.warn("Could not create qr-code image for url: {}", url, ex);
                 NotificationManager.getNotificationForCurrentOS().showErrorNotification(ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME,
-                        Translation.getTranslatedString("ShowQrDialogBundle", "errorCopyImage"));
+                        Translation.get("ShowQrDialogBundle", "errorCopyImage"));
             }
         });
 
@@ -212,7 +212,7 @@ public class ShowQrDialog extends JFrame implements Translatable {
 
     private void initGui() {
 
-        setTitle(weblocFile.getName() + " — " + Translation.getTranslatedString("ShowQrDialogBundle", "windowTitle"));
+        setTitle(weblocFile.getName() + " — " + Translation.get("ShowQrDialogBundle", "windowTitle"));
         setIconImage(Toolkit.getDefaultToolkit().getImage(ShowQrDialog.class.getResource("/images/qrCode256.png")));
 
 
@@ -244,8 +244,8 @@ public class ShowQrDialog extends JFrame implements Translatable {
     @Override
     public void translate() {
         Translation translation = new Translation("ShowQrDialogBundle");
-        copyImageButton.setToolTipText(translation.getTranslatedString("copyButton"));
-        saveImageButton.setToolTipText(translation.getTranslatedString("saveImageButton"));
-        openButton.setText(translation.getTranslatedString("openButton"));
+        copyImageButton.setToolTipText(translation.get("copyButton"));
+        saveImageButton.setToolTipText(translation.get("saveImageButton"));
+        openButton.setText(translation.get("openButton"));
     }
 }

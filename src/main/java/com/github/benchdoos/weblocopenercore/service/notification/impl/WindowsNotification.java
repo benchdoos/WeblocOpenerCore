@@ -65,7 +65,7 @@ public class WindowsNotification implements Notification {
 
             PopupMenu menu = new PopupMenu();
 
-            MenuItem close = new MenuItem(Translation.getTranslatedString("CommonsBundle", "closeButton"));
+            MenuItem close = new MenuItem(Translation.get("CommonsBundle", "closeButton"));
             close.addActionListener(e -> tray.remove(trayIcon));
 
             menu.add(close);

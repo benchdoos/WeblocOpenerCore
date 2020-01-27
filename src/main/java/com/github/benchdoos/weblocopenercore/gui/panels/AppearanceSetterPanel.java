@@ -85,7 +85,7 @@ public class AppearanceSetterPanel extends JPanel implements SettingsPanel, Tran
 
     @Override
     public String getName() {
-        return Translation.getTranslatedString("SettingsDialogBundle", "settingsAppearancePanelName");
+        return Translation.get("SettingsDialogBundle", "settingsAppearancePanelName");
     }
 
     /**
@@ -259,7 +259,7 @@ public class AppearanceSetterPanel extends JPanel implements SettingsPanel, Tran
     private void createUIComponents() {
         locationTextField = new PlaceholderTextField();
         ((PlaceholderTextField) locationTextField).setPlaceholder(
-                Translation.getTranslatedString("AppearanceSetterPanelBundle", "yourLocation"));
+                Translation.get("AppearanceSetterPanelBundle", "yourLocation"));
     }
 
     private void initDarkModeButtonGroup() {
@@ -491,12 +491,12 @@ public class AppearanceSetterPanel extends JPanel implements SettingsPanel, Tran
     @Override
     public void translate() {
         Translation translation = new Translation("AppearanceSetterPanelBundle");
-        darkModeLabel.setText(translation.getTranslatedString("darkMode"));
-        disabledDarkModeRadioButton.setText(translation.getTranslatedString("disabledName"));
-        alwaysDarkModeRadioButton.setText(translation.getTranslatedString("alwaysName"));
-        byTimeDarkModeRadioButton.setText(translation.getTranslatedString("byTimeName"));
-        byLocationDarkModeRadioButton.setText(translation.getTranslatedString("byLocationName"));
-        attentionLabel.setText(translation.getTranslatedString("attentionLabel"));
+        darkModeLabel.setText(translation.get("darkMode"));
+        disabledDarkModeRadioButton.setText(translation.get("disabledName"));
+        alwaysDarkModeRadioButton.setText(translation.get("alwaysName"));
+        byTimeDarkModeRadioButton.setText(translation.get("byTimeName"));
+        byLocationDarkModeRadioButton.setText(translation.get("byLocationName"));
+        attentionLabel.setText(translation.get("attentionLabel"));
     }
 
     private void updateLocationVerificationStatus(boolean b) {

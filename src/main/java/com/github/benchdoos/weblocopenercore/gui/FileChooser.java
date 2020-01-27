@@ -213,7 +213,7 @@ public class FileChooser extends JDialog implements Translatable {
     private void initGui() {
         setContentPane(contentPane);
 
-        setTitle(Translation.getTranslatedString("FileChooserBundle", "windowTitle"));
+        setTitle(Translation.get("FileChooserBundle", "windowTitle"));
 
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
@@ -302,8 +302,8 @@ public class FileChooser extends JDialog implements Translatable {
 
     private void onHelp() {
         JOptionPane.showMessageDialog(this,
-                Translation.getTranslatedString("FileChooserBundle", "helpMessage"),
-                Translation.getTranslatedString("FileChooserBundle", "helpTitle"),
+                Translation.get("FileChooserBundle", "helpMessage"),
+                Translation.get("FileChooserBundle", "helpTitle"),
                 JOptionPane.PLAIN_MESSAGE);
     }
 
@@ -315,9 +315,9 @@ public class FileChooser extends JDialog implements Translatable {
     @Override
     public void translate() {
         Translation translation = new Translation("FileChooserBundle");
-        greetingLabel.setText(translation.getTranslatedString("greetingLabel"));
-        askingLabel.setText(translation.getTranslatedString("askingLabel"));
-        buttonOK.setText(translation.getTranslatedString("buttonOk"));
-        buttonCancel.setText(translation.getTranslatedString("buttonCancel"));
+        greetingLabel.setText(translation.get("greetingLabel"));
+        askingLabel.setText(translation.get("askingLabel"));
+        buttonOK.setText(translation.get("buttonOk"));
+        buttonCancel.setText(translation.get("buttonCancel"));
     }
 }

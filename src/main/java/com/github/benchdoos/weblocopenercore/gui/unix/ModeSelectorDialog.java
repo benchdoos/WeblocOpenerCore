@@ -351,18 +351,18 @@ public class ModeSelectorDialog extends JFrame implements Translatable {
     @Override
     public void translate() {
         Translation translation = new Translation("ModeSelectorDialogBundle");
-        windowTitleLabel.setText(translation.getTranslatedString("windowTitle"));
-        openRadioButton.setText(translation.getTranslatedString("selectionOpen"));
-        editRadioButton.setText(translation.getTranslatedString("selectionEdit"));
-        copyRadioButton.setText(translation.getTranslatedString("selectionCopy"));
-        generateQrRadioButton.setText(translation.getTranslatedString("selectionQr"));
-        copyQrRadioButton.setText(translation.getTranslatedString("selectionCopyQr"));
-        saveSelectionCheckBox.setText(translation.getTranslatedString("saveCheckBox"));
-        saveSelectionCheckBox.setToolTipText(translation.getTranslatedString("saveCheckBoxToolTip"));
+        windowTitleLabel.setText(translation.get("windowTitle"));
+        openRadioButton.setText(translation.get("selectionOpen"));
+        editRadioButton.setText(translation.get("selectionEdit"));
+        copyRadioButton.setText(translation.get("selectionCopy"));
+        generateQrRadioButton.setText(translation.get("selectionQr"));
+        copyQrRadioButton.setText(translation.get("selectionCopyQr"));
+        saveSelectionCheckBox.setText(translation.get("saveCheckBox"));
+        saveSelectionCheckBox.setToolTipText(translation.get("saveCheckBoxToolTip"));
 
 
         Translation common = new Translation("CommonsBundle");
-        buttonOK.setText(common.getTranslatedString("okButton"));
-        buttonCancel.setText(common.getTranslatedString("cancelButton"));
+        buttonOK.setText(common.get("okButton"));
+        buttonCancel.setText(common.get("cancelButton"));
     }
 }

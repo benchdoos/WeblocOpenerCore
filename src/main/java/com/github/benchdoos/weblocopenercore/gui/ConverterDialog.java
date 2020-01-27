@@ -100,10 +100,10 @@ public class ConverterDialog extends JDialog implements Translatable {
     private void initTitle() {
         final Translation translation = new Translation("ConvertDialogBundle");
         if (filesToConvert.size() == 1) {
-            final String title = String.format(translation.getTranslatedString("windowTitleSolo"), filesToConvert.get(0));
+            final String title = String.format(translation.get("windowTitleSolo"), filesToConvert.get(0));
             setTitle(title);
         } else {
-            final String title = String.format(translation.getTranslatedString("windowTitleMultiple"), filesToConvert.size());
+            final String title = String.format(translation.get("windowTitleMultiple"), filesToConvert.size());
             setTitle(title);
         }
     }
@@ -171,12 +171,12 @@ public class ConverterDialog extends JDialog implements Translatable {
         if (filesToConvert.size() == convertedFiles.size()) {
             NotificationManager.getNotificationForCurrentOS().showInfoNotification(
                     ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME,
-                    translation.getTranslatedString("allFilesSuccessfullyConverted")
+                    translation.get("allFilesSuccessfullyConverted")
                             + convertedFiles.size() + "/" + filesToConvert.size());
         } else {
             NotificationManager.getNotificationForCurrentOS().showWarningNotification(
                     ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME,
-                    translation.getTranslatedString("someFilesFailedToConvert")
+                    translation.get("someFilesFailedToConvert")
                             + convertedFiles.size() + "/" + filesToConvert.size());
         }
     }
@@ -211,8 +211,8 @@ public class ConverterDialog extends JDialog implements Translatable {
     @Override
     public void translate() {
         Translation translation = new Translation("CommonsBundle");
-        buttonCancel.setText(translation.getTranslatedString("cancelButton"));
-        buttonOK.setText(translation.getTranslatedString("okButton"));
+        buttonCancel.setText(translation.get("cancelButton"));
+        buttonOK.setText(translation.get("okButton"));
     }
 
     {

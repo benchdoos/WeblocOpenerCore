@@ -49,7 +49,15 @@ public class Translation {
         this.messages = getTranslation();
     }
 
-    public static String getTranslatedString(String stringBundleName, String message) {
+    /**
+     * Returns translated string by bundle and message name. Supports deadlock protection
+     *
+     * @param stringBundleName name of bundle
+     * @param message message name
+     * @return translated string
+     * @see #protectFromDeadLock(MessageInformation)
+     */
+    public static String get(String stringBundleName, String message) {
         try {
             final String bundlePath = "translations/" + stringBundleName;
             locale = PreferencesManager.getLocale();
@@ -73,7 +81,7 @@ public class Translation {
             log.info("APPLYING new locale: {}", supportedLocale);
             locale = supportedLocale;
             PreferencesManager.setLocale(supportedLocale);
-            return getTranslatedString(stringBundleName, message);
+            return get(stringBundleName, message);
         } catch (Exception e) {
             log.warn("Could not translate string: {}:[{}] for locale: {}", stringBundleName, message, locale, e);
             throw new RuntimeException("Could not localize string: " + stringBundleName + ":[" + message + "]", e);
@@ -96,7 +104,7 @@ public class Translation {
         return new Locale("en", "EN");
     }
 
-    public String getTranslatedString(String message) {
+    public String get(String message) {
         try {
             log.trace("[TRANSLATION] Translating message: {}", message);
 
@@ -110,6 +118,11 @@ public class Translation {
         }
     }
 
+    /**
+     * Protects message seeking from deadlock. More then 3 iterations will break seeking by {@link RuntimeException}.
+     *
+     * @param messageInformation info about message
+     */
     private static void protectFromDeadLock(MessageInformation messageInformation) {
         if (deadLockProtection.containsKey(messageInformation)) {
             final Integer current = deadLockProtection.get(messageInformation);

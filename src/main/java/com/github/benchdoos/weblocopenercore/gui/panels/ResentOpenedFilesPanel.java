@@ -135,16 +135,16 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel, Tra
     private void showNoSelectedItemMessage() {
         final Translation translation = new Translation("RecentFilesPanelBundle");
         repaintInfoPanel(new MessagePanel(
-                translation.getTranslatedString("noSelectedItemTitle"),
-                translation.getTranslatedString("noSelectedItemMessage")
+                translation.get("noSelectedItemTitle"),
+                translation.get("noSelectedItemMessage")
         ));
     }
 
     private void showMultipleSelectedItemsMessage() {
         final Translation translation = new Translation("RecentFilesPanelBundle");
         repaintInfoPanel(new MessagePanel(
-                translation.getTranslatedString("multipleSelectionTitle"),
-                translation.getTranslatedString("multipleSelectionMessage")
+                translation.get("multipleSelectionTitle"),
+                translation.get("multipleSelectionMessage")
         ));
     }
 
@@ -157,7 +157,7 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel, Tra
 
     @Override
     public String getName() {
-        return Translation.getTranslatedString("RecentFilesPanelBundle", "title");
+        return Translation.get("RecentFilesPanelBundle", "title");
     }
 
 
@@ -201,7 +201,7 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel, Tra
     @Override
     public void translate() {
         final Translation translation = new Translation("RecentFilesPanelBundle");
-        setName(translation.getTranslatedString("title"));
+        setName(translation.get("title"));
 
         ((Translatable) disabledRecentFilesPanel).translate();
 

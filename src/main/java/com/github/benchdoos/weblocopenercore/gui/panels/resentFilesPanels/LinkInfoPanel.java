@@ -193,9 +193,9 @@ public class LinkInfoPanel extends JPanel implements Translatable {
     public void translate() {
         final Translation translation = new Translation("LinkInfoPanelBundle");
 
-        fileNameLabel.setText(translation.getTranslatedString("fileNameLabel"));
-        fullLinkLabel.setText(translation.getTranslatedString("fullLinkLabel"));
-        openLocationButton.setText(translation.getTranslatedString("openLocationButtonText"));
-        openLinkButton.setText(translation.getTranslatedString("openLinkButtonText"));
+        fileNameLabel.setText(translation.get("fileNameLabel"));
+        fullLinkLabel.setText(translation.get("fullLinkLabel"));
+        openLocationButton.setText(translation.get("openLocationButtonText"));
+        openLinkButton.setText(translation.get("openLinkButtonText"));
     }
 }

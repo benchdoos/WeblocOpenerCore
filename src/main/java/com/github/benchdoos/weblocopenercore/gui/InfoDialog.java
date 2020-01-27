@@ -236,6 +236,6 @@ public class InfoDialog extends JDialog implements Translatable {
     @Override
     public void translate() {
         final Translation translation = new Translation("CommonsBundle");
-        reportButton.setText(translation.getTranslatedString("reportButton"));
+        reportButton.setText(translation.get("reportButton"));
     }
 }

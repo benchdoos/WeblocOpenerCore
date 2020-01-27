@@ -178,7 +178,7 @@ public class CreateNewFilePanel extends JPanel implements Translatable {
                     log.warn("Could not create .{} link at: {} with url: {}", link.getExtension(), path, url, e);
                     NotificationManager.getNotificationForCurrentOS().showErrorNotification(
                             ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME,
-                            Translation.getTranslatedString("CreateNewFileBundle", "errorSave")
+                            Translation.get("CreateNewFileBundle", "errorSave")
                                     + " " + file.getName() + " \n" + e.getLocalizedMessage()
                     );
                 }
@@ -199,7 +199,7 @@ public class CreateNewFilePanel extends JPanel implements Translatable {
         log.debug("Opening File Browser");
 
         FileDialog fileDialog = new FileDialog(FrameUtils.findDialog(this),
-                Translation.getTranslatedString("CreateNewFileBundle", "saveAsFile"),
+                Translation.get("CreateNewFileBundle", "saveAsFile"),
                 FileDialog.SAVE);
         try {
             fileDialog.setIconImage(Toolkit.getDefaultToolkit()
@@ -295,8 +295,8 @@ public class CreateNewFilePanel extends JPanel implements Translatable {
 
     @Override
     public void translate() {
-        buttonSave.setText(Translation.getTranslatedString("CreateNewFileBundle", "saveButton"));
-        buttonCancel.setText(Translation.getTranslatedString("CommonsBundle", "cancelButton"));
+        buttonSave.setText(Translation.get("CreateNewFileBundle", "saveButton"));
+        buttonCancel.setText(Translation.get("CommonsBundle", "cancelButton"));
     }
 
     public JButton getOkButton() {

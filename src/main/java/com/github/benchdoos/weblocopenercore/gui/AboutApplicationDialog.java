@@ -305,11 +305,11 @@ public class AboutApplicationDialog extends JDialog {
 
         if (PreferencesManager.isDarkModeEnabledNow()) {
             descriptionTextPane.setText(
-                    Translation.getTranslatedString("AboutApplicationDialogBundle", "aboutAppInfo")
+                    Translation.get("AboutApplicationDialogBundle", "aboutAppInfo")
                             .replace("{}", "color:white;"));
         } else {
             descriptionTextPane.setText(
-                    Translation.getTranslatedString("AboutApplicationDialogBundle", "aboutAppInfo")
+                    Translation.get("AboutApplicationDialogBundle", "aboutAppInfo")
                             .replace("{}", "color:black;"));
         }
 
@@ -352,7 +352,7 @@ public class AboutApplicationDialog extends JDialog {
                     colorful.colorize(infoDialog);
                 }
 
-                infoDialog.setTitle(Translation.getTranslatedString("AboutApplicationDialogBundle", "librariesLabelToolTip"));
+                infoDialog.setTitle(Translation.get("AboutApplicationDialogBundle", "librariesLabelToolTip"));
 
                 infoDialog.setContent(getDarkStyle(CoreUtils.getContentFromResource("/pages/libs.html")));
                 infoDialog.setVisible(true);
@@ -487,42 +487,42 @@ public class AboutApplicationDialog extends JDialog {
     private void translateDialog() {
 
         Translation translation = new Translation("AboutApplicationDialogBundle");
-        setTitle(translation.getTranslatedString("windowTitle"));
+        setTitle(translation.get("windowTitle"));
 
         final ApplicationVersion currentApplicationVersion = CoreUtils.getCurrentApplicationVersion();
         String versionAdditionalInfo = currentApplicationVersion.isBeta() ?
                 " (beta." + currentApplicationVersion.getBeta().getVersion() + ")" : "";
 
-        versionLabel.setText(translation.getTranslatedString("appVersionLabel") + " " + currentApplicationVersion.getVersion() + versionAdditionalInfo);
+        versionLabel.setText(translation.get("appVersionLabel") + " " + currentApplicationVersion.getVersion() + versionAdditionalInfo);
 
-        siteLinkLabel.setText(createHtmlLink(translation.getTranslatedString("visitLabel")));
+        siteLinkLabel.setText(createHtmlLink(translation.get("visitLabel")));
 
 
         githubLinkLabel.setText(createHtmlLink("Github"));
 
 
-        librariesLabel.setText(createHtmlLink(translation.getTranslatedString("librariesLabel")));
+        librariesLabel.setText(createHtmlLink(translation.get("librariesLabel")));
 
-        logLabel.setText(createHtmlLink(translation.getTranslatedString("logLabel")));
-
-
-        logLabel.setToolTipText(translation.getTranslatedString("logLabelTooltip"));
-
-        feedbackLabel.setToolTipText(translation.getTranslatedString("feedbackLabel"));
+        logLabel.setText(createHtmlLink(translation.get("logLabel")));
 
 
-        telegramLabel.setToolTipText(translation.getTranslatedString("telegramLabel"));
+        logLabel.setToolTipText(translation.get("logLabelTooltip"));
 
-        twitterLabel.setToolTipText(translation.getTranslatedString("twitterLabel"));
+        feedbackLabel.setToolTipText(translation.get("feedbackLabel"));
 
-        shareBalloonMessage = translation.getTranslatedString("shareBalloonMessage");
 
-        shareLabel.setToolTipText(translation.getTranslatedString("shareLabel"));
+        telegramLabel.setToolTipText(translation.get("telegramLabel"));
 
-        shareLabelText = translation.getTranslatedString("shareLabelText");
+        twitterLabel.setToolTipText(translation.get("twitterLabel"));
 
-        donateByPayPalLabel.setToolTipText(translation.getTranslatedString("donateLabelTooltip"));
-        donateByDonationAlertsLabel.setToolTipText(translation.getTranslatedString("donateByDonationAlertsLabelTooltip"));
+        shareBalloonMessage = translation.get("shareBalloonMessage");
+
+        shareLabel.setToolTipText(translation.get("shareLabel"));
+
+        shareLabelText = translation.get("shareLabelText");
+
+        donateByPayPalLabel.setToolTipText(translation.get("donateLabelTooltip"));
+        donateByDonationAlertsLabel.setToolTipText(translation.get("donateByDonationAlertsLabelTooltip"));
     }
 
 }

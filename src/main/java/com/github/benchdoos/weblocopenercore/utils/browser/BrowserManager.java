@@ -18,7 +18,6 @@ package com.github.benchdoos.weblocopenercore.utils.browser;
 import com.github.benchdoos.weblocopenercore.core.Translation;
 import com.github.benchdoos.weblocopenercore.core.constants.SettingsConstants;
 import com.github.benchdoos.weblocopenercore.utils.system.OS;
-import com.github.benchdoos.weblocopenercore.utils.system.SystemUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -94,7 +93,7 @@ public class BrowserManager {
         log.info("Loading browser list. Given list: {}", list);
         browserList = list;
         browserList.add(0, new Browser(
-                Translation.getTranslatedString("CommonsBundle", "defaultBrowserName"),
+                Translation.get("CommonsBundle", "defaultBrowserName"),
                 SettingsConstants.BROWSER_DEFAULT_VALUE));
         log.debug("Browsers count: " + browserList.size() + " " + browserList);
 

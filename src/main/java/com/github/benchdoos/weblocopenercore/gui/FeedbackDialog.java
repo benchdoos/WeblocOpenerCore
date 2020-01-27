@@ -177,8 +177,8 @@ public class FeedbackDialog extends JFrame implements Translatable {
             final Translation translation = new Translation("FeedbackDialogBundle");
 
             JOptionPane.showMessageDialog(this,
-                    String.format(translation.getTranslatedString("imageCountErrorMessage"), MAXIMUM_IMAGES_COUNT),
-                    translation.getTranslatedString("imageCountErrorTitle"),
+                    String.format(translation.get("imageCountErrorMessage"), MAXIMUM_IMAGES_COUNT),
+                    translation.get("imageCountErrorTitle"),
                     JOptionPane.WARNING_MESSAGE);
         }
     }
@@ -242,7 +242,7 @@ public class FeedbackDialog extends JFrame implements Translatable {
             @Override
             public JDialog initWindow() {
                 final JDialog dialog = new JDialog();
-                final String screenshotTitle = Translation.getTranslatedString("FeedbackDialogBundle", "screenshotTitle");
+                final String screenshotTitle = Translation.get("FeedbackDialogBundle", "screenshotTitle");
                 dialog.setTitle(String.format(screenshotTitle, dimension.getWidth(), dimension.getHeight()));
                 dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                 dialog.setLayout(new BorderLayout());
@@ -472,8 +472,8 @@ public class FeedbackDialog extends JFrame implements Translatable {
                 final Translation translation = new Translation("FeedbackDialogBundle");
 
                 JOptionPane.showMessageDialog(this,
-                        String.format(translation.getTranslatedString("imageSizeErrorMessage"), (i + 1)),
-                        translation.getTranslatedString("imageSizeErrorTitle"),
+                        String.format(translation.get("imageSizeErrorMessage"), (i + 1)),
+                        translation.get("imageSizeErrorTitle"),
                         JOptionPane.WARNING_MESSAGE
                 );
                 throw new IllegalArgumentException("Image weight is bigger that maximum value (" + MAXIMUM_IMAGE_SIZE + ") on index: " + i);
@@ -514,12 +514,12 @@ public class FeedbackDialog extends JFrame implements Translatable {
     @Override
     public void translate() {
         final Translation translation = new Translation("FeedbackDialogBundle");
-        setTitle(translation.getTranslatedString("windowTitle"));
-        appendLogsCheckBox.setText(translation.getTranslatedString("appendLogsCheckBox"));
-        appengLogsInfoLabel.setToolTipText(translation.getTranslatedString("appendLogsInfoLabel"));
-        screenshotNoticeLabel.setText(translation.getTranslatedString("screenshotNoticeLabel"));
-        sendButton.setText(translation.getTranslatedString("sendButton"));
-        cancelButton.setText(translation.getTranslatedString("cancelButton"));
+        setTitle(translation.get("windowTitle"));
+        appendLogsCheckBox.setText(translation.get("appendLogsCheckBox"));
+        appengLogsInfoLabel.setToolTipText(translation.get("appendLogsInfoLabel"));
+        screenshotNoticeLabel.setText(translation.get("screenshotNoticeLabel"));
+        sendButton.setText(translation.get("sendButton"));
+        cancelButton.setText(translation.get("cancelButton"));
     }
 
     private static boolean isSupportedImageExtension(String extension) {
