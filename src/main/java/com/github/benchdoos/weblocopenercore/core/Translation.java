@@ -58,6 +58,8 @@ public class Translation {
      * @see #protectFromDeadLock(MessageInformation)
      */
     public static String get(String stringBundleName, String message) {
+        stringBundleName = updateBundleName(stringBundleName);
+
         try {
             final String bundlePath = "translations/" + stringBundleName;
             locale = PreferencesManager.getLocale();
@@ -86,6 +88,14 @@ public class Translation {
             log.warn("Could not translate string: {}:[{}] for locale: {}", stringBundleName, message, locale, e);
             throw new RuntimeException("Could not localize string: " + stringBundleName + ":[" + message + "]", e);
         }
+    }
+
+    private static String updateBundleName(String stringBundleName) {
+        final String bundle = "Bundle";
+        if (!stringBundleName.contains(bundle)) {
+            stringBundleName = stringBundleName + bundle;
+        }
+        return stringBundleName;
     }
 
     private static Locale getSupportedLocale(Locale locale) {
