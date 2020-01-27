@@ -511,6 +511,7 @@ public class FeedbackDialog extends JFrame implements Translatable {
         final Translation translation = new Translation("FeedbackDialogBundle");
         setTitle(translation.getTranslatedString("windowTitle"));
         appendLogsCheckBox.setText(translation.getTranslatedString("appendLogsCheckBox"));
+        appengLogsInfoLabel.setToolTipText(translation.getTranslatedString("appendLogsInfoLabel"));
         screenshotNoticeLabel.setText(translation.getTranslatedString("screenshotNoticeLabel"));
         sendButton.setText(translation.getTranslatedString("sendButton"));
         cancelButton.setText(translation.getTranslatedString("cancelButton"));
