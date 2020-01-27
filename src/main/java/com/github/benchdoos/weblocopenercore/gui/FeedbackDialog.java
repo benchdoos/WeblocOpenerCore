@@ -433,6 +433,7 @@ public class FeedbackDialog extends JFrame implements Translatable {
                 }
             } catch (final IOException e) {
                 log.warn("Could not send feedback", e);
+                imageAddingEnabled = true;
                 switchInputsEnabled(true);
             }
         });
