@@ -33,10 +33,10 @@ public interface StringConstants {
     String FAVICON_GETTER_URL = "https://besticon-demo.herokuapp.com/allicons.json?url=";
 
     //-----
-    String SHARE_USER_INFO_URL = "https://weblocopener-statistics.herokuapp.com/users/notify/%s";
+    String SHARE_USER_INFO_URL = "https://weblocopener-statistics.herokuapp.com/application-login/notify/%s";
     String SEND_FEEDBACK_URL = "https://weblocopener-statistics.herokuapp.com/feedback";
 
-    String SHARE_USER_INFO_DEV_MODE_URL = "http://localhost:8022/users/notify/%s";
+    String SHARE_USER_INFO_DEV_MODE_URL = "http://localhost:8022/application-login/notify/%s";
     String SEND_FEEDBACK_DEV_MODE_URL = "http://localhost:8022/feedback";
     //-----
 
