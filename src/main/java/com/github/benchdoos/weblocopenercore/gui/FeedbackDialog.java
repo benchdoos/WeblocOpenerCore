@@ -174,9 +174,11 @@ public class FeedbackDialog extends JFrame implements Translatable {
             addImageToList(bufferedImage);
             updatePanel();
         } else {
+            final Translation translation = new Translation("FeedbackDialogBundle");
+
             JOptionPane.showMessageDialog(this,
-                    "Can not add more images than " + MAXIMUM_IMAGES_COUNT, //todo translate
-                    "Can not add image",//todo translate
+                    String.format(translation.getTranslatedString("imageCountErrorMessage"), MAXIMUM_IMAGES_COUNT),
+                    translation.getTranslatedString("imageCountErrorTitle"),
                     JOptionPane.WARNING_MESSAGE);
         }
     }
@@ -240,7 +242,8 @@ public class FeedbackDialog extends JFrame implements Translatable {
             @Override
             public JDialog initWindow() {
                 final JDialog dialog = new JDialog();
-                dialog.setTitle(String.format("Screenshot (%sX%s)", dimension.getWidth(), dimension.getHeight()));//todo translate
+                final String screenshotTitle = Translation.getTranslatedString("FeedbackDialogBundle", "screenshotTitle");
+                dialog.setTitle(String.format(screenshotTitle, dimension.getWidth(), dimension.getHeight()));
                 dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                 dialog.setLayout(new BorderLayout());
                 dialog.add(new JLabel(new ImageIcon(scaled)));
@@ -466,9 +469,11 @@ public class FeedbackDialog extends JFrame implements Translatable {
             final Image image = panel.getImage();
             final int imageWeight = ImagesUtils.getImageWeight(CoreUtils.toBufferedImage(image));
             if (imageWeight > MAXIMUM_IMAGE_SIZE) {
+                final Translation translation = new Translation("FeedbackDialogBundle");
+
                 JOptionPane.showMessageDialog(this,
-                        String.format("Image %s is bigger than 15MB", (i + 1)), //todo add translation
-                        "Image size is not valid", //todo add translation
+                        String.format(translation.getTranslatedString("imageSizeErrorMessage"), (i + 1)),
+                        translation.getTranslatedString("imageSizeErrorTitle"),
                         JOptionPane.WARNING_MESSAGE
                 );
                 throw new IllegalArgumentException("Image weight is bigger that maximum value (" + MAXIMUM_IMAGE_SIZE + ") on index: " + i);
