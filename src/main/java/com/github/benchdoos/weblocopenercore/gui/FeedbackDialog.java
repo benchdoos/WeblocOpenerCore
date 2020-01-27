@@ -77,7 +77,7 @@ public class FeedbackDialog extends JFrame implements Translatable {
     private static final int MAXIMUM_IMAGE_SIZE = 15_000_000; //15 megabytes
     private JPanel contentPane;
     private JButton sendButton;
-    private JButton buttonCancel;
+    private JButton cancelButton;
     private JTextArea feedbackTextArea;
     private JPanel imagesPanel;
     private JList<BufferedImagePanel> imagesList;
@@ -87,6 +87,7 @@ public class FeedbackDialog extends JFrame implements Translatable {
     private JCheckBox appendLogsCheckBox;
     private JProgressBar sendingProgressBar;
     private JLabel appengLogsInfoLabel;
+    private JLabel screenshotNoticeLabel;
     private static final List<FileExtension> SUPPORTED_IMAGES_EXTENSIONS = Arrays.asList(FileExtension.JPG, FileExtension.PNG);
     private Thread sendFeedbackThread;
     private boolean imageAddingEnabled = true;
@@ -320,7 +321,7 @@ public class FeedbackDialog extends JFrame implements Translatable {
         removeItemButton.addActionListener(e -> onRemove());
 
         sendButton.addActionListener(e -> sendFeedback());
-        buttonCancel.addActionListener(e -> onCancel());
+        cancelButton.addActionListener(e -> onCancel());
     }
 
     private void onRemove() {
@@ -510,6 +511,9 @@ public class FeedbackDialog extends JFrame implements Translatable {
         final Translation translation = new Translation("FeedbackDialogBundle");
         setTitle(translation.getTranslatedString("windowTitle"));
         appendLogsCheckBox.setText(translation.getTranslatedString("appendLogsCheckBox"));
+        screenshotNoticeLabel.setText(translation.getTranslatedString("screenshotNoticeLabel"));
+        sendButton.setText(translation.getTranslatedString("sendButton"));
+        cancelButton.setText(translation.getTranslatedString("cancelButton"));
     }
 
     private static boolean isSupportedImageExtension(String extension) {
@@ -527,21 +531,21 @@ public class FeedbackDialog extends JFrame implements Translatable {
     private void $$$setupUI$$$() {
         createUIComponents();
         contentPane = new JPanel();
-        contentPane.setLayout(new GridLayoutManager(6, 2, new Insets(10, 10, 10, 10), -1, -1));
+        contentPane.setLayout(new GridLayoutManager(7, 2, new Insets(10, 10, 10, 10), -1, -1));
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
-        contentPane.add(panel1, new GridConstraints(5, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
+        contentPane.add(panel1, new GridConstraints(6, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, 1, null, null, null, 0, false));
         final Spacer spacer1 = new Spacer();
         panel1.add(spacer1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         final JPanel panel2 = new JPanel();
         panel2.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1, true, false));
         panel1.add(panel2, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         sendButton = new JButton();
-        sendButton.setText("Send");
+        this.$$$loadButtonText$$$(sendButton, ResourceBundle.getBundle("translations/FeedbackDialogBundle").getString("sendButton"));
         panel2.add(sendButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        buttonCancel = new JButton();
-        buttonCancel.setText("Cancel");
-        panel2.add(buttonCancel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        cancelButton = new JButton();
+        this.$$$loadButtonText$$$(cancelButton, ResourceBundle.getBundle("translations/FeedbackDialogBundle").getString("cancelButton"));
+        panel2.add(cancelButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel3 = new JPanel();
         panel3.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         panel3.setVisible(true);
@@ -585,7 +589,11 @@ public class FeedbackDialog extends JFrame implements Translatable {
         contentPane.add(appengLogsInfoLabel, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         sendingProgressBar = new JProgressBar();
         sendingProgressBar.setIndeterminate(true);
-        contentPane.add(sendingProgressBar, new GridConstraints(4, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        contentPane.add(sendingProgressBar, new GridConstraints(5, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        screenshotNoticeLabel = new JLabel();
+        screenshotNoticeLabel.setForeground(new Color(-6316129));
+        this.$$$loadLabelText$$$(screenshotNoticeLabel, ResourceBundle.getBundle("translations/FeedbackDialogBundle").getString("screenshotNoticeLabel"));
+        contentPane.add(screenshotNoticeLabel, new GridConstraints(4, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
@@ -605,6 +613,33 @@ public class FeedbackDialog extends JFrame implements Translatable {
             }
         }
         return new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
+    }
+
+    /**
+     * @noinspection ALL
+     */
+    private void $$$loadLabelText$$$(JLabel component, String text) {
+        StringBuffer result = new StringBuffer();
+        boolean haveMnemonic = false;
+        char mnemonic = '\0';
+        int mnemonicIndex = -1;
+        for (int i = 0; i < text.length(); i++) {
+            if (text.charAt(i) == '&') {
+                i++;
+                if (i == text.length()) break;
+                if (!haveMnemonic && text.charAt(i) != '&') {
+                    haveMnemonic = true;
+                    mnemonic = text.charAt(i);
+                    mnemonicIndex = result.length();
+                }
+            }
+            result.append(text.charAt(i));
+        }
+        component.setText(result.toString());
+        if (haveMnemonic) {
+            component.setDisplayedMnemonic(mnemonic);
+            component.setDisplayedMnemonicIndex(mnemonicIndex);
+        }
     }
 
     /**
