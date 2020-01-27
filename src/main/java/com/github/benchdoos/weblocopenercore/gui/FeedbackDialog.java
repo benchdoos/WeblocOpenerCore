@@ -421,22 +421,26 @@ public class FeedbackDialog extends JFrame implements Translatable {
                 if (HttpStatus.SC_OK == code) {
                     log.info("Feedback was sent successfully");
                     NotificationManager.getNotificationForCurrentOS().showInfoNotification(
-                            "Feedback", // todo show this
-                            "Feedback has been sent"//todo translate this
+                            Translation.get("FeedbackDialog", "successSendTitle"),
+                            Translation.get("FeedbackDialog", "successSendMessage")
                     );
                     dispose();
                 } else if (-1 == code) {
                     switchInputsEnabled(true);
                 } else {
-                    JOptionPane.showMessageDialog(this,
-                            "Feedback was not sent", //todo translate this
-                            "Error", //todo translate this
-                            JOptionPane.WARNING_MESSAGE);
+                    NotificationManager.getNotificationForCurrentOS().showErrorNotification(
+                            Translation.get("FeedbackDialog", "errorSendTitle"),
+                            Translation.get("FeedbackDialog", "errorSendMessage")
+                    );
                     imageAddingEnabled = true;
                     switchInputsEnabled(true);
                 }
             } catch (final IOException e) {
                 log.warn("Could not send feedback", e);
+                NotificationManager.getNotificationForCurrentOS().showErrorNotification(
+                        Translation.get("FeedbackDialog", "errorSendTitle"),
+                        Translation.get("FeedbackDialog", "errorSendMessage")
+                );
                 imageAddingEnabled = true;
                 switchInputsEnabled(true);
             }
@@ -453,6 +457,7 @@ public class FeedbackDialog extends JFrame implements Translatable {
         sendingProgressBar.setVisible(!enabled);
         sendButton.setEnabled(enabled);
         pack();
+        setMinimumSize(getSize());
     }
 
     private void validateInput() {

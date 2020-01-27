@@ -100,7 +100,7 @@ public class ForcedNotificationDialog extends JDialog implements Notification {
         final String finalMessage;
         if (messageLevel == JOptionPane.ERROR_MESSAGE) {
 
-            final String reportIssue = Translation.get("CommonsBundle", "reportIssue");
+            final String reportIssue = Translation.get("Commons", "reportIssue");
             finalMessage = "<HTML><BODY>" + message + "<br><br>" + reportIssue + " " +
                     "<a href=\"" + StringConstants.GITHUB_REPORT_ISSUE + "\">"
                     + StringConstants.GITHUB_NAME + "</a></BODY></HTML>";
