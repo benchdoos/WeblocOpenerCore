@@ -21,7 +21,7 @@ import com.github.benchdoos.weblocopenercore.utils.system.OS;
 
 public interface ApplicationConstants {
     String WEBLOCOPENER_APPLICATION_NAME = "WeblocOpener";
-    String UPDATER_APPLICATION_NAME = "WeblocOpenerUpdater";
+    String CORE_NAME = "WeblocOpenerCore";
 
     String DEFAULT_APPLICATION_CHARSET = "UTF-8";
 

@@ -20,8 +20,8 @@
             <PatternLayout pattern="%d %p %C{1.}:%L [%t] - %msg%n" charset="UTF-8"/>
         </Console>
 
-        <RollingFile name="trace" fileName="${sys:com.github.benchdoos.weblocopenercore.log.folder}/trace.log"
-                     filePattern="${sys:com.github.benchdoos.weblocopenercore.log.folder}/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i-trace.log.gz">
+        <RollingFile name="trace" fileName="${sys:user.home}/.WeblocOpener/Log/WeblocOpenerCore/trace.log"
+                     filePattern="${sys:user.home}/.WeblocOpener/Log/WeblocOpenerCore/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i-trace.log.gz">
             <PatternLayout header="${java:runtime} - ${java:vm} - ${java:os}" charset="UTF-8">
                 <pattern>%d %p %C{1.}:%L [%t] - %msg%n</pattern>
             </PatternLayout>
@@ -31,8 +31,8 @@
             <DefaultRolloverStrategy max="1"/>
         </RollingFile>
 
-        <RollingFile name="info" fileName="${sys:com.github.benchdoos.weblocopenercore.log.folder}/info.log"
-                     filePattern="${sys:com.github.benchdoos.weblocopenercore.log.folder}/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i-info.log.gz">
+        <RollingFile name="info" fileName="${sys:user.home}/.WeblocOpener/Log/WeblocOpenerCore/info.log"
+                     filePattern="${sys:user.home}/.WeblocOpener/Log/WeblocOpenerCore/$${date:yyyy-MM}/app-%d{MM-dd-yyyy}-%i-info.log.gz">
             <PatternLayout header="${java:runtime} - ${java:vm} - ${java:os}" charset="UTF-8">
                 <pattern>%d %p %C{1.}:%L [%t] - %msg%n</pattern>
             </PatternLayout>

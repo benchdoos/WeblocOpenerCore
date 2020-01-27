@@ -15,9 +15,7 @@
 
 package com.github.benchdoos.weblocopenercore.service.clipboard.impl;
 
-import com.github.benchdoos.weblocopenercore.core.Logging;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
@@ -33,12 +31,12 @@ import java.nio.channels.Channels;
 /**
  * This holy crap is because gnome does not support normal copying for java or otherwise
  */
+@Log4j2
 public class UnixClipboardHelper extends Thread {
     private static BufferedReader stdInCh = new BufferedReader(
             new InputStreamReader(Channels.newInputStream((
                     new FileInputStream(FileDescriptor.in)).getChannel())));
     final InputStream in = System.in;
-    private final Logger log = LogManager.getLogger(Logging.getCurrentClassName());
     private final String text;
     private final BufferedImage image;
 

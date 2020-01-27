@@ -15,23 +15,20 @@
 
 package com.github.benchdoos.weblocopenercore.service.notification.impl;
 
-import com.github.benchdoos.weblocopenercore.core.Logging;
 import com.github.benchdoos.weblocopenercore.service.notification.Notification;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.extern.log4j.Log4j2;
 
 import java.awt.TrayIcon;
 import java.io.IOException;
 
+@Log4j2
 public class UnixNotification implements Notification {
-    public static final Logger log = LogManager.getLogger(Logging.getCurrentClassName());
     private static final int TIME_NOTIFICATION_DELAY = 50_000; //5 secs
 
     private static void createNotification(String title, String message, TrayIcon.MessageType messageType) {
 
         title = prepareString(title);
         message = prepareString(message);
-
 
         showNotification(title, message, getMessageType(messageType));
     }

@@ -16,9 +16,10 @@
 package com.github.benchdoos.weblocopenercore.gui;
 
 import com.github.benchdoos.jcolorful.core.JColorful;
-import com.github.benchdoos.weblocopenercore.core.Logging;
+import com.github.benchdoos.jcolorful.utils.Logging;
 import com.github.benchdoos.weblocopenercore.core.Translation;
 import com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants;
+import com.github.benchdoos.weblocopenercore.core.constants.PathConstants;
 import com.github.benchdoos.weblocopenercore.core.constants.StringConstants;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import com.github.benchdoos.weblocopenercore.service.UrlsProceed;
@@ -56,6 +57,7 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -369,9 +371,9 @@ public class AboutApplicationDialog extends JDialog {
             @Override
             public void mouseClicked(MouseEvent e) {
                 try {
-                    Desktop.getDesktop().open(Logging.LOG_FOLDER);
+                    Desktop.getDesktop().open(new File(PathConstants.APP_LOG_FOLDER_PATH));
                 } catch (IOException e1) {
-                    log.warn("Can not open log folder: " + Logging.LOG_FOLDER);
+                    log.warn("Can not open log folder: " + PathConstants.APP_LOG_FOLDER_PATH);
                 }
             }
         });

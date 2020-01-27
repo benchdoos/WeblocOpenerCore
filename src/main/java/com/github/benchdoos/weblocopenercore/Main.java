@@ -1,22 +1,23 @@
 package com.github.benchdoos.weblocopenercore;
 
 import com.github.benchdoos.weblocopenercore.core.Application;
-import com.github.benchdoos.weblocopenercore.core.Logging;
 import com.github.benchdoos.weblocopenercore.core.Translation;
+import com.github.benchdoos.weblocopenercore.core.constants.PathConstants;
 import com.github.benchdoos.weblocopenercore.service.notification.NotificationManager;
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import com.github.benchdoos.weblocopenercore.utils.system.OS;
 import com.github.benchdoos.weblocopenercore.utils.system.SystemUtils;
 import com.github.benchdoos.weblocopenercore.utils.system.UnsupportedSystemException;
-import org.apache.logging.log4j.LogManager;
+import lombok.extern.java.Log;
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
 
 import static com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME;
 
+@Log4j2
 public class Main {
-    private static Logger log;
 
     public static void main(String[] args) {
         System.out.println(WEBLOCOPENER_APPLICATION_NAME + " starting with args: " + Arrays.toString(args));
@@ -40,7 +41,6 @@ public class Main {
     }
 
     private static void initLogging() {
-        new Logging(WEBLOCOPENER_APPLICATION_NAME);
-        log = LogManager.getLogger(Logging.getCurrentClassName());
+        log.info("Logging to: {}", PathConstants.APP_LOG_FOLDER_PATH);
     }
 }

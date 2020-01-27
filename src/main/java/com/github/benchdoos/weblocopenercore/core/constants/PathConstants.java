@@ -21,17 +21,15 @@ import com.github.benchdoos.weblocopenercore.utils.system.SystemUtils;
 
 import java.io.File;
 
+import static com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants.CORE_NAME;
 import static com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants.WEBLOCOPENER_APPLICATION_NAME;
 
 
 public interface PathConstants {
 
-    String ROOT_PATH = OS.isWindows() ?
-            System.getProperty("java.io.tmpdir") + File.separator + WEBLOCOPENER_APPLICATION_NAME :
-            System.getProperty("user.home") + File.separator + "." + WEBLOCOPENER_APPLICATION_NAME;
+    String ROOT_PATH = System.getProperty("user.home") + File.separator + "." + WEBLOCOPENER_APPLICATION_NAME;
 
-    String APP_LOG_FOLDER_PATH = ROOT_PATH + File.separator + "Log";
-    String APP_LOG_PROPERTY = "com.github.benchdoos.weblocopenercore.log.folder";
+    String APP_LOG_FOLDER_PATH = ROOT_PATH + File.separator + "Log" + File.separator + CORE_NAME;
 
     String RECENT_OPENED_FILES_FILE_PATH = ROOT_PATH + File.separator
             + CoreUtils.fixFileName("recent-files-" + System.getProperty("user.name").toLowerCase() + ".json");
