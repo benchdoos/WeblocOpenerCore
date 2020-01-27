@@ -527,6 +527,9 @@ public class Application {
                     case OPENER_CONVERT_ARGUMENT:
                         runConverterDialog(args);
                         break;
+                    case FEEDBACK_ARGUMENT:
+                        runFeedbackDialog();
+                        break;
                     default:
                         manageArgumentsOnUnix(args);
                         break;
