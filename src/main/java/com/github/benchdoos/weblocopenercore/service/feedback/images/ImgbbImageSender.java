@@ -3,6 +3,7 @@ package com.github.benchdoos.weblocopenercore.service.feedback.images;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.benchdoos.weblocopenercore.core.constants.StringConstants;
+import com.github.benchdoos.weblocopenercore.utils.http.HttpUtils;
 import lombok.extern.log4j.Log4j2;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -22,6 +23,7 @@ import java.util.List;
 @Log4j2
 public class ImgbbImageSender implements ImageSender {
     private final static String rootUrl = "https://api.imgbb.com/1/upload";
+    final HttpUtils<ImgbbResponseDto> httpUtils = new HttpUtils<>(ImgbbResponseDto.class);
 
     @Override
     public List<ImageInfo> sendImages(List<String> base64ImagesList) {
@@ -39,7 +41,7 @@ public class ImgbbImageSender implements ImageSender {
 
                         try {
                             if (!Thread.currentThread().isInterrupted()) {
-                                final ImgbbResponseDto imgbbResponseDto = sendRequest(post);
+                                final ImgbbResponseDto imgbbResponseDto = httpUtils.sendHttpRequest(post).getResponse();
                                 log.info("Image was sent. Status: {}", imgbbResponseDto.getStatus());
 
                                 if (imgbbResponseDto.getData() != null) {
@@ -61,26 +63,5 @@ public class ImgbbImageSender implements ImageSender {
         }
 
         return result;
-    }
-
-    /**
-     * Sends request and return
-     * //todo use HttpUtils (something went wrong with LinkedHashMap
-     * @param post method
-     * @return response from ImgBB
-     * @throws IOException if something is wrong
-     */
-    private ImgbbResponseDto sendRequest(HttpPost post) throws IOException {
-        try (final CloseableHttpClient httpClient = HttpClients.createDefault();
-             final CloseableHttpResponse response = httpClient.execute(post)) {
-
-            final int statusCode = response.getStatusLine().getStatusCode();
-            log.info("Http request sent. (code: {}, response: {})",
-                    statusCode,
-                    response.getEntity());
-            final ObjectMapper mapper = new ObjectMapper();
-            mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-            return mapper.readValue(response.getEntity().getContent(), ImgbbResponseDto.class);
-        }
     }
 }

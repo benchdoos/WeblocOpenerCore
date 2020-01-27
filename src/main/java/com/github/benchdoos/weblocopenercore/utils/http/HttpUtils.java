@@ -20,9 +20,19 @@ import java.io.IOException;
 
 @Log4j2
 public class HttpUtils<T> {
+    private Class<T> objectClass;
+
     public HttpUtils() {
+
     }
-//todo fix: https://stackoverflow.com/questions/11664894/jackson-deserialize-using-generic-class
+
+    /**
+     * Creates instance of {@link HttpUtils} with class object, that provides stability working with TypeReference
+     * @param objectClass
+     */
+    public HttpUtils(Class<T> objectClass) {
+        this.objectClass = objectClass;
+    }
     public HttpResponse<T> sendHttpRequest(HttpRequestBase request) throws IOException {
         try (final CloseableHttpClient httpClient = HttpClients.createDefault();
              final CloseableHttpResponse response = httpClient.execute(request)) {
@@ -44,8 +54,12 @@ public class HttpUtils<T> {
 
             @Nullable final T value;
             if (!StringUtil.isBlank(responseString)) {
-                value = mapper.readValue(responseString, new TypeReference<T>() {
-                });
+                if (objectClass != null) {
+                    value = mapper.readValue(responseString, objectClass);
+                } else {
+                    value = mapper.readValue(responseString, new TypeReference<T>() {
+                    });
+                }
             } else {
                 value = null;
             }

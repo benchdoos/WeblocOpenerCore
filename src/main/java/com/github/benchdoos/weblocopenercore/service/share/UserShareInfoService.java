@@ -3,6 +3,7 @@ package com.github.benchdoos.weblocopenercore.service.share;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.benchdoos.weblocopenercore.core.constants.StringConstants;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
+import com.github.benchdoos.weblocopenercore.service.feedback.images.ImgbbResponseDto;
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import com.github.benchdoos.weblocopenercore.utils.http.HttpUtils;
 import lombok.extern.log4j.Log4j2;
