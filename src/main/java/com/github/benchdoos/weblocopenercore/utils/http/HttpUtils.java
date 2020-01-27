@@ -22,7 +22,7 @@ import java.io.IOException;
 public class HttpUtils<T> {
     public HttpUtils() {
     }
-
+//todo fix: https://stackoverflow.com/questions/11664894/jackson-deserialize-using-generic-class
     public HttpResponse<T> sendHttpRequest(HttpRequestBase request) throws IOException {
         try (final CloseableHttpClient httpClient = HttpClients.createDefault();
              final CloseableHttpResponse response = httpClient.execute(request)) {
