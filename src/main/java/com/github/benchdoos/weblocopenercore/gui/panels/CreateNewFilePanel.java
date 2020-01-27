@@ -187,7 +187,7 @@ public class CreateNewFilePanel extends JPanel implements Translatable {
             }
         } catch (MalformedURLException e) {
             log.warn("Could not create url from text: {}, cause: {}", text, e.getMessage());
-            FrameUtils.shakeFrame(this); //fixme не работает при вызове из настроек
+            FrameUtils.shakeFrame(parentWindow);
         }
     }
 
