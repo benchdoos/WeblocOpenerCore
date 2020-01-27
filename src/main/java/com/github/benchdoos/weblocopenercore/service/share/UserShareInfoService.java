@@ -21,7 +21,7 @@ import java.util.UUID;
 @Log4j2
 public class UserShareInfoService {
 
-    private final HttpUtils httpUtils = new HttpUtils<>();
+    private final HttpUtils httpUtils = new HttpUtils<>(null);
 
     public void sendInfo(@NotNull UUID uuid) throws IOException {
         log.info("Sharing user info. UUID: {}", uuid);
@@ -32,8 +32,8 @@ public class UserShareInfoService {
         post.setHeader(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8");
         post.setEntity(entity);
 
-        final HttpUtils.HttpResponse uuidHttpResponse = httpUtils.sendHttpRequest(post);
-        log.info("Shared info about application. Status code: {}", uuidHttpResponse.getCode());
+        final int code = httpUtils.sendHttpRequest(post).getCode();
+        log.info("Shared info about application. Status code: {}", code);
     }
 
     @NotNull

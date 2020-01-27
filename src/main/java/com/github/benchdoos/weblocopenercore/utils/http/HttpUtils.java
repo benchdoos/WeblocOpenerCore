@@ -13,6 +13,7 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jsoup.internal.StringUtil;
 
@@ -22,15 +23,12 @@ import java.io.IOException;
 public class HttpUtils<T> {
     private Class<T> objectClass;
 
-    public HttpUtils() {
-
-    }
-
     /**
      * Creates instance of {@link HttpUtils} with class object, that provides stability working with TypeReference
-     * @param objectClass
+     *
+     * @param objectClass class of creating object in response
      */
-    public HttpUtils(Class<T> objectClass) {
+    public HttpUtils(@Nullable Class<T> objectClass) {
         this.objectClass = objectClass;
     }
     public HttpResponse<T> sendHttpRequest(HttpRequestBase request) throws IOException {
@@ -57,6 +55,7 @@ public class HttpUtils<T> {
                 if (objectClass != null) {
                     value = mapper.readValue(responseString, objectClass);
                 } else {
+                    //try generify
                     value = mapper.readValue(responseString, new TypeReference<T>() {
                     });
                 }

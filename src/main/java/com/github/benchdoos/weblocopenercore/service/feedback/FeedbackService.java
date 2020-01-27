@@ -30,7 +30,7 @@ import java.util.UUID;
 
 @Log4j2
 public class FeedbackService {
-    private final HttpUtils<UUID> httpUtils = new HttpUtils<>();
+    private final HttpUtils<UUID> httpUtils = new HttpUtils<>(UUID.class);
 
     public int sendFeedback(Feedback feedback) throws IOException {
         final Thread thread = Thread.currentThread();
