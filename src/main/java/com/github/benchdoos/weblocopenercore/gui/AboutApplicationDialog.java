@@ -22,6 +22,7 @@ import com.github.benchdoos.weblocopenercore.core.constants.PathConstants;
 import com.github.benchdoos.weblocopenercore.core.constants.StringConstants;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import com.github.benchdoos.weblocopenercore.service.UrlsProceed;
+import com.github.benchdoos.weblocopenercore.service.WindowLauncher;
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import com.github.benchdoos.weblocopenercore.utils.FrameUtils;
 import com.github.benchdoos.weblocopenercore.utils.version.ApplicationVersion;
@@ -37,6 +38,7 @@ import net.java.balloontip.styles.MinimalBalloonStyle;
 import net.java.balloontip.utils.TimingUtils;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -82,6 +84,7 @@ public class AboutApplicationDialog extends JDialog {
     private JLabel donateByPayPalLabel;
     private JLabel donateByDonationAlertsLabel;
     private JLabel twitterLabel;
+    private JButton feedbackButton;
     private String shareLabelText;
     private String shareBalloonMessage;
 
@@ -179,33 +182,41 @@ public class AboutApplicationDialog extends JDialog {
         final Spacer spacer1 = new Spacer();
         panel6.add(spacer1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         final JPanel panel7 = new JPanel();
-        panel7.setLayout(new GridLayoutManager(1, 6, new Insets(0, 0, 0, 0), -1, -1));
+        panel7.setLayout(new GridLayoutManager(1, 7, new Insets(0, 0, 0, 0), -1, -1));
         panel7.setOpaque(false);
         panel6.add(panel7, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         feedbackLabel = new JLabel();
         feedbackLabel.setIcon(new ImageIcon(getClass().getResource("/images/feedbackIcon.png")));
         feedbackLabel.setText("");
-        panel7.add(feedbackLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel7.add(feedbackLabel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         telegramLabel = new JLabel();
         telegramLabel.setIcon(new ImageIcon(getClass().getResource("/images/telegramIcon16.png")));
         telegramLabel.setText("");
-        panel7.add(telegramLabel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel7.add(telegramLabel, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         shareLabel = new JLabel();
         shareLabel.setIcon(new ImageIcon(getClass().getResource("/images/shareIcon16.png")));
         shareLabel.setText("");
-        panel7.add(shareLabel, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel7.add(shareLabel, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         donateByPayPalLabel = new JLabel();
         donateByPayPalLabel.setIcon(new ImageIcon(getClass().getResource("/images/donate16.png")));
         donateByPayPalLabel.setText("");
-        panel7.add(donateByPayPalLabel, new GridConstraints(0, 5, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel7.add(donateByPayPalLabel, new GridConstraints(0, 6, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         donateByDonationAlertsLabel = new JLabel();
         donateByDonationAlertsLabel.setIcon(new ImageIcon(getClass().getResource("/images/donationAlertsIcon16.png")));
         donateByDonationAlertsLabel.setText("");
-        panel7.add(donateByDonationAlertsLabel, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel7.add(donateByDonationAlertsLabel, new GridConstraints(0, 5, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         twitterLabel = new JLabel();
         twitterLabel.setIcon(new ImageIcon(getClass().getResource("/images/twitterIcon16.png")));
         twitterLabel.setText("");
-        panel7.add(twitterLabel, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel7.add(twitterLabel, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        feedbackButton = new JButton();
+        feedbackButton.setBorderPainted(false);
+        feedbackButton.setContentAreaFilled(false);
+        feedbackButton.setIcon(new ImageIcon(getClass().getResource("/images/icons/feedback16.png")));
+        feedbackButton.setIconTextGap(0);
+        feedbackButton.setOpaque(false);
+        feedbackButton.setText("");
+        panel7.add(feedbackButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(20, 20), new Dimension(20, 20), new Dimension(20, 20), 0, false));
         final JPanel panel8 = new JPanel();
         panel8.setLayout(new GridLayoutManager(1, 4, new Insets(0, 0, 0, 0), -1, -1));
         panel8.setOpaque(false);
@@ -316,6 +327,8 @@ public class AboutApplicationDialog extends JDialog {
 
         initLinks();
 
+        initListeners();
+
         scrollPane.setViewportBorder(null);
 
         setModal(true);
@@ -323,6 +336,23 @@ public class AboutApplicationDialog extends JDialog {
         setResizable(false);
         FrameUtils.setWindowOnScreenCenter(this);
         log.debug("GUI created");
+    }
+
+    private void initListeners() {
+        feedbackButton.setCursor(new Cursor(Cursor.HAND_CURSOR));//todo change to smart elements iteration
+        feedbackButton.addActionListener(e -> onFeedback());
+
+    }
+
+    private void onFeedback() {
+        final FeedbackDialog feedbackDialog = new WindowLauncher<FeedbackDialog>() {
+            @Override
+            public FeedbackDialog initWindow() {
+                return new FeedbackDialog();
+            }
+        }.getWindow();
+        FrameUtils.setWindowOnParentWindowCenter(this, feedbackDialog);
+        feedbackDialog.setVisible(true);
     }
 
     private void initLinks() {

@@ -49,7 +49,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Frame;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Toolkit;
@@ -106,7 +105,7 @@ public class FeedbackDialog extends JFrame implements Translatable {
         setContentPane(contentPane);
         getRootPane().setDefaultButton(sendButton);
 
-        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/feedback256.png")));
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/icons/bigIcons/feedback256.png")));
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
