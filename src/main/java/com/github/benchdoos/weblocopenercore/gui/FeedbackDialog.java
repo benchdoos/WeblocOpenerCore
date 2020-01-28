@@ -350,18 +350,41 @@ public class FeedbackDialog extends JFrame implements Translatable {
 
     private void editLogs() {
         final String traceLog = PathConstants.APP_LOG_FOLDER_PATH + File.separator + "trace.log";
-        final String contentFromResource = CoreUtils.getContentFromFile(new File(traceLog));
-        if (!StringUtil.isBlank(contentFromResource)) {
-            logs = contentFromResource;
-            //todo add edit logs window.
+
+        if (logs == null) {
+            logs = CoreUtils.getContentFromFile(new File(traceLog));
+        }
+
+        if (!StringUtil.isBlank(logs)) {
+            showEditTextDialog();
         } else {
             log.warn("Could not append trace.log file (filepath: {}). Skipping.", traceLog);
             logs = null;
             NotificationManager.getNotificationForCurrentOS().showWarningNotification(
-                    "Edit logs",
-                    "Can not edit logs"
+                    "Edit logs", //todo add translation
+                    "Can not edit logs" //todo add translation
             );
         }
+    }
+
+    private void showEditTextDialog() {
+        final EditTextDialog editTextDialog = new WindowLauncher<EditTextDialog>() {
+            @Override
+            public EditTextDialog initWindow() {
+                return new EditTextDialog();
+            }
+        }.getWindow();
+        editTextDialog.setText(logs);
+        editTextDialog.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                logs = editTextDialog.getText(); //fixme not working
+                super.windowClosing(e);
+            }
+        });
+
+        editTextDialog.setVisible(true);
+
     }
 
     private void onRemove() {
