@@ -16,7 +16,6 @@
 package com.github.benchdoos.weblocopenercore.gui;
 
 import com.github.benchdoos.jcolorful.core.JColorful;
-import com.github.benchdoos.jcolorful.utils.Logging;
 import com.github.benchdoos.weblocopenercore.core.Translation;
 import com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants;
 import com.github.benchdoos.weblocopenercore.core.constants.PathConstants;
@@ -356,7 +355,7 @@ public class AboutApplicationDialog extends JDialog {
 
                 infoDialog.setTitle(Translation.get("AboutApplicationDialogBundle", "librariesLabelToolTip"));
 
-                infoDialog.setContent(getDarkStyle(CoreUtils.getContentFromResource("/pages/libs.html")));
+                infoDialog.setContent(getDarkStyle(CoreUtils.getContentFromLocalResource("/pages/libs.html")));
                 infoDialog.setVisible(true);
             }
 

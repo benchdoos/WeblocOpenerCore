@@ -375,7 +375,7 @@ public class FeedbackDialog extends JFrame implements Translatable {
 
         if (appendLogsCheckBox.isSelected()) {
             final String traceLog = PathConstants.APP_LOG_FOLDER_PATH + File.separator + "trace.log";
-            final String contentFromResource = CoreUtils.getContentFromResource(traceLog);
+            final String contentFromResource = CoreUtils.getContentFromFile(new File(traceLog));
             if (!StringUtil.isBlank(contentFromResource)) {
                 dto.setLogFileContent(contentFromResource);
             } else {

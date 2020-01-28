@@ -22,11 +22,11 @@ import com.github.benchdoos.weblocopenercore.utils.version.ApplicationVersion;
 import com.github.benchdoos.weblocopenercore.utils.version.Beta;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FileExistsException;
+import org.apache.commons.io.IOUtils;
+import org.assertj.core.api.Assertions;
+import org.jetbrains.annotations.NotNull;
 
-import javax.swing.Icon;
 import javax.swing.UIManager;
-import java.awt.Dimension;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -35,12 +35,14 @@ import java.awt.datatransfer.Transferable;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -245,7 +247,7 @@ public class CoreUtils {
         final InfoDialog infoDialog = new InfoDialog();
         infoDialog.setTitle(WEBLOCOPENER_APPLICATION_NAME);
 
-        final String content = getContentFromResource("/pages/fatalErrorPage.html");
+        final String content = getContentFromLocalResource("/pages/fatalErrorPage.html");
 
         final StringWriter stringWriter = new StringWriter();
         final PrintWriter printWriter = new PrintWriter(stringWriter);
@@ -257,7 +259,18 @@ public class CoreUtils {
         infoDialog.setVisible(true);
     }
 
-    public static String getContentFromResource(String path) {
+    public static String getContentFromFile(@NotNull File file) {
+        try {
+            Assertions.assertThat(file).exists();
+            Assertions.assertThat(file).isFile();
+            return IOUtils.toString(file.toURI(), StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            log.warn("Could not load content from file: {}. Returning empty string.",file);
+            return "";
+        }
+    }
+
+    public static String getContentFromLocalResource(String path) {
         final StringBuilder contentBuilder = new StringBuilder();
 
         try (final InputStreamReader in = new InputStreamReader(CoreUtils.class.getResourceAsStream(path));
