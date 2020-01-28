@@ -9,25 +9,17 @@ import java.awt.Window;
 public abstract class WindowLauncher<Child extends Window> {
     private final Child window;
 
-    public WindowLauncher() {
+    public WindowLauncher(Child window) {
         if (PreferencesManager.isDarkModeEnabledNow()) {
             final JColorful colorful = new JColorful(ApplicationConstants.DARK_MODE_THEME);
             colorful.colorizeGlobal();
 
-            window = initWindow();
+            this.window = window;
             colorful.colorize(window);
         } else {
-            window = initWindow();
+            this.window = window;
         }
     }
-
-    /**
-     * Method creates instance of {@link WindowLauncher<Child>}.
-     * DO NOT USE this method, use {@link #getWindow()} instead.
-     *
-     * @return instance of {@link WindowLauncher<Child>}.
-     */
-    public abstract Child initWindow();
 
     public Child getWindow() {
         return window;
