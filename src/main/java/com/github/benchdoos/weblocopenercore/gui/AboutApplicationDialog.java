@@ -47,6 +47,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Dimension;
@@ -85,6 +86,7 @@ public class AboutApplicationDialog extends JDialog {
     private JLabel donateByDonationAlertsLabel;
     private JLabel twitterLabel;
     private JButton feedbackButton;
+    private JPanel buttonsPanel;
     private String shareLabelText;
     private String shareBalloonMessage;
 
@@ -181,34 +183,34 @@ public class AboutApplicationDialog extends JDialog {
         panel3.add(panel6, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final Spacer spacer1 = new Spacer();
         panel6.add(spacer1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
-        final JPanel panel7 = new JPanel();
-        panel7.setLayout(new GridLayoutManager(1, 7, new Insets(0, 0, 0, 0), -1, -1));
-        panel7.setOpaque(false);
-        panel6.add(panel7, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        buttonsPanel = new JPanel();
+        buttonsPanel.setLayout(new GridLayoutManager(1, 7, new Insets(0, 0, 0, 0), -1, -1));
+        buttonsPanel.setOpaque(false);
+        panel6.add(buttonsPanel, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         feedbackLabel = new JLabel();
         feedbackLabel.setIcon(new ImageIcon(getClass().getResource("/images/feedbackIcon.png")));
         feedbackLabel.setText("");
-        panel7.add(feedbackLabel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        buttonsPanel.add(feedbackLabel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         telegramLabel = new JLabel();
         telegramLabel.setIcon(new ImageIcon(getClass().getResource("/images/telegramIcon16.png")));
         telegramLabel.setText("");
-        panel7.add(telegramLabel, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        buttonsPanel.add(telegramLabel, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         shareLabel = new JLabel();
         shareLabel.setIcon(new ImageIcon(getClass().getResource("/images/shareIcon16.png")));
         shareLabel.setText("");
-        panel7.add(shareLabel, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        buttonsPanel.add(shareLabel, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         donateByPayPalLabel = new JLabel();
         donateByPayPalLabel.setIcon(new ImageIcon(getClass().getResource("/images/donate16.png")));
         donateByPayPalLabel.setText("");
-        panel7.add(donateByPayPalLabel, new GridConstraints(0, 6, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        buttonsPanel.add(donateByPayPalLabel, new GridConstraints(0, 6, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         donateByDonationAlertsLabel = new JLabel();
         donateByDonationAlertsLabel.setIcon(new ImageIcon(getClass().getResource("/images/donationAlertsIcon16.png")));
         donateByDonationAlertsLabel.setText("");
-        panel7.add(donateByDonationAlertsLabel, new GridConstraints(0, 5, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        buttonsPanel.add(donateByDonationAlertsLabel, new GridConstraints(0, 5, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         twitterLabel = new JLabel();
         twitterLabel.setIcon(new ImageIcon(getClass().getResource("/images/twitterIcon16.png")));
         twitterLabel.setText("");
-        panel7.add(twitterLabel, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        buttonsPanel.add(twitterLabel, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         feedbackButton = new JButton();
         feedbackButton.setBorderPainted(false);
         feedbackButton.setContentAreaFilled(false);
@@ -216,23 +218,23 @@ public class AboutApplicationDialog extends JDialog {
         feedbackButton.setIconTextGap(0);
         feedbackButton.setOpaque(false);
         feedbackButton.setText("");
-        panel7.add(feedbackButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(20, 20), new Dimension(20, 20), new Dimension(20, 20), 0, false));
-        final JPanel panel8 = new JPanel();
-        panel8.setLayout(new GridLayoutManager(1, 4, new Insets(0, 0, 0, 0), -1, -1));
-        panel8.setOpaque(false);
-        panel6.add(panel8, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        buttonsPanel.add(feedbackButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, new Dimension(20, 20), new Dimension(20, 20), new Dimension(20, 20), 0, false));
+        final JPanel panel7 = new JPanel();
+        panel7.setLayout(new GridLayoutManager(1, 4, new Insets(0, 0, 0, 0), -1, -1));
+        panel7.setOpaque(false);
+        panel6.add(panel7, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         siteLinkLabel = new JLabel();
         this.$$$loadLabelText$$$(siteLinkLabel, ResourceBundle.getBundle("spelling").getString("site"));
-        panel8.add(siteLinkLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel7.add(siteLinkLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         githubLinkLabel = new JLabel();
         this.$$$loadLabelText$$$(githubLinkLabel, ResourceBundle.getBundle("spelling").getString("github"));
-        panel8.add(githubLinkLabel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel7.add(githubLinkLabel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         librariesLabel = new JLabel();
         this.$$$loadLabelText$$$(librariesLabel, ResourceBundle.getBundle("translations/AboutApplicationDialogBundle").getString("librariesLabel"));
-        panel8.add(librariesLabel, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel7.add(librariesLabel, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         logLabel = new JLabel();
         this.$$$loadLabelText$$$(logLabel, ResourceBundle.getBundle("translations/AboutApplicationDialogBundle").getString("logLabelTooltip"));
-        panel8.add(logLabel, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel7.add(logLabel, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**
@@ -326,6 +328,7 @@ public class AboutApplicationDialog extends JDialog {
         }
 
         initLinks();
+        initButtonsPanel();
 
         initListeners();
 
@@ -338,8 +341,15 @@ public class AboutApplicationDialog extends JDialog {
         log.debug("GUI created");
     }
 
+    private void initButtonsPanel() {
+        for (Component component : buttonsPanel.getComponents()) {
+            if (component instanceof JButton) {
+                component.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            }
+        }
+    }
+
     private void initListeners() {
-        feedbackButton.setCursor(new Cursor(Cursor.HAND_CURSOR));//todo change to smart elements iteration
         feedbackButton.addActionListener(e -> onFeedback());
 
     }
@@ -377,7 +387,7 @@ public class AboutApplicationDialog extends JDialog {
         librariesLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
         librariesLabel.addMouseListener(new MouseAdapter() {
             private void createInfoDialog() {
-                InfoDialog infoDialog = new InfoDialog();
+                final InfoDialog infoDialog = new InfoDialog();
                 if (PreferencesManager.isDarkModeEnabledNow()) {
                     final JColorful colorful = new JColorful(ApplicationConstants.DARK_MODE_THEME);
                     colorful.colorize(infoDialog);
@@ -401,7 +411,7 @@ public class AboutApplicationDialog extends JDialog {
             public void mouseClicked(MouseEvent e) {
                 try {
                     Desktop.getDesktop().open(new File(PathConstants.APP_LOG_FOLDER_PATH));
-                } catch (IOException e1) {
+                } catch (final IOException e1) {
                     log.warn("Can not open log folder: " + PathConstants.APP_LOG_FOLDER_PATH);
                 }
             }
@@ -412,7 +422,7 @@ public class AboutApplicationDialog extends JDialog {
             private void callMail() {
                 try {
                     Desktop.getDesktop().mail(new URI(StringConstants.FEEDBACK_MAIL_URL));
-                } catch (URISyntaxException | IOException ex) {
+                } catch (final URISyntaxException | IOException ex) {
                     log.warn("Can not open mail for: '" + StringConstants.FEEDBACK_MAIL_URL + "'", ex);
                 }
             }
@@ -451,11 +461,11 @@ public class AboutApplicationDialog extends JDialog {
         shareLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
         shareLabel.addMouseListener(new MouseAdapter() {
             private void createBalloonTip() {
-                BalloonTip balloonTip = new BalloonTip(shareLabel, shareBalloonMessage);
+                final BalloonTip balloonTip = new BalloonTip(shareLabel, shareBalloonMessage);
                 balloonTip.setCloseButton(null);
-                BalloonTipStyle minimalStyle = new MinimalBalloonStyle(Color.WHITE, 5);
+                final BalloonTipStyle minimalStyle = new MinimalBalloonStyle(Color.WHITE, 5);
                 balloonTip.setStyle(minimalStyle);
-                BalloonTipPositioner balloonTipPositioner = new LeftAbovePositioner(0, 0);
+                final BalloonTipPositioner balloonTipPositioner = new LeftAbovePositioner(0, 0);
                 balloonTip.setPositioner(balloonTipPositioner);
 
                 TimingUtils.showTimedBalloon(balloonTip, 4_000);
@@ -472,8 +482,8 @@ public class AboutApplicationDialog extends JDialog {
             public void mouseReleased(MouseEvent e) {
                 shareLabel.setIcon(new ImageIcon(Toolkit.getDefaultToolkit()
                         .getImage(getClass().getResource("/images/shareIcon16.png"))));
-                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-                StringSelection stringSelection = new StringSelection(shareLabelText);
+                final Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                final StringSelection stringSelection = new StringSelection(shareLabelText);
                 clipboard.setContents(stringSelection, null);
 
                 createBalloonTip();
@@ -517,11 +527,11 @@ public class AboutApplicationDialog extends JDialog {
 
     private void translateDialog() {
 
-        Translation translation = new Translation("AboutApplicationDialogBundle");
+        final Translation translation = new Translation("AboutApplicationDialogBundle");
         setTitle(translation.get("windowTitle"));
 
         final ApplicationVersion currentApplicationVersion = CoreUtils.getCurrentApplicationVersion();
-        String versionAdditionalInfo = currentApplicationVersion.isBeta() ?
+        final String versionAdditionalInfo = currentApplicationVersion.isBeta() ?
                 " (beta." + currentApplicationVersion.getBeta().getVersion() + ")" : "";
 
         versionLabel.setText(translation.get("appVersionLabel") + " " + currentApplicationVersion.getVersion() + versionAdditionalInfo);
