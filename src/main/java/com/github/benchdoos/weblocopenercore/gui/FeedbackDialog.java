@@ -49,6 +49,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.Toolkit;
@@ -361,8 +362,8 @@ public class FeedbackDialog extends JFrame implements Translatable {
             log.warn("Could not append trace.log file (filepath: {}). Skipping.", traceLog);
             logs = null;
             NotificationManager.getNotificationForCurrentOS().showWarningNotification(
-                    "Edit logs", //todo add translation
-                    "Can not edit logs" //todo add translation
+                    Translation.get("FeedbackDialog", "editLogsNotificationTitle"),
+                    Translation.get("FeedbackDialog", "editLogsNotificationMessage")
             );
         }
     }
@@ -375,16 +376,10 @@ public class FeedbackDialog extends JFrame implements Translatable {
             }
         }.getWindow();
         editTextDialog.setText(logs);
-        editTextDialog.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                logs = editTextDialog.getText(); //fixme not working
-                super.windowClosing(e);
-            }
-        });
-
+        FrameUtils.setWindowOnParentWindowCenter(this, editTextDialog);
         editTextDialog.setVisible(true);
 
+        logs = editTextDialog.getText();
     }
 
     private void onRemove() {
@@ -577,6 +572,7 @@ public class FeedbackDialog extends JFrame implements Translatable {
         final Translation translation = new Translation("FeedbackDialogBundle");
         setTitle(translation.get("windowTitle"));
         appendLogsCheckBox.setText(translation.get("appendLogsCheckBox"));
+        editSendingLogsButton.setToolTipText(translation.get("editSendingLogsButton"));
         appengLogsInfoLabel.setToolTipText(translation.get("appendLogsInfoLabel"));
         screenshotNoticeLabel.setText(translation.get("screenshotNoticeLabel"));
         sendButton.setText(translation.get("sendButton"));
