@@ -20,6 +20,7 @@ import lombok.extern.log4j.Log4j2;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.apache.http.HttpStatus;
+import org.jetbrains.annotations.Nullable;
 import org.jsoup.internal.StringUtil;
 
 import javax.imageio.ImageIO;
@@ -88,9 +89,12 @@ public class FeedbackDialog extends JFrame implements Translatable {
     private JProgressBar sendingProgressBar;
     private JLabel appengLogsInfoLabel;
     private JLabel screenshotNoticeLabel;
+    private JButton editSendingLogsButton;
     private static final List<FileExtension> SUPPORTED_IMAGES_EXTENSIONS = Arrays.asList(FileExtension.JPG, FileExtension.PNG);
     private Thread sendFeedbackThread;
     private boolean imageAddingEnabled = true;
+    @Nullable
+    private String logs = null;
 
     public FeedbackDialog() {
         $$$setupUI$$$();
@@ -112,6 +116,10 @@ public class FeedbackDialog extends JFrame implements Translatable {
 
         initListeners();
 
+        updateAppendLogsCheckbox();
+
+        initLogsCheckbox();
+
         initTextArea();
 
         initDropTarget();
@@ -127,6 +135,17 @@ public class FeedbackDialog extends JFrame implements Translatable {
 
         pack();
         setMinimumSize(getSize());
+    }
+
+    private void initLogsCheckbox() {
+        appendLogsCheckBox.addChangeListener(l -> updateAppendLogsCheckbox());
+    }
+
+    private void updateAppendLogsCheckbox() {
+        editSendingLogsButton.setEnabled(appendLogsCheckBox.isSelected());
+        if (!appendLogsCheckBox.isSelected()) {
+            logs = null;
+        }
     }
 
     public void setFeedbackText(String text) {
@@ -323,14 +342,32 @@ public class FeedbackDialog extends JFrame implements Translatable {
         previewItemButton.addActionListener(e -> openImage());
         removeItemButton.addActionListener(e -> onRemove());
 
+        editSendingLogsButton.addActionListener(e -> editLogs());
+
         sendButton.addActionListener(e -> sendFeedback());
         cancelButton.addActionListener(e -> onCancel());
+    }
+
+    private void editLogs() {
+        final String traceLog = PathConstants.APP_LOG_FOLDER_PATH + File.separator + "trace.log";
+        final String contentFromResource = CoreUtils.getContentFromFile(new File(traceLog));
+        if (!StringUtil.isBlank(contentFromResource)) {
+            logs = contentFromResource;
+            //todo add edit logs window.
+        } else {
+            log.warn("Could not append trace.log file (filepath: {}). Skipping.", traceLog);
+            logs = null;
+            NotificationManager.getNotificationForCurrentOS().showWarningNotification(
+                    "Edit logs",
+                    "Can not edit logs"
+            );
+        }
     }
 
     private void onRemove() {
         if (imagesList.getSelectedValue() != null) {
             for (BufferedImagePanel panel : imagesList.getSelectedValuesList()) {
-                ((DefaultListModel) imagesList.getModel()).removeElement(panel);
+                ((DefaultListModel<BufferedImagePanel>) imagesList.getModel()).removeElement(panel);
             }
         }
         if (imagesList.getModel().getSize() == 0) {
@@ -374,12 +411,8 @@ public class FeedbackDialog extends JFrame implements Translatable {
         }
 
         if (appendLogsCheckBox.isSelected()) {
-            final String traceLog = PathConstants.APP_LOG_FOLDER_PATH + File.separator + "trace.log";
-            final String contentFromResource = CoreUtils.getContentFromFile(new File(traceLog));
-            if (!StringUtil.isBlank(contentFromResource)) {
-                dto.setLogFileContent(contentFromResource);
-            } else {
-                log.warn("Could not append trace.log file (filepath: {}). Skipping.", traceLog);
+            if (logs != null) {
+                dto.setLogFileContent(logs);
             }
         }
 
@@ -592,12 +625,6 @@ public class FeedbackDialog extends JFrame implements Translatable {
         appendLogsCheckBox = new JCheckBox();
         this.$$$loadButtonText$$$(appendLogsCheckBox, ResourceBundle.getBundle("translations/FeedbackDialogBundle").getString("appendLogsCheckBox"));
         contentPane.add(appendLogsCheckBox, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        appengLogsInfoLabel = new JLabel();
-        appengLogsInfoLabel.setIcon(new ImageIcon(getClass().getResource("/images/infoIcon16.png")));
-        appengLogsInfoLabel.setIconTextGap(0);
-        appengLogsInfoLabel.setText("");
-        appengLogsInfoLabel.setToolTipText(ResourceBundle.getBundle("translations/FeedbackDialogBundle").getString("appendLogsInfoLabel"));
-        contentPane.add(appengLogsInfoLabel, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         sendingProgressBar = new JProgressBar();
         sendingProgressBar.setIndeterminate(true);
         contentPane.add(sendingProgressBar, new GridConstraints(5, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
@@ -605,6 +632,23 @@ public class FeedbackDialog extends JFrame implements Translatable {
         screenshotNoticeLabel.setForeground(new Color(-6316129));
         this.$$$loadLabelText$$$(screenshotNoticeLabel, ResourceBundle.getBundle("translations/FeedbackDialogBundle").getString("screenshotNoticeLabel"));
         contentPane.add(screenshotNoticeLabel, new GridConstraints(4, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JPanel panel4 = new JPanel();
+        panel4.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
+        contentPane.add(panel4, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        appengLogsInfoLabel = new JLabel();
+        appengLogsInfoLabel.setIcon(new ImageIcon(getClass().getResource("/images/infoIcon16.png")));
+        appengLogsInfoLabel.setIconTextGap(0);
+        appengLogsInfoLabel.setText("");
+        appengLogsInfoLabel.setToolTipText(ResourceBundle.getBundle("translations/FeedbackDialogBundle").getString("appendLogsInfoLabel"));
+        panel4.add(appengLogsInfoLabel, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        editSendingLogsButton = new JButton();
+        editSendingLogsButton.setBorderPainted(false);
+        editSendingLogsButton.setIcon(new ImageIcon(getClass().getResource("/images/icons/edit16.png")));
+        editSendingLogsButton.setOpaque(false);
+        editSendingLogsButton.setToolTipText(ResourceBundle.getBundle("translations/FeedbackDialogBundle").getString("editSendingLogsButton"));
+        panel4.add(editSendingLogsButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final Spacer spacer3 = new Spacer();
+        panel4.add(spacer3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
     }
 
     /**
