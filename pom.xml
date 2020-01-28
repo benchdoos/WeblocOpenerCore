@@ -231,5 +231,10 @@
             <artifactId>thumbnailator</artifactId>
             <version>0.4.8</version>
         </dependency>
+        <dependency>
+            <groupId>com.gdetotut</groupId>
+            <artifactId>jundo-framework</artifactId>
+            <version>1.15</version>
+        </dependency>
     </dependencies>
 </project>
