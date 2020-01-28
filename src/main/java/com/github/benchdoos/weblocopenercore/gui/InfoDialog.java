@@ -169,7 +169,7 @@ public class InfoDialog extends JDialog implements Translatable {
             public FeedbackDialog initWindow() {
                 return new FeedbackDialog();
             }
-        }.initWindow();
+        }.getWindow();
 
         if (stackTraceString != null) {
             feedbackDialog.setFeedbackText("\n\n\n\n" +

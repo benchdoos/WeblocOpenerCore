@@ -271,7 +271,7 @@ public class FeedbackDialog extends JFrame implements Translatable {
                 dialog.setResizable(false);
                 return dialog;
             }
-        }.initWindow();
+        }.getWindow();
 
         FrameUtils.setWindowOnScreenCenter(dialog);
 
