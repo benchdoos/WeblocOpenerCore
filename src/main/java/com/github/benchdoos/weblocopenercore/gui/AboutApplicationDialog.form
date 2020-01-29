@@ -3,7 +3,7 @@
   <grid id="cbd77" binding="contentPane" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="48" y="54" width="585" height="300"/>
+      <xy x="48" y="54" width="736" height="300"/>
     </constraints>
     <properties>
       <maximumSize width="550" height="300"/>
@@ -139,7 +139,7 @@
                           </component>
                         </children>
                       </grid>
-                      <grid id="d9adf" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                      <grid id="d9adf" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                         <margin top="0" left="0" bottom="0" right="10"/>
                         <constraints>
                           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
@@ -150,95 +150,7 @@
                         </properties>
                         <border type="none"/>
                         <children>
-                          <hspacer id="634f6">
-                            <constraints>
-                              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                          </hspacer>
-                          <grid id="804ba" binding="buttonsPanel" layout-manager="GridLayoutManager" row-count="1" column-count="7" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-                            <margin top="0" left="0" bottom="0" right="0"/>
-                            <constraints>
-                              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-                            </constraints>
-                            <properties>
-                              <opaque value="false"/>
-                            </properties>
-                            <border type="none"/>
-                            <children>
-                              <component id="90283" class="javax.swing.JLabel" binding="feedbackLabel">
-                                <constraints>
-                                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                                </constraints>
-                                <properties>
-                                  <icon value="images/feedbackIcon.png"/>
-                                  <text value=""/>
-                                </properties>
-                              </component>
-                              <component id="7ee6c" class="javax.swing.JLabel" binding="telegramLabel">
-                                <constraints>
-                                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                                </constraints>
-                                <properties>
-                                  <icon value="images/telegramIcon16.png"/>
-                                  <text value=""/>
-                                </properties>
-                              </component>
-                              <component id="9778c" class="javax.swing.JLabel" binding="shareLabel">
-                                <constraints>
-                                  <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                                </constraints>
-                                <properties>
-                                  <icon value="images/shareIcon16.png"/>
-                                  <text value=""/>
-                                </properties>
-                              </component>
-                              <component id="a755c" class="javax.swing.JLabel" binding="donateByPayPalLabel">
-                                <constraints>
-                                  <grid row="0" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                                </constraints>
-                                <properties>
-                                  <icon value="images/donate16.png"/>
-                                  <text value=""/>
-                                </properties>
-                              </component>
-                              <component id="2c46e" class="javax.swing.JLabel" binding="donateByDonationAlertsLabel">
-                                <constraints>
-                                  <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                                </constraints>
-                                <properties>
-                                  <icon value="images/donationAlertsIcon16.png"/>
-                                  <text value=""/>
-                                </properties>
-                              </component>
-                              <component id="5aef9" class="javax.swing.JLabel" binding="twitterLabel">
-                                <constraints>
-                                  <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                                </constraints>
-                                <properties>
-                                  <icon value="images/twitterIcon16.png"/>
-                                  <text value=""/>
-                                </properties>
-                              </component>
-                              <component id="6e58c" class="javax.swing.JButton" binding="feedbackButton">
-                                <constraints>
-                                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
-                                    <minimum-size width="20" height="20"/>
-                                    <preferred-size width="20" height="20"/>
-                                    <maximum-size width="20" height="20"/>
-                                  </grid>
-                                </constraints>
-                                <properties>
-                                  <borderPainted value="false"/>
-                                  <contentAreaFilled value="false"/>
-                                  <icon value="images/icons/feedback16.png"/>
-                                  <iconTextGap value="0"/>
-                                  <opaque value="false"/>
-                                  <text value=""/>
-                                </properties>
-                              </component>
-                            </children>
-                          </grid>
-                          <grid id="edf91" layout-manager="GridLayoutManager" row-count="1" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                          <grid id="804ba" binding="buttonsPanel" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                             <margin top="0" left="0" bottom="0" right="0"/>
                             <constraints>
                               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -248,38 +160,170 @@
                             </properties>
                             <border type="none"/>
                             <children>
-                              <component id="ce034" class="javax.swing.JLabel" binding="siteLinkLabel">
+                              <grid id="93ed8" layout-manager="GridLayoutManager" row-count="1" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                                <margin top="0" left="0" bottom="0" right="0"/>
                                 <constraints>
-                                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                                    <preferred-size width="580" height="34"/>
+                                  </grid>
                                 </constraints>
                                 <properties>
-                                  <text resource-bundle="spelling" key="site"/>
+                                  <enabled value="true"/>
+                                  <opaque value="false"/>
                                 </properties>
-                              </component>
-                              <component id="5e247" class="javax.swing.JLabel" binding="githubLinkLabel">
+                                <border type="none"/>
+                                <children>
+                                  <component id="b0b14" class="javax.swing.JButton" binding="siteLinkButton">
+                                    <constraints>
+                                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                    </constraints>
+                                    <properties>
+                                      <borderPainted value="false"/>
+                                      <contentAreaFilled value="false"/>
+                                      <text resource-bundle="spelling" key="site"/>
+                                    </properties>
+                                  </component>
+                                  <component id="d91a2" class="javax.swing.JButton" binding="githubLinkButton">
+                                    <constraints>
+                                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                    </constraints>
+                                    <properties>
+                                      <borderPainted value="false"/>
+                                      <contentAreaFilled value="false"/>
+                                      <text resource-bundle="spelling" key="github"/>
+                                    </properties>
+                                  </component>
+                                  <component id="f1691" class="javax.swing.JButton" binding="librariesButton">
+                                    <constraints>
+                                      <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                                    </constraints>
+                                    <properties>
+                                      <borderPainted value="false"/>
+                                      <contentAreaFilled value="false"/>
+                                      <text resource-bundle="translations/AboutApplicationDialogBundle" key="librariesLabel"/>
+                                    </properties>
+                                  </component>
+                                  <component id="85579" class="javax.swing.JButton" binding="logButton">
+                                    <constraints>
+                                      <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                    </constraints>
+                                    <properties>
+                                      <borderPainted value="false"/>
+                                      <contentAreaFilled value="false"/>
+                                      <text resource-bundle="translations/AboutApplicationDialogBundle" key="logLabelTooltip"/>
+                                    </properties>
+                                  </component>
+                                </children>
+                              </grid>
+                              <grid id="a215" layout-manager="GridLayoutManager" row-count="1" column-count="6" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                                <margin top="0" left="0" bottom="0" right="0"/>
                                 <constraints>
-                                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                                    <preferred-size width="580" height="34"/>
+                                  </grid>
                                 </constraints>
                                 <properties>
-                                  <text resource-bundle="spelling" key="github"/>
+                                  <opaque value="false"/>
                                 </properties>
-                              </component>
-                              <component id="39e16" class="javax.swing.JLabel" binding="librariesLabel">
+                                <border type="none"/>
+                                <children>
+                                  <component id="6e58c" class="javax.swing.JButton" binding="feedbackButton">
+                                    <constraints>
+                                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                                        <minimum-size width="20" height="20"/>
+                                        <preferred-size width="20" height="20"/>
+                                        <maximum-size width="20" height="20"/>
+                                      </grid>
+                                    </constraints>
+                                    <properties>
+                                      <borderPainted value="false"/>
+                                      <contentAreaFilled value="false"/>
+                                      <icon value="images/icons/feedback16.png"/>
+                                      <iconTextGap value="0"/>
+                                      <opaque value="false"/>
+                                      <text value=""/>
+                                      <toolTipText resource-bundle="translations/AboutApplicationDialogBundle" key="feedbackLabel"/>
+                                    </properties>
+                                  </component>
+                                  <component id="e840" class="javax.swing.JButton" binding="telegramButton">
+                                    <constraints>
+                                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                                        <minimum-size width="20" height="20"/>
+                                        <preferred-size width="20" height="20"/>
+                                        <maximum-size width="20" height="20"/>
+                                      </grid>
+                                    </constraints>
+                                    <properties>
+                                      <borderPainted value="false"/>
+                                      <contentAreaFilled value="false"/>
+                                      <icon value="images/telegramIcon16.png"/>
+                                      <opaque value="false"/>
+                                      <text value=""/>
+                                    </properties>
+                                  </component>
+                                  <component id="3348f" class="javax.swing.JButton" binding="twitterButton">
+                                    <constraints>
+                                      <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                                        <minimum-size width="20" height="20"/>
+                                        <preferred-size width="20" height="20"/>
+                                        <maximum-size width="20" height="20"/>
+                                      </grid>
+                                    </constraints>
+                                    <properties>
+                                      <borderPainted value="false"/>
+                                      <contentAreaFilled value="false"/>
+                                      <icon value="images/twitterIcon16.png"/>
+                                      <opaque value="false"/>
+                                    </properties>
+                                  </component>
+                                  <component id="3e1c8" class="javax.swing.JButton" binding="shareButton">
+                                    <constraints>
+                                      <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
+                                        <minimum-size width="20" height="20"/>
+                                        <preferred-size width="20" height="20"/>
+                                        <maximum-size width="20" height="20"/>
+                                      </grid>
+                                    </constraints>
+                                    <properties>
+                                      <borderPainted value="false"/>
+                                      <contentAreaFilled value="false"/>
+                                      <icon value="images/shareIcon16.png"/>
+                                      <text value=""/>
+                                    </properties>
+                                  </component>
+                                  <component id="2c2ce" class="javax.swing.JButton" binding="donateByDonationAlertsButton">
+                                    <constraints>
+                                      <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
+                                        <minimum-size width="20" height="20"/>
+                                        <preferred-size width="20" height="20"/>
+                                        <maximum-size width="20" height="20"/>
+                                      </grid>
+                                    </constraints>
+                                    <properties>
+                                      <borderPainted value="false"/>
+                                      <contentAreaFilled value="false"/>
+                                      <icon value="images/donationAlertsIcon16.png"/>
+                                      <text value=""/>
+                                    </properties>
+                                  </component>
+                                  <component id="536ca" class="javax.swing.JButton" binding="donateByPayPalButton" custom-create="true">
+                                    <constraints>
+                                      <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                    </constraints>
+                                    <properties>
+                                      <borderPainted value="false"/>
+                                      <contentAreaFilled value="false"/>
+                                      <icon value="images/donate16.png"/>
+                                      <text value=""/>
+                                    </properties>
+                                  </component>
+                                </children>
+                              </grid>
+                              <hspacer id="c665e">
                                 <constraints>
-                                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                                 </constraints>
-                                <properties>
-                                  <text resource-bundle="translations/AboutApplicationDialogBundle" key="librariesLabel"/>
-                                </properties>
-                              </component>
-                              <component id="14c96" class="javax.swing.JLabel" binding="logLabel">
-                                <constraints>
-                                  <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                                </constraints>
-                                <properties>
-                                  <text resource-bundle="translations/AboutApplicationDialogBundle" key="logLabelTooltip"/>
-                                </properties>
-                              </component>
+                              </hspacer>
                             </children>
                           </grid>
                         </children>
