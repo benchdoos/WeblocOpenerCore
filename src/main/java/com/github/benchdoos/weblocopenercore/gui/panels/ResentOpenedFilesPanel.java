@@ -119,10 +119,23 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel, Tra
         if (selectedIndices.length == 0) {
             showNoSelectedItemMessage();
         } else if (selectedIndices.length == 1) {
-            showLinkInfoPanel(fileList.getSelectedValue());
+            final File file = fileList.getSelectedValue().getFilePath().toFile();
+            if (file.exists() && file.isFile()) {
+                showLinkInfoPanel(fileList.getSelectedValue());
+            } else {
+                showDeletedItemMessage();
+            }
         } else {
             showMultipleSelectedItemsMessage();
         }
+    }
+
+    private void showDeletedItemMessage() {
+        final Translation translation = new Translation("RecentFilesPanel");
+        repaintInfoPanel(new MessagePanel(
+                translation.get("deletedItemTitle"),
+                null
+        ));
     }
 
     private void showLinkInfoPanel(OpenedFileInfo selectedValue) {
@@ -237,6 +250,7 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel, Tra
         private Color selectionBackground = list.getSelectionBackground();
         private Color foreground = list.getForeground();
         private Color background = list.getBackground();
+        private Color deletedForeground = Color.RED;
 
         FileListCellRenderer() {
             label = new JLabel();
@@ -263,6 +277,13 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel, Tra
             } else {
                 label.setBackground(background);
                 label.setForeground(foreground);
+            }
+            if (!file.exists()) {
+                if (selected) {
+                    label.setForeground(deletedForeground.darker().darker());
+                } else {
+                    label.setForeground(deletedForeground);
+                }
             }
 
             return label;

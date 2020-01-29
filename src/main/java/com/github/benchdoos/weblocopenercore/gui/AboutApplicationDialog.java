@@ -20,8 +20,10 @@ import com.github.benchdoos.weblocopenercore.core.Translation;
 import com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants;
 import com.github.benchdoos.weblocopenercore.core.constants.PathConstants;
 import com.github.benchdoos.weblocopenercore.core.constants.StringConstants;
+import com.github.benchdoos.weblocopenercore.gui.buttons.DonationButton;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import com.github.benchdoos.weblocopenercore.service.UrlsProceed;
+import com.github.benchdoos.weblocopenercore.service.WindowLauncher;
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import com.github.benchdoos.weblocopenercore.utils.FrameUtils;
 import com.github.benchdoos.weblocopenercore.utils.version.ApplicationVersion;
@@ -36,7 +38,10 @@ import net.java.balloontip.styles.BalloonTipStyle;
 import net.java.balloontip.styles.MinimalBalloonStyle;
 import net.java.balloontip.utils.TimingUtils;
 
+import javax.swing.AbstractButton;
+import javax.swing.Action;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -45,6 +50,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.KeyStroke;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Dimension;
@@ -53,13 +59,13 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ResourceBundle;
 
 import static javax.swing.BorderFactory.createEmptyBorder;
@@ -67,21 +73,24 @@ import static javax.swing.BorderFactory.createEmptyBorder;
 @Log4j2
 public class AboutApplicationDialog extends JDialog {
 
+    private static final int BALLOON_TIP_DELAY = 7_000;
     private JPanel contentPane;
     private JTextPane descriptionTextPane;
     private JLabel versionLabel;
     private JPanel imagePanel;
     private JScrollPane scrollPane;
-    private JLabel siteLinkLabel;
-    private JLabel githubLinkLabel;
-    private JLabel logLabel;
-    private JLabel feedbackLabel;
-    private JLabel librariesLabel;
-    private JLabel telegramLabel;
-    private JLabel shareLabel;
-    private JLabel donateByPayPalLabel;
-    private JLabel donateByDonationAlertsLabel;
-    private JLabel twitterLabel;
+    private JButton siteLinkButton;
+    private JButton githubLinkButton;
+    private JButton logButton;
+    private JButton emailFeedbackButton;
+    private JButton librariesButton;
+    private JButton telegramButton;
+    private JButton shareButton;
+    private JButton donateByPayPalButton;
+    private JButton donateByDonationAlertsButton;
+    private JButton twitterButton;
+    private JButton feedbackButton;
+    private JPanel buttonsPanel;
     private String shareLabelText;
     private String shareBalloonMessage;
 
@@ -172,56 +181,84 @@ public class AboutApplicationDialog extends JDialog {
         this.$$$loadLabelText$$$(versionLabel, ResourceBundle.getBundle("translations/AboutApplicationDialogBundle").getString("appVersionLabel"));
         panel5.add(versionLabel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel6 = new JPanel();
-        panel6.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 10), -1, -1));
+        panel6.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 10), -1, -1));
         panel6.setBackground(new Color(-9923881));
         panel6.setOpaque(false);
         panel3.add(panel6, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        final Spacer spacer1 = new Spacer();
-        panel6.add(spacer1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        buttonsPanel = new JPanel();
+        buttonsPanel.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
+        buttonsPanel.setOpaque(false);
+        panel6.add(buttonsPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final JPanel panel7 = new JPanel();
-        panel7.setLayout(new GridLayoutManager(1, 6, new Insets(0, 0, 0, 0), -1, -1));
+        panel7.setLayout(new GridLayoutManager(1, 4, new Insets(0, 0, 0, 0), -1, -1));
+        panel7.setEnabled(true);
         panel7.setOpaque(false);
-        panel6.add(panel7, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        feedbackLabel = new JLabel();
-        feedbackLabel.setIcon(new ImageIcon(getClass().getResource("/images/feedbackIcon.png")));
-        feedbackLabel.setText("");
-        panel7.add(feedbackLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        telegramLabel = new JLabel();
-        telegramLabel.setIcon(new ImageIcon(getClass().getResource("/images/telegramIcon16.png")));
-        telegramLabel.setText("");
-        panel7.add(telegramLabel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        shareLabel = new JLabel();
-        shareLabel.setIcon(new ImageIcon(getClass().getResource("/images/shareIcon16.png")));
-        shareLabel.setText("");
-        panel7.add(shareLabel, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        donateByPayPalLabel = new JLabel();
-        donateByPayPalLabel.setIcon(new ImageIcon(getClass().getResource("/images/donate16.png")));
-        donateByPayPalLabel.setText("");
-        panel7.add(donateByPayPalLabel, new GridConstraints(0, 5, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        donateByDonationAlertsLabel = new JLabel();
-        donateByDonationAlertsLabel.setIcon(new ImageIcon(getClass().getResource("/images/donationAlertsIcon16.png")));
-        donateByDonationAlertsLabel.setText("");
-        panel7.add(donateByDonationAlertsLabel, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        twitterLabel = new JLabel();
-        twitterLabel.setIcon(new ImageIcon(getClass().getResource("/images/twitterIcon16.png")));
-        twitterLabel.setText("");
-        panel7.add(twitterLabel, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        buttonsPanel.add(panel7, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(580, 34), null, 0, false));
+        siteLinkButton = new JButton();
+        siteLinkButton.setBorderPainted(false);
+        siteLinkButton.setContentAreaFilled(false);
+        this.$$$loadButtonText$$$(siteLinkButton, ResourceBundle.getBundle("spelling").getString("site"));
+        panel7.add(siteLinkButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        githubLinkButton = new JButton();
+        githubLinkButton.setBorderPainted(false);
+        githubLinkButton.setContentAreaFilled(false);
+        this.$$$loadButtonText$$$(githubLinkButton, ResourceBundle.getBundle("spelling").getString("github"));
+        panel7.add(githubLinkButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        librariesButton = new JButton();
+        librariesButton.setBorderPainted(false);
+        librariesButton.setContentAreaFilled(false);
+        this.$$$loadButtonText$$$(librariesButton, ResourceBundle.getBundle("translations/AboutApplicationDialogBundle").getString("librariesLabel"));
+        panel7.add(librariesButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        logButton = new JButton();
+        logButton.setBorderPainted(false);
+        logButton.setContentAreaFilled(false);
+        this.$$$loadButtonText$$$(logButton, ResourceBundle.getBundle("translations/AboutApplicationDialogBundle").getString("logLabelTooltip"));
+        panel7.add(logButton, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel8 = new JPanel();
-        panel8.setLayout(new GridLayoutManager(1, 4, new Insets(0, 0, 0, 0), -1, -1));
+        panel8.setLayout(new GridLayoutManager(1, 6, new Insets(0, 0, 0, 0), -1, -1));
         panel8.setOpaque(false);
-        panel6.add(panel8, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        siteLinkLabel = new JLabel();
-        this.$$$loadLabelText$$$(siteLinkLabel, ResourceBundle.getBundle("spelling").getString("site"));
-        panel8.add(siteLinkLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        githubLinkLabel = new JLabel();
-        this.$$$loadLabelText$$$(githubLinkLabel, ResourceBundle.getBundle("spelling").getString("github"));
-        panel8.add(githubLinkLabel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        librariesLabel = new JLabel();
-        this.$$$loadLabelText$$$(librariesLabel, ResourceBundle.getBundle("translations/AboutApplicationDialogBundle").getString("librariesLabel"));
-        panel8.add(librariesLabel, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        logLabel = new JLabel();
-        this.$$$loadLabelText$$$(logLabel, ResourceBundle.getBundle("translations/AboutApplicationDialogBundle").getString("logLabelTooltip"));
-        panel8.add(logLabel, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        buttonsPanel.add(panel8, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(580, 34), null, 0, false));
+        feedbackButton = new JButton();
+        feedbackButton.setBorderPainted(false);
+        feedbackButton.setContentAreaFilled(false);
+        feedbackButton.setIcon(new ImageIcon(getClass().getResource("/images/icons/feedback16.png")));
+        feedbackButton.setIconTextGap(0);
+        feedbackButton.setOpaque(false);
+        feedbackButton.setText("");
+        feedbackButton.setToolTipText(ResourceBundle.getBundle("translations/AboutApplicationDialogBundle").getString("feedbackLabel"));
+        panel8.add(feedbackButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, new Dimension(20, 20), new Dimension(20, 20), new Dimension(20, 20), 0, false));
+        telegramButton = new JButton();
+        telegramButton.setBorderPainted(false);
+        telegramButton.setContentAreaFilled(false);
+        telegramButton.setIcon(new ImageIcon(getClass().getResource("/images/telegramIcon16.png")));
+        telegramButton.setOpaque(false);
+        telegramButton.setText("");
+        panel8.add(telegramButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, new Dimension(20, 20), new Dimension(20, 20), new Dimension(20, 20), 0, false));
+        twitterButton = new JButton();
+        twitterButton.setBorderPainted(false);
+        twitterButton.setContentAreaFilled(false);
+        twitterButton.setIcon(new ImageIcon(getClass().getResource("/images/twitterIcon16.png")));
+        twitterButton.setOpaque(false);
+        panel8.add(twitterButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, new Dimension(20, 20), new Dimension(20, 20), new Dimension(20, 20), 0, false));
+        shareButton = new JButton();
+        shareButton.setBorderPainted(false);
+        shareButton.setContentAreaFilled(false);
+        shareButton.setIcon(new ImageIcon(getClass().getResource("/images/shareIcon16.png")));
+        shareButton.setText("");
+        panel8.add(shareButton, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, new Dimension(20, 20), new Dimension(20, 20), new Dimension(20, 20), 0, false));
+        donateByDonationAlertsButton = new JButton();
+        donateByDonationAlertsButton.setBorderPainted(false);
+        donateByDonationAlertsButton.setContentAreaFilled(false);
+        donateByDonationAlertsButton.setIcon(new ImageIcon(getClass().getResource("/images/donationAlertsIcon16.png")));
+        donateByDonationAlertsButton.setText("");
+        panel8.add(donateByDonationAlertsButton, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, new Dimension(20, 20), new Dimension(20, 20), new Dimension(20, 20), 0, false));
+        donateByPayPalButton.setBorderPainted(false);
+        donateByPayPalButton.setContentAreaFilled(false);
+        donateByPayPalButton.setIcon(new ImageIcon(getClass().getResource("/images/donate16.png")));
+        donateByPayPalButton.setText("");
+        panel8.add(donateByPayPalButton, new GridConstraints(0, 5, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final Spacer spacer1 = new Spacer();
+        buttonsPanel.add(spacer1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
     }
 
     /**
@@ -273,12 +310,39 @@ public class AboutApplicationDialog extends JDialog {
     /**
      * @noinspection ALL
      */
+    private void $$$loadButtonText$$$(AbstractButton component, String text) {
+        StringBuffer result = new StringBuffer();
+        boolean haveMnemonic = false;
+        char mnemonic = '\0';
+        int mnemonicIndex = -1;
+        for (int i = 0; i < text.length(); i++) {
+            if (text.charAt(i) == '&') {
+                i++;
+                if (i == text.length()) break;
+                if (!haveMnemonic && text.charAt(i) != '&') {
+                    haveMnemonic = true;
+                    mnemonic = text.charAt(i);
+                    mnemonicIndex = result.length();
+                }
+            }
+            result.append(text.charAt(i));
+        }
+        component.setText(result.toString());
+        if (haveMnemonic) {
+            component.setMnemonic(mnemonic);
+            component.setDisplayedMnemonicIndex(mnemonicIndex);
+        }
+    }
+
+    /**
+     * @noinspection ALL
+     */
     public JComponent $$$getRootComponent$$$() {
         return contentPane;
     }
 
     private void createUIComponents() {
-        ImageIcon image = null;
+        ImageIcon image;
         if (!PreferencesManager.isDarkModeEnabledNow()) {
             image = new ImageIcon(getClass().getResource("/images/background.png"));
         } else {
@@ -292,6 +356,7 @@ public class AboutApplicationDialog extends JDialog {
         scrollPane.getViewport().setOpaque(false);
         scrollPane.setBorder(createEmptyBorder());
 
+        donateByPayPalButton = new DonationButton();
     }
 
     private void initGui() {
@@ -314,7 +379,9 @@ public class AboutApplicationDialog extends JDialog {
                             .replace("{}", "color:black;"));
         }
 
-        initLinks();
+        addCursorsToButtons(buttonsPanel.getComponents());
+
+        initListeners();
 
         scrollPane.setViewportBorder(null);
 
@@ -325,148 +392,76 @@ public class AboutApplicationDialog extends JDialog {
         log.debug("GUI created");
     }
 
-    private void initLinks() {
-        siteLinkLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        siteLinkLabel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                UrlsProceed.openUrl(StringConstants.UPDATE_WEB_URL);
+    private void addCursorsToButtons(final Component[] components) {
+        for (Component component : components) {
+            if (component instanceof JPanel) {
+                addCursorsToButtons(((JPanel) component).getComponents());
+            } else if (component instanceof JButton) {
+                component.setCursor(new Cursor(Cursor.HAND_CURSOR));
+            }
+        }
+    }
+
+    private void initListeners() {
+        feedbackButton.addActionListener(e -> onFeedback());
+        telegramButton.addActionListener(e -> UrlsProceed.openUrl(StringConstants.BENCH_DOOS_TELEGRAM_URL));
+        twitterButton.addActionListener(e -> UrlsProceed.openUrl(StringConstants.WEBLOCOPENER_TWITTER_URL));
+        shareButton.addActionListener(e -> shareWeblocOpener());
+        donateByDonationAlertsButton.addActionListener(e -> UrlsProceed.openUrl(StringConstants.DONATE_DONATION_ALERTS_URL));
+        siteLinkButton.addActionListener(e -> UrlsProceed.openUrl(StringConstants.UPDATE_WEB_URL));
+        githubLinkButton.addActionListener(e -> UrlsProceed.openUrl(StringConstants.GITHUB_WEB_URL));
+        librariesButton.addActionListener(e -> createInfoDialog());
+        logButton.addActionListener(e -> {
+            try {
+                Desktop.getDesktop().open(new File(PathConstants.APP_LOG_FOLDER_PATH));
+            } catch (final IOException e1) {
+                log.warn("Can not open log folder: " + PathConstants.APP_LOG_FOLDER_PATH);
             }
         });
-        siteLinkLabel.setToolTipText(StringConstants.UPDATE_WEB_URL);
+    }
 
-        githubLinkLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        githubLinkLabel.addMouseListener(new MouseAdapter() {
+    private void onFeedback() {
+        final FeedbackDialog feedbackDialog = new WindowLauncher<FeedbackDialog>() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                UrlsProceed.openUrl(StringConstants.GITHUB_WEB_URL);
+            public FeedbackDialog initWindow() {
+                return new FeedbackDialog();
             }
-        });
-        githubLinkLabel.setToolTipText(StringConstants.GITHUB_WEB_URL);
+        }.getWindow();
+        FrameUtils.setWindowOnParentWindowCenter(this, feedbackDialog);
+        feedbackDialog.setVisible(true);
+        dispose();
+    }
 
-        librariesLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        librariesLabel.addMouseListener(new MouseAdapter() {
-            private void createInfoDialog() {
-                InfoDialog infoDialog = new InfoDialog();
-                if (PreferencesManager.isDarkModeEnabledNow()) {
-                    final JColorful colorful = new JColorful(ApplicationConstants.DARK_MODE_THEME);
-                    colorful.colorize(infoDialog);
-                }
+    private void shareWeblocOpener() {
+        final Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        final StringSelection stringSelection = new StringSelection(Translation.get("AboutApplicationDialog", "shareLabelText"));
+        clipboard.setContents(stringSelection, null);
 
-                infoDialog.setTitle(Translation.get("AboutApplicationDialogBundle", "librariesLabelToolTip"));
+        createBalloonTip();
+    }
 
-                infoDialog.setContent(getDarkStyle(CoreUtils.getContentFromLocalResource("/pages/libs.html")));
-                infoDialog.setVisible(true);
-            }
+    private void createBalloonTip() {
+        final BalloonTip balloonTip = new BalloonTip(shareButton, shareBalloonMessage);
+        balloonTip.setCloseButton(null);
+        final BalloonTipStyle minimalStyle = new MinimalBalloonStyle(new JPanel().getBackground(), 5);
+        balloonTip.setStyle(minimalStyle);
+        final BalloonTipPositioner balloonTipPositioner = new LeftAbovePositioner(0, 0);
+        balloonTip.setPositioner(balloonTipPositioner);
 
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                createInfoDialog();
-            }
-        });
+        TimingUtils.showTimedBalloon(balloonTip, BALLOON_TIP_DELAY);
+    }
 
-        logLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        logLabel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                try {
-                    Desktop.getDesktop().open(new File(PathConstants.APP_LOG_FOLDER_PATH));
-                } catch (IOException e1) {
-                    log.warn("Can not open log folder: " + PathConstants.APP_LOG_FOLDER_PATH);
-                }
-            }
-        });
+    private void createInfoDialog() {
+        final InfoDialog infoDialog = new InfoDialog();
+        if (PreferencesManager.isDarkModeEnabledNow()) {
+            final JColorful colorful = new JColorful(ApplicationConstants.DARK_MODE_THEME);
+            colorful.colorize(infoDialog);
+        }
 
-        feedbackLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        feedbackLabel.addMouseListener(new MouseAdapter() {
-            private void callMail() {
-                try {
-                    Desktop.getDesktop().mail(new URI(StringConstants.FEEDBACK_MAIL_URL));
-                } catch (URISyntaxException | IOException ex) {
-                    log.warn("Can not open mail for: '" + StringConstants.FEEDBACK_MAIL_URL + "'", ex);
-                }
-            }
+        infoDialog.setTitle(Translation.get("AboutApplicationDialogBundle", "librariesLabelToolTip"));
 
-            @Override
-            public void mousePressed(MouseEvent e) {
-                feedbackLabel.setIcon(new ImageIcon(Toolkit.getDefaultToolkit()
-                        .getImage(getClass().getResource("/images/feedbackIconPressed.png"))));
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                feedbackLabel.setIcon(new ImageIcon(Toolkit.getDefaultToolkit()
-                        .getImage(getClass().getResource("/images/feedbackIcon.png"))));
-
-                callMail();
-            }
-        });
-
-        telegramLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        telegramLabel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                UrlsProceed.openUrl(StringConstants.BENCH_DOOS_TELEGRAM_URL);
-            }
-        });
-
-        twitterLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        twitterLabel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                UrlsProceed.openUrl(StringConstants.WEBLOCOPENER_TWITTER_URL);
-            }
-        });
-
-        shareLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        shareLabel.addMouseListener(new MouseAdapter() {
-            private void createBalloonTip() {
-                BalloonTip balloonTip = new BalloonTip(shareLabel, shareBalloonMessage);
-                balloonTip.setCloseButton(null);
-                BalloonTipStyle minimalStyle = new MinimalBalloonStyle(Color.WHITE, 5);
-                balloonTip.setStyle(minimalStyle);
-                BalloonTipPositioner balloonTipPositioner = new LeftAbovePositioner(0, 0);
-                balloonTip.setPositioner(balloonTipPositioner);
-
-                TimingUtils.showTimedBalloon(balloonTip, 4_000);
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-                shareLabel.setIcon(new ImageIcon(Toolkit.getDefaultToolkit()
-                        .getImage(getClass().getResource("/images/shareIconPressed16.png"))));
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                shareLabel.setIcon(new ImageIcon(Toolkit.getDefaultToolkit()
-                        .getImage(getClass().getResource("/images/shareIcon16.png"))));
-                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-                StringSelection stringSelection = new StringSelection(shareLabelText);
-                clipboard.setContents(stringSelection, null);
-
-                createBalloonTip();
-            }
-        });
-
-        donateByDonationAlertsLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        donateByDonationAlertsLabel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                UrlsProceed.openUrl(StringConstants.DONATE_DONATION_ALERTS_URL);
-            }
-        });
-
-        donateByPayPalLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        donateByPayPalLabel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                UrlsProceed.openUrl(StringConstants.DONATE_PAYPAL_URL);
-            }
-        });
-
-
+        infoDialog.setContent(getDarkStyle(CoreUtils.getContentFromLocalResource("/pages/libs.html")));
+        infoDialog.setVisible(true);
     }
 
     private String getDarkStyle(String content) {
@@ -487,43 +482,40 @@ public class AboutApplicationDialog extends JDialog {
 
     private void translateDialog() {
 
-        Translation translation = new Translation("AboutApplicationDialogBundle");
+        final Translation translation = new Translation("AboutApplicationDialogBundle");
         setTitle(translation.get("windowTitle"));
 
         final ApplicationVersion currentApplicationVersion = CoreUtils.getCurrentApplicationVersion();
-        String versionAdditionalInfo = currentApplicationVersion.isBeta() ?
+        final String versionAdditionalInfo = currentApplicationVersion.isBeta() ?
                 " (beta." + currentApplicationVersion.getBeta().getVersion() + ")" : "";
 
         versionLabel.setText(translation.get("appVersionLabel") + " " + currentApplicationVersion.getVersion() + versionAdditionalInfo);
 
-        siteLinkLabel.setText(createHtmlLink(translation.get("visitLabel")));
+        siteLinkButton.setText(createHtmlLink(translation.get("visitLabel")));
+        siteLinkButton.setToolTipText(StringConstants.UPDATE_WEB_URL);
 
+        githubLinkButton.setText(createHtmlLink("Github"));
+        githubLinkButton.setToolTipText(StringConstants.GITHUB_WEB_URL);
 
-        githubLinkLabel.setText(createHtmlLink("Github"));
+        librariesButton.setText(createHtmlLink(translation.get("librariesLabel")));
 
+        logButton.setText(createHtmlLink(translation.get("logLabel")));
+        logButton.setToolTipText(translation.get("logLabelTooltip"));
 
-        librariesLabel.setText(createHtmlLink(translation.get("librariesLabel")));
+        feedbackButton.setToolTipText(translation.get("feedbackLabel"));
 
-        logLabel.setText(createHtmlLink(translation.get("logLabel")));
+        telegramButton.setToolTipText(translation.get("telegramLabel"));
 
-
-        logLabel.setToolTipText(translation.get("logLabelTooltip"));
-
-        feedbackLabel.setToolTipText(translation.get("feedbackLabel"));
-
-
-        telegramLabel.setToolTipText(translation.get("telegramLabel"));
-
-        twitterLabel.setToolTipText(translation.get("twitterLabel"));
+        twitterButton.setToolTipText(translation.get("twitterLabel"));
 
         shareBalloonMessage = translation.get("shareBalloonMessage");
 
-        shareLabel.setToolTipText(translation.get("shareLabel"));
+        shareButton.setToolTipText(translation.get("shareLabel"));
 
         shareLabelText = translation.get("shareLabelText");
 
-        donateByPayPalLabel.setToolTipText(translation.get("donateLabelTooltip"));
-        donateByDonationAlertsLabel.setToolTipText(translation.get("donateByDonationAlertsLabelTooltip"));
+        donateByPayPalButton.setToolTipText(translation.get("donateLabelTooltip"));
+        donateByDonationAlertsButton.setToolTipText(translation.get("donateByDonationAlertsLabelTooltip"));
     }
 
 }
