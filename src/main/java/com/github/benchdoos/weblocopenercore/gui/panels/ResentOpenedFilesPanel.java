@@ -250,6 +250,7 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel, Tra
         private Color selectionBackground = list.getSelectionBackground();
         private Color foreground = list.getForeground();
         private Color background = list.getBackground();
+        private Color deletedForeground = Color.RED;
 
         FileListCellRenderer() {
             label = new JLabel();
@@ -276,6 +277,13 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel, Tra
             } else {
                 label.setBackground(background);
                 label.setForeground(foreground);
+            }
+            if (!file.exists()) {
+                if (selected) {
+                    label.setForeground(deletedForeground.darker().darker());
+                } else {
+                    label.setForeground(deletedForeground);
+                }
             }
 
             return label;
