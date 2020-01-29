@@ -43,6 +43,7 @@ public class Translation {
 
     public Translation(String bundleName) {
         locale = PreferencesManager.getLocale();
+        bundleName = updateBundleName(bundleName);
 
         this.bundleName = bundleName;
         this.bundlePath = "translations/" + bundleName;

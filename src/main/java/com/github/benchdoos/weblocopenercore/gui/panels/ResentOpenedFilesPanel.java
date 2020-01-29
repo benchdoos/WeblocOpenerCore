@@ -119,10 +119,23 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel, Tra
         if (selectedIndices.length == 0) {
             showNoSelectedItemMessage();
         } else if (selectedIndices.length == 1) {
-            showLinkInfoPanel(fileList.getSelectedValue());
+            final File file = fileList.getSelectedValue().getFilePath().toFile();
+            if (file.exists() && file.isFile()) {
+                showLinkInfoPanel(fileList.getSelectedValue());
+            } else {
+                showDeletedItemMessage();
+            }
         } else {
             showMultipleSelectedItemsMessage();
         }
+    }
+
+    private void showDeletedItemMessage() {
+        final Translation translation = new Translation("RecentFilesPanel");
+        repaintInfoPanel(new MessagePanel(
+                translation.get("deletedItemTitle"),
+                null
+        ));
     }
 
     private void showLinkInfoPanel(OpenedFileInfo selectedValue) {
