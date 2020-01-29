@@ -151,7 +151,7 @@ public class Application {
                         try {
                             manageCreateArgument(args);
                         } catch (final Exception e) {
-                            log.warn("Can not create .webloc file (" + CORRECT_CREATION_SYNTAX + "): "
+                            log.warn("Can not create link file (" + CORRECT_CREATION_SYNTAX + "): "
                                     + Arrays.toString(args), e);
                         }
                         break;
