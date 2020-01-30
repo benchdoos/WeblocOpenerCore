@@ -15,7 +15,7 @@
 
 package com.github.benchdoos.weblocopenercore.service.notification;
 
-import com.github.benchdoos.weblocopenercore.gui.ForcedNotificationDialog;
+import com.github.benchdoos.weblocopenercore.gui.dialogs.ForcedNotificationDialog;
 import com.github.benchdoos.weblocopenercore.model.notification.Notification;
 import com.github.benchdoos.weblocopenercore.model.notification.impl.UnixNotification;
 import com.github.benchdoos.weblocopenercore.model.notification.impl.WindowsNotification;

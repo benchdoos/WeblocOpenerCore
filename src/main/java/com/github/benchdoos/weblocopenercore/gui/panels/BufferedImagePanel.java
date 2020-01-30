@@ -1,6 +1,6 @@
 package com.github.benchdoos.weblocopenercore.gui.panels;
 
-import com.github.benchdoos.weblocopenercore.gui.ImagePanel;
+import com.github.benchdoos.weblocopenercore.gui.elements.ImagePanel;
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
@@ -17,8 +17,6 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 @Log4j2

@@ -15,7 +15,7 @@
 
 package com.github.benchdoos.weblocopenercore.gui.panels;
 
-import com.github.benchdoos.weblocopenercore.gui.panels.simpleTimePickerListeners.ValueChangeListener;
+import com.github.benchdoos.weblocopenercore.gui.panels.ValueChangeListener;
 import com.github.benchdoos.weblocopenercore.model.darkMode.SimpleTime;
 
 import javax.swing.DefaultComboBoxModel;

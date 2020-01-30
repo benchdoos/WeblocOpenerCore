@@ -2,10 +2,10 @@ package com.github.benchdoos.weblocopenercore.gui.panels.resentFilesPanels;
 
 import com.github.benchdoos.weblocopenercore.core.Application;
 import com.github.benchdoos.weblocopenercore.core.Translation;
-import com.github.benchdoos.weblocopenercore.gui.SettingsDialog;
+import com.github.benchdoos.weblocopenercore.gui.dialogs.SettingsDialog;
 import com.github.benchdoos.weblocopenercore.gui.Translatable;
-import com.github.benchdoos.weblocopenercore.gui.panels.MainSetterPanel;
-import com.github.benchdoos.weblocopenercore.gui.panels.ResentOpenedFilesPanel;
+import com.github.benchdoos.weblocopenercore.gui.panels.settingsPanels.MainSetterPanel;
+import com.github.benchdoos.weblocopenercore.gui.panels.settingsPanels.ResentOpenedFilesPanel;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;

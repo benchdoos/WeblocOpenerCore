@@ -19,7 +19,7 @@ import com.github.benchdoos.linksupport.links.Link;
 import com.github.benchdoos.weblocopenercore.core.Application;
 import com.github.benchdoos.weblocopenercore.core.Translation;
 import com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants;
-import com.github.benchdoos.weblocopenercore.gui.PlaceholderTextField;
+import com.github.benchdoos.weblocopenercore.gui.elements.PlaceholderTextField;
 import com.github.benchdoos.weblocopenercore.gui.Translatable;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import com.github.benchdoos.weblocopenercore.utils.FileUtils;

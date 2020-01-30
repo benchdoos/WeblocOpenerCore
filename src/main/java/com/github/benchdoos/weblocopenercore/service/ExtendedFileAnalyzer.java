@@ -3,7 +3,7 @@ package com.github.benchdoos.weblocopenercore.service;
 import com.github.benchdoos.linksupport.links.Link;
 import com.github.benchdoos.weblocopenercore.exceptions.LinkCanNotBeProcessedException;
 import com.github.benchdoos.weblocopenercore.exceptions.UnsupportedFileFormatException;
-import com.github.benchdoos.weblocopenercore.gui.FileChooser;
+import com.github.benchdoos.weblocopenercore.gui.dialogs.FileChooser;
 import com.github.benchdoos.weblocopenercore.service.links.LinkUtilities;
 import com.github.benchdoos.weblocopenercore.utils.FileUtils;
 import com.github.benchdoos.weblocopenercore.utils.FrameUtils;

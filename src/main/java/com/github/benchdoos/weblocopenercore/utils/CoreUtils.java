@@ -17,7 +17,7 @@ package com.github.benchdoos.weblocopenercore.utils;
 
 import com.github.benchdoos.weblocopenercore.Main;
 import com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants;
-import com.github.benchdoos.weblocopenercore.gui.InfoDialog;
+import com.github.benchdoos.weblocopenercore.gui.dialogs.InfoDialog;
 import com.github.benchdoos.weblocopenercore.model.version.ApplicationVersion;
 import com.github.benchdoos.weblocopenercore.model.version.Beta;
 import lombok.extern.log4j.Log4j2;
