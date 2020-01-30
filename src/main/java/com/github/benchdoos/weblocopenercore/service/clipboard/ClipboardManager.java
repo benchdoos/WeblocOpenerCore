@@ -15,9 +15,10 @@
 
 package com.github.benchdoos.weblocopenercore.service.clipboard;
 
-import com.github.benchdoos.weblocopenercore.service.clipboard.impl.UnixClipboard;
-import com.github.benchdoos.weblocopenercore.service.clipboard.impl.WindowsClipboard;
-import com.github.benchdoos.weblocopenercore.utils.system.OS;
+import com.github.benchdoos.weblocopenercore.model.clipboard.Clipboard;
+import com.github.benchdoos.weblocopenercore.model.clipboard.impl.UnixClipboard;
+import com.github.benchdoos.weblocopenercore.model.clipboard.impl.WindowsClipboard;
+import com.github.benchdoos.weblocopenercore.model.enumirations.OS;
 
 public class ClipboardManager {
     private static final Clipboard DEFAULT_CLIPBOARD = new WindowsClipboard();

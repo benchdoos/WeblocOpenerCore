@@ -21,7 +21,7 @@ import com.github.benchdoos.weblocopenercore.core.constants.ApplicationArgument;
 import com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants;
 import com.github.benchdoos.weblocopenercore.core.constants.SettingsConstants;
 import com.github.benchdoos.weblocopenercore.service.gui.darkMode.DarkModeAnalyzer;
-import com.github.benchdoos.weblocopenercore.service.gui.darkMode.SimpleTime;
+import com.github.benchdoos.weblocopenercore.model.darkMode.SimpleTime;
 import com.github.benchdoos.weblocopenercore.service.links.LinkFactory;
 import lombok.extern.log4j.Log4j2;
 

@@ -35,14 +35,14 @@ import com.github.benchdoos.weblocopenercore.service.UrlsProceed;
 import com.github.benchdoos.weblocopenercore.service.WindowLauncher;
 import com.github.benchdoos.weblocopenercore.service.clipboard.ClipboardManager;
 import com.github.benchdoos.weblocopenercore.service.notification.NotificationManager;
-import com.github.benchdoos.weblocopenercore.service.recentFiles.OpenedFileInfo;
+import com.github.benchdoos.weblocopenercore.model.recentFile.OpenedFileInfo;
 import com.github.benchdoos.weblocopenercore.service.recentFiles.RecentFilesManager;
-import com.github.benchdoos.weblocopenercore.service.share.UserShareInfoService;
+import com.github.benchdoos.weblocopenercore.service.statistics.UserShareStatisticsService;
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import com.github.benchdoos.weblocopenercore.utils.FileUtils;
 import com.github.benchdoos.weblocopenercore.utils.FrameUtils;
 import com.github.benchdoos.weblocopenercore.utils.browser.BrowserManager;
-import com.github.benchdoos.weblocopenercore.utils.system.OS;
+import com.github.benchdoos.weblocopenercore.model.enumirations.OS;
 import lombok.extern.log4j.Log4j2;
 
 import java.awt.Dimension;
@@ -93,7 +93,7 @@ public class Application {
         if (PreferencesManager.isShareAnonymousInfoEnabled()) {
             new Thread(() -> {
                 try {
-                    new UserShareInfoService().sendInfo(PreferencesManager.getApplicationUuid());
+                    new UserShareStatisticsService().sendInfo(PreferencesManager.getApplicationUuid());
                 } catch (IOException e) {
                     log.warn("Could not send user info.", e);
                 }

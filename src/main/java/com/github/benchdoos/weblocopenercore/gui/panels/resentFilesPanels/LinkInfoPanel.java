@@ -3,7 +3,7 @@ package com.github.benchdoos.weblocopenercore.gui.panels.resentFilesPanels;
 import com.github.benchdoos.weblocopenercore.core.Translation;
 import com.github.benchdoos.weblocopenercore.gui.Translatable;
 import com.github.benchdoos.weblocopenercore.service.UrlsProceed;
-import com.github.benchdoos.weblocopenercore.service.recentFiles.OpenedFileInfo;
+import com.github.benchdoos.weblocopenercore.model.recentFile.OpenedFileInfo;
 import com.github.benchdoos.weblocopenercore.utils.FileUtils;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;

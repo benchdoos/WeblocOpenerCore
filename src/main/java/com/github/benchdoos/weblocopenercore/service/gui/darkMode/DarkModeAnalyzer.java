@@ -15,6 +15,9 @@
 
 package com.github.benchdoos.weblocopenercore.service.gui.darkMode;
 
+import com.github.benchdoos.weblocopenercore.model.darkMode.DarkModeValue;
+import com.github.benchdoos.weblocopenercore.model.darkMode.Location;
+import com.github.benchdoos.weblocopenercore.model.darkMode.TimeRange;
 import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;

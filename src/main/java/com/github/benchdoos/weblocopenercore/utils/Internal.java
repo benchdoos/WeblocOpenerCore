@@ -15,9 +15,8 @@
 
 package com.github.benchdoos.weblocopenercore.utils;
 
-import com.github.benchdoos.weblocopenercore.utils.version.ApplicationVersion;
-import com.github.benchdoos.weblocopenercore.utils.version.Version;
-import com.github.benchdoos.weblocopenercore.utils.version.ApplicationVersion;
+import com.github.benchdoos.weblocopenercore.model.version.ApplicationVersion;
+import com.github.benchdoos.weblocopenercore.model.version.Version;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Date;

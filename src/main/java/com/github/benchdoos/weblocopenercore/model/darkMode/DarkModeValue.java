@@ -13,7 +13,7 @@
  * Eugene Zrazhevsky <eugene.zrazhevsky@gmail.com>
  */
 
-package com.github.benchdoos.weblocopenercore.service.gui.darkMode;
+package com.github.benchdoos.weblocopenercore.model.darkMode;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,11 +27,11 @@ public class DarkModeValue {
     private TimeRange next;
     private Location location;
 
-    DarkModeValue(Location location) {
+    public DarkModeValue(Location location) {
         this.location = location;
     }
 
-    DarkModeValue(TimeRange previous, TimeRange next) {
+    public DarkModeValue(TimeRange previous, TimeRange next) {
         this.previous = previous;
         this.next = next;
     }

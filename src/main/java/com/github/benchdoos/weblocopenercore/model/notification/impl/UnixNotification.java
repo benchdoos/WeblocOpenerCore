@@ -13,9 +13,9 @@
  * Eugene Zrazhevsky <eugene.zrazhevsky@gmail.com>
  */
 
-package com.github.benchdoos.weblocopenercore.service.notification.impl;
+package com.github.benchdoos.weblocopenercore.model.notification.impl;
 
-import com.github.benchdoos.weblocopenercore.service.notification.Notification;
+import com.github.benchdoos.weblocopenercore.model.notification.Notification;
 import lombok.extern.log4j.Log4j2;
 
 import java.awt.TrayIcon;

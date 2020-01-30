@@ -16,9 +16,10 @@
 package com.github.benchdoos.weblocopenercore.service.notification;
 
 import com.github.benchdoos.weblocopenercore.gui.ForcedNotificationDialog;
-import com.github.benchdoos.weblocopenercore.service.notification.impl.UnixNotification;
-import com.github.benchdoos.weblocopenercore.service.notification.impl.WindowsNotification;
-import com.github.benchdoos.weblocopenercore.utils.system.OS;
+import com.github.benchdoos.weblocopenercore.model.notification.Notification;
+import com.github.benchdoos.weblocopenercore.model.notification.impl.UnixNotification;
+import com.github.benchdoos.weblocopenercore.model.notification.impl.WindowsNotification;
+import com.github.benchdoos.weblocopenercore.model.enumirations.OS;
 
 import java.awt.Component;
 

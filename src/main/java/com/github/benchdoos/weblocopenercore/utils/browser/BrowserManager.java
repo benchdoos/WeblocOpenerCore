@@ -17,7 +17,8 @@ package com.github.benchdoos.weblocopenercore.utils.browser;
 
 import com.github.benchdoos.weblocopenercore.core.Translation;
 import com.github.benchdoos.weblocopenercore.core.constants.SettingsConstants;
-import com.github.benchdoos.weblocopenercore.utils.system.OS;
+import com.github.benchdoos.weblocopenercore.model.browser.Browser;
+import com.github.benchdoos.weblocopenercore.model.enumirations.OS;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;

@@ -15,7 +15,7 @@
 
 package com.github.benchdoos.weblocopenercore.utils;
 
-import com.github.benchdoos.weblocopenercore.utils.system.OS;
+import com.github.benchdoos.weblocopenercore.model.enumirations.OS;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.io.FilenameUtils;
 

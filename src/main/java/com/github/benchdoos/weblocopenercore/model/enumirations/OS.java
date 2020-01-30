@@ -13,14 +13,10 @@
  * Eugene Zrazhevsky <eugene.zrazhevsky@gmail.com>
  */
 
-package com.github.benchdoos.weblocopenercore.utils.system;
+package com.github.benchdoos.weblocopenercore.model.enumirations;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.tika.utils.SystemUtils;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 @RequiredArgsConstructor
 public enum OS {

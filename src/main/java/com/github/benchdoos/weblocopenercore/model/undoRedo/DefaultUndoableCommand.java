@@ -1,4 +1,4 @@
-package com.github.benchdoos.weblocopenercore.service.undoRedo;
+package com.github.benchdoos.weblocopenercore.model.undoRedo;
 
 import com.logdyn.UndoableCommand;
 

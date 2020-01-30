@@ -13,9 +13,9 @@
  * Eugene Zrazhevsky <eugene.zrazhevsky@gmail.com>
  */
 
-package com.github.benchdoos.weblocopenercore.service.clipboard.impl;
+package com.github.benchdoos.weblocopenercore.model.clipboard.impl;
 
-import com.github.benchdoos.weblocopenercore.service.clipboard.Clipboard;
+import com.github.benchdoos.weblocopenercore.model.clipboard.Clipboard;
 import lombok.extern.log4j.Log4j2;
 
 import javax.swing.Timer;

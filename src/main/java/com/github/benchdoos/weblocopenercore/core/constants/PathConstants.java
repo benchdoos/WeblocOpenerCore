@@ -16,8 +16,6 @@
 package com.github.benchdoos.weblocopenercore.core.constants;
 
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
-import com.github.benchdoos.weblocopenercore.utils.system.OS;
-import com.github.benchdoos.weblocopenercore.utils.system.SystemUtils;
 
 import java.io.File;
 

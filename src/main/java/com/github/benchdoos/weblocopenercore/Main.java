@@ -5,12 +5,10 @@ import com.github.benchdoos.weblocopenercore.core.Translation;
 import com.github.benchdoos.weblocopenercore.core.constants.PathConstants;
 import com.github.benchdoos.weblocopenercore.service.notification.NotificationManager;
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
-import com.github.benchdoos.weblocopenercore.utils.system.OS;
+import com.github.benchdoos.weblocopenercore.model.enumirations.OS;
 import com.github.benchdoos.weblocopenercore.utils.system.SystemUtils;
 import com.github.benchdoos.weblocopenercore.utils.system.UnsupportedSystemException;
-import lombok.extern.java.Log;
 import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.Logger;
 
 import java.util.Arrays;
 

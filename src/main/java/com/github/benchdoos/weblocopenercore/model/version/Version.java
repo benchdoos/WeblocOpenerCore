@@ -13,7 +13,7 @@
  * Eugene Zrazhevsky <eugene.zrazhevsky@gmail.com>
  */
 
-package com.github.benchdoos.weblocopenercore.utils.version;
+package com.github.benchdoos.weblocopenercore.model.version;
 
 import org.jetbrains.annotations.NotNull;
 

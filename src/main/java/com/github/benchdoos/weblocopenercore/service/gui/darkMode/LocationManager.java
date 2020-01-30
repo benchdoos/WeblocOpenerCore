@@ -15,6 +15,7 @@
 
 package com.github.benchdoos.weblocopenercore.service.gui.darkMode;
 
+import com.github.benchdoos.weblocopenercore.model.darkMode.Location;
 import com.github.benchdoos.weblocopenercore.utils.ConnectionUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

@@ -13,12 +13,26 @@
  * Eugene Zrazhevsky <eugene.zrazhevsky@gmail.com>
  */
 
-package com.github.benchdoos.weblocopenercore.service.notification;
+package com.github.benchdoos.weblocopenercore.model.clipboard;
 
-public interface Notification {
-    void showInfoNotification(String title, String message);
+import java.awt.image.BufferedImage;
 
-    void showWarningNotification(String title, String message);
+/**
+ * Interface that gives abilities to operate with {@link java.awt.datatransfer.Clipboard}
+ */
+public interface Clipboard {
 
-    void showErrorNotification(String title, String message);
+    /**
+     * Copy string to clipboard
+     *
+     * @param string to copy
+     */
+    void copy(String string);
+
+    /**
+     * Copy image to clipboard
+     *
+     * @param image image to copy
+     */
+    void copy(BufferedImage image);
 }

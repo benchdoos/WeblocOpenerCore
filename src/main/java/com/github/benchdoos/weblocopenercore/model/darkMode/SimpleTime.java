@@ -13,18 +13,26 @@
  * Eugene Zrazhevsky <eugene.zrazhevsky@gmail.com>
  */
 
-package com.github.benchdoos.weblocopenercore.service.gui.darkMode;
+package com.github.benchdoos.weblocopenercore.model.darkMode;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Calendar;
+import java.util.Date;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Location {
-    private double longitude;
-    private double latitude;
+public class SimpleTime {
+    private int hour;
+    private int minute;
 
-    private String address;
+    public Date toDate() {
+        final Calendar up = Calendar.getInstance();
+        up.set(Calendar.HOUR, hour);
+        up.set(Calendar.MINUTE, minute);
+        return up.getTime();
+    }
 }

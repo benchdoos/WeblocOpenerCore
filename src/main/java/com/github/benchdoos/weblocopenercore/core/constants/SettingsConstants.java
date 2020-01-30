@@ -16,10 +16,9 @@
 package com.github.benchdoos.weblocopenercore.core.constants;
 
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
-import com.github.benchdoos.weblocopenercore.service.gui.darkMode.SimpleTime;
+import com.github.benchdoos.weblocopenercore.model.darkMode.SimpleTime;
 import com.github.benchdoos.weblocopenercore.service.links.LinkFactory;
-import com.github.benchdoos.weblocopenercore.utils.system.OS;
-import com.github.benchdoos.weblocopenercore.utils.system.SystemUtils;
+import com.github.benchdoos.weblocopenercore.model.enumirations.OS;
 
 public interface SettingsConstants {
     boolean IS_APP_AUTO_UPDATE_DEFAULT_VALUE = true;

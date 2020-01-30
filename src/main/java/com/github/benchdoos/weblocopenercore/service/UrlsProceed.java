@@ -20,7 +20,7 @@ import com.github.benchdoos.weblocopenercore.core.constants.SettingsConstants;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import com.github.benchdoos.weblocopenercore.utils.QrCodeUtils;
 import com.github.benchdoos.weblocopenercore.service.notification.NotificationManager;
-import com.github.benchdoos.weblocopenercore.utils.system.OS;
+import com.github.benchdoos.weblocopenercore.model.enumirations.OS;
 import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageConfig;
 import lombok.extern.log4j.Log4j2;

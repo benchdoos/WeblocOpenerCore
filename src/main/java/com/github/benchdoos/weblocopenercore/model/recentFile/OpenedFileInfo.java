@@ -1,4 +1,4 @@
-package com.github.benchdoos.weblocopenercore.service.recentFiles;
+package com.github.benchdoos.weblocopenercore.model.recentFile;
 
 import com.github.benchdoos.linksupport.links.Link;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package com.github.benchdoos.weblocopenercore.service.share;
+package com.github.benchdoos.weblocopenercore.model.statistics;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

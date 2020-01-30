@@ -15,6 +15,7 @@
 
 package com.github.benchdoos.weblocopenercore.utils.browser;
 
+import com.github.benchdoos.weblocopenercore.model.browser.Browser;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;

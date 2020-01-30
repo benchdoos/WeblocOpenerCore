@@ -13,7 +13,7 @@
  * Eugene Zrazhevsky <eugene.zrazhevsky@gmail.com>
  */
 
-package com.github.benchdoos.weblocopenercore.service.clipboard.impl;
+package com.github.benchdoos.weblocopenercore.model.clipboard.impl;
 
 import lombok.extern.log4j.Log4j2;
 

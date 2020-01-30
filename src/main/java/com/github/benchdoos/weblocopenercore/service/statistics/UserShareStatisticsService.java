@@ -1,9 +1,9 @@
-package com.github.benchdoos.weblocopenercore.service.share;
+package com.github.benchdoos.weblocopenercore.service.statistics;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.benchdoos.weblocopenercore.core.constants.StringConstants;
+import com.github.benchdoos.weblocopenercore.model.statistics.UserLoginDto;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
-import com.github.benchdoos.weblocopenercore.service.feedback.images.ImgbbResponseDto;
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import com.github.benchdoos.weblocopenercore.utils.http.HttpUtils;
 import lombok.extern.log4j.Log4j2;
@@ -19,7 +19,7 @@ import java.util.Locale;
 import java.util.UUID;
 
 @Log4j2
-public class UserShareInfoService {
+public class UserShareStatisticsService {
 
     private final HttpUtils httpUtils = new HttpUtils<>(null);
 

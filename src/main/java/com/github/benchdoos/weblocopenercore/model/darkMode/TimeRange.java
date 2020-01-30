@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2018.  Eugene Zrazhevsky and others.
+ * (C) Copyright 2019.  Eugene Zrazhevsky and others.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,29 +13,20 @@
  * Eugene Zrazhevsky <eugene.zrazhevsky@gmail.com>
  */
 
-package com.github.benchdoos.weblocopenercore.utils.browser;
+package com.github.benchdoos.weblocopenercore.model.darkMode;
 
-
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-/**
- * Created by Eugene Zrazhevsky on 24.08.2017.
- */
-@NoArgsConstructor
+import java.util.Date;
+
+@AllArgsConstructor
 @Data
-public class Browser {
-    private String name;
-    private String call;
-    private String incognitoCall;
+public class TimeRange {
+    private Date start;
+    private Date end;
 
-    public Browser(String name, String call) {
-        this.name = name;
-        this.call = call;
-    }
-
-    @Override
-    public String toString() {
-        return "Browser{" + "name='" + name + '\'' + '}';
+    public boolean isInRange(Date date) {
+        return start.before(date) && end.after(date);
     }
 }

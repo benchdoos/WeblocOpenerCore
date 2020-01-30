@@ -17,11 +17,12 @@ package com.github.benchdoos.weblocopenercore.utils.system;
 
 
 import com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants;
+import com.github.benchdoos.weblocopenercore.model.enumirations.OS;
 import com.github.benchdoos.weblocopenercore.utils.Internal;
 import lombok.extern.log4j.Log4j2;
 
-import static com.github.benchdoos.weblocopenercore.utils.system.OS.getOsName;
-import static com.github.benchdoos.weblocopenercore.utils.system.OS.isWindows;
+import static com.github.benchdoos.weblocopenercore.model.enumirations.OS.getOsName;
+import static com.github.benchdoos.weblocopenercore.model.enumirations.OS.isWindows;
 
 @Log4j2
 public class SystemUtils {

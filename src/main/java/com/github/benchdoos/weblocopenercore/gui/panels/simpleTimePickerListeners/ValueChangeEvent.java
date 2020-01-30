@@ -15,7 +15,7 @@
 
 package com.github.benchdoos.weblocopenercore.gui.panels.simpleTimePickerListeners;
 
-import com.github.benchdoos.weblocopenercore.service.gui.darkMode.SimpleTime;
+import com.github.benchdoos.weblocopenercore.model.darkMode.SimpleTime;
 
 public interface ValueChangeEvent {
     SimpleTime getSelectedTime();

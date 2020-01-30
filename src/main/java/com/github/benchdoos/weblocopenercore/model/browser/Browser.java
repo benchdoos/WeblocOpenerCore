@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2019.  Eugene Zrazhevsky and others.
+ * (C) Copyright 2018.  Eugene Zrazhevsky and others.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,12 +13,29 @@
  * Eugene Zrazhevsky <eugene.zrazhevsky@gmail.com>
  */
 
-package com.github.benchdoos.weblocopenercore.service.clipboard;
+package com.github.benchdoos.weblocopenercore.model.browser;
 
-import java.awt.image.BufferedImage;
 
-public interface Clipboard {
-    void copy(String string);
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-    void copy(BufferedImage image);
+/**
+ * Created by Eugene Zrazhevsky on 24.08.2017.
+ */
+@NoArgsConstructor
+@Data
+public class Browser {
+    private String name;
+    private String call;
+    private String incognitoCall;
+
+    public Browser(String name, String call) {
+        this.name = name;
+        this.call = call;
+    }
+
+    @Override
+    public String toString() {
+        return "Browser{" + "name='" + name + '\'' + '}';
+    }
 }

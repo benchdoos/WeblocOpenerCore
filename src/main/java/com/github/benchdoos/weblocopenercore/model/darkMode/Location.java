@@ -13,20 +13,18 @@
  * Eugene Zrazhevsky <eugene.zrazhevsky@gmail.com>
  */
 
-package com.github.benchdoos.weblocopenercore.service.gui.darkMode;
+package com.github.benchdoos.weblocopenercore.model.darkMode;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.util.Date;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Data
-public class TimeRange {
-    private Date start;
-    private Date end;
+public class Location {
+    private double longitude;
+    private double latitude;
 
-    boolean isInRange(Date date) {
-        return start.before(date) && end.after(date);
-    }
+    private String address;
 }
