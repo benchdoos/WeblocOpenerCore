@@ -6,27 +6,27 @@ import lombok.RequiredArgsConstructor;
 import javax.swing.text.JTextComponent;
 
 @RequiredArgsConstructor
-public class DefaultUndoableExecutor implements UndoableExecutor<DefaultUndoableCommand> {
+public class InsertUndoableExecutor implements UndoableExecutor<InsertUndoableCommand> {
     private final JTextComponent textComponent;
     //todo need to store text some where
 
     @Override
-    public void execute(DefaultUndoableCommand undoableCommand) throws Exception {
+    public void execute(InsertUndoableCommand undoableCommand) throws Exception {
         final String text = textComponent.getText();
-        System.out.println("EX> " + text);  //save to somewhere
+        System.out.println("INSERT: EX> " + text);  //save to somewhere
 
     }
 
     @Override
-    public void reexecute(DefaultUndoableCommand command) throws Exception {
+    public void reexecute(InsertUndoableCommand command) throws Exception {
         final String text = textComponent.getText();
-        System.out.println("RE> " + text);
+        System.out.println("INSERT: RE> " + text);
 
     }
 
     @Override
-    public void unexecute(DefaultUndoableCommand undoableCommand) throws Exception {
+    public void unexecute(InsertUndoableCommand undoableCommand) throws Exception {
         final String text = textComponent.getText();
-        System.out.println("UN> " + text);
+        System.out.println("INSERT: UN> " + text);
     }
 }

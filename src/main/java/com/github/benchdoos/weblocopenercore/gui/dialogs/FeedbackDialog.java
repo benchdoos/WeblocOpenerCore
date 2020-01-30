@@ -5,14 +5,17 @@ import com.github.benchdoos.weblocopenercore.core.constants.PathConstants;
 import com.github.benchdoos.weblocopenercore.gui.Translatable;
 import com.github.benchdoos.weblocopenercore.gui.elements.PlaceholderTextField;
 import com.github.benchdoos.weblocopenercore.gui.panels.BufferedImagePanel;
+import com.github.benchdoos.weblocopenercore.model.undoRedo.ChangeUndoableCommand;
+import com.github.benchdoos.weblocopenercore.model.undoRedo.InsertUndoableCommand;
+import com.github.benchdoos.weblocopenercore.model.undoRedo.RemoveUndoableCommand;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
+import com.github.benchdoos.weblocopenercore.service.DefaultHistoryServiceImpl;
+import com.github.benchdoos.weblocopenercore.service.HistoryService;
 import com.github.benchdoos.weblocopenercore.service.WindowLauncher;
 import com.github.benchdoos.weblocopenercore.service.feedback.Feedback;
 import com.github.benchdoos.weblocopenercore.service.feedback.FeedbackService;
 import com.github.benchdoos.weblocopenercore.service.feedback.FileExtension;
 import com.github.benchdoos.weblocopenercore.service.notification.NotificationManager;
-import com.github.benchdoos.weblocopenercore.model.undoRedo.DefaultUndoableCommand;
-import com.github.benchdoos.weblocopenercore.model.undoRedo.DefaultUndoableExecutor;
 import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import com.github.benchdoos.weblocopenercore.utils.FileUtils;
 import com.github.benchdoos.weblocopenercore.utils.FrameUtils;
@@ -20,8 +23,6 @@ import com.github.benchdoos.weblocopenercore.utils.ImagesUtils;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import com.logdyn.CommandDelegator;
-import com.logdyn.ExecutionException;
 import lombok.extern.log4j.Log4j2;
 import net.coobird.thumbnailator.Thumbnails;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -104,6 +105,8 @@ public class FeedbackDialog extends JFrame implements Translatable {
     @Nullable
     private String logs = null;
 
+    private HistoryService feedbackTextAreaHistoryService;
+
     public FeedbackDialog() {
         $$$setupUI$$$();
         initGui();
@@ -148,57 +151,32 @@ public class FeedbackDialog extends JFrame implements Translatable {
     }
 
     private void initTextAreaHistory() {
+        feedbackTextAreaHistoryService = new DefaultHistoryServiceImpl(feedbackTextArea);
 
-        CommandDelegator.getINSTANCE().subscribe(new DefaultUndoableExecutor(feedbackTextArea),
-                DefaultUndoableCommand.class);
         feedbackTextArea.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                try {
-                    CommandDelegator.getINSTANCE().publish(new DefaultUndoableCommand());
-                } catch (final ExecutionException ex) {
-                    ex.printStackTrace();
-                }
+                feedbackTextAreaHistoryService.registerCommand(new InsertUndoableCommand());
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                try {
-                    CommandDelegator.getINSTANCE().publish(new DefaultUndoableCommand());
-                } catch (final ExecutionException ex) {
-                    ex.printStackTrace();
-                }
+                feedbackTextAreaHistoryService.registerCommand(new RemoveUndoableCommand());
             }
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                try {
-                    CommandDelegator.getINSTANCE().publish(new DefaultUndoableCommand());
-                } catch (final ExecutionException ex) {
-                    ex.printStackTrace();
-                }
+                feedbackTextAreaHistoryService.registerCommand(new ChangeUndoableCommand());
             }
         });
 
         feedbackTextArea.registerKeyboardAction(e -> {
-                    try {
-                        if (CommandDelegator.getINSTANCE().canUndo()) {
-                            CommandDelegator.getINSTANCE().undo();
-                        }
-                    } catch (final ExecutionException ex) {
-                        log.warn("<<<", feedbackTextArea.getText(), e);
-                    }
+                   feedbackTextAreaHistoryService.undo();
                 }, KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK),
                 JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
         feedbackTextArea.registerKeyboardAction(e -> {
-                    try {
-                        if (CommandDelegator.getINSTANCE().canRedo()) {
-                            CommandDelegator.getINSTANCE().redo();
-                        }
-                    } catch (final ExecutionException ex) {
-                        log.warn("<<<", feedbackTextArea.getText(), e);
-                    }
+                  feedbackTextAreaHistoryService.redo();
                 }, KeyStroke.getKeyStroke(KeyEvent.VK_Z, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK),
                 JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
