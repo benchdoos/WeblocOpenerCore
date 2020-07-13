@@ -219,8 +219,8 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel, Tra
 
         ((Translatable) disabledRecentFilesPanel).translate();
 
-        updateItemsList.setToolTipText("updateItemsList");
-        removeSelectedItemsButton.setToolTipText("removeSelectedItemsButton");
+        updateItemsList.setToolTipText(translation.get("updateItemsList"));
+        removeSelectedItemsButton.setToolTipText(translation.get("removeSelectedItemsButton"));
 
         translateInfoPanelComponent();
         updateInfoPanel();
