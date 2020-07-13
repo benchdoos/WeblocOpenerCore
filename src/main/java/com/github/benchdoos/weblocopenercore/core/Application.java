@@ -321,6 +321,7 @@ public class Application {
                 }
             } catch (final Exception e) {
                 log.warn("Could not edit file: {}", path, e);
+                throw new RuntimeException("Can not edit file: " + path, e);
             }
         } else {
             showIncorrectArgumentMessage(ApplicationArgument.OPENER_EDIT_ARGUMENT.getArgument());
