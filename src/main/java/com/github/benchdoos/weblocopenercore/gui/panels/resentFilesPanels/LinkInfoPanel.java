@@ -76,7 +76,11 @@ public class LinkInfoPanel extends JPanel implements Translatable {
         try {
             final File file = selectedValue.getFilePath().toFile();
             final URL url = selectedValue.getType().getLinkProcessor().getUrl(file);
-            fullLinkTextField.setText(url.toString());
+            if (url != null) {
+                fullLinkTextField.setText(url.toString());
+            } else {
+                fullLinkTextField.setText("");
+            }
         } catch (Exception e) {
             log.warn("Could not init url", e);
         }
