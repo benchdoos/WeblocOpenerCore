@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +36,14 @@ public class ExtendedFileAnalyzer implements FileAnalyzer {
             validateExistedFile(file);
 
             final Link type = Link.getLinkForFile(file);
-            final URL url = type.getLinkProcessor().getUrl(file);
+            try {
+                final URL url = type.getLinkProcessor().getUrl(file);
 
-            return new LinkFile(file, type, url);
+                return new LinkFile(file, type, url);
+            } catch (MalformedURLException e) {
+                log.warn("Can not read url from file: {}. Type is: {}", file, type);
+                return new LinkFile(file, type, null);
+            }
         } catch (IOException e) {
             throw new LinkCanNotBeProcessedException("Can not process link for file: " + filePath, e);
         }
