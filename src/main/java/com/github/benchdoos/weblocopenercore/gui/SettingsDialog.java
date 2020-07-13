@@ -15,7 +15,6 @@
 
 package com.github.benchdoos.weblocopenercore.gui;
 
-import com.github.benchdoos.jcolorful.core.JColorful;
 import com.github.benchdoos.weblocopenercore.core.Translation;
 import com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants;
 import com.github.benchdoos.weblocopenercore.gui.buttons.DonationButton;
@@ -29,6 +28,7 @@ import com.github.benchdoos.weblocopenercore.gui.wrappers.CreateNewFileDialogWra
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import com.github.benchdoos.weblocopenercore.service.WindowLauncher;
 import com.github.benchdoos.weblocopenercore.service.notification.NotificationManager;
+import com.github.benchdoos.weblocopenercore.utils.CoreUtils;
 import com.github.benchdoos.weblocopenercore.utils.FrameUtils;
 import com.github.benchdoos.weblocopenercore.utils.GuiUtils;
 import com.github.benchdoos.weblocopenercore.utils.system.OS;
@@ -81,7 +81,7 @@ import static com.github.benchdoos.weblocopenercore.utils.FrameUtils.setWindowOn
 @Log4j2
 public class SettingsDialog extends JFrame implements Translatable {
     private static final int MINIMAL_MODE_SQUARE = 32;
-    private static final int MINIMAL_MODE_DIVIDER_LOCATION = MINIMAL_MODE_SQUARE + 2;
+    private static final int MINIMAL_MODE_DIVIDER_LOCATION = MINIMAL_MODE_SQUARE + 6;
     private Timer settingsSavedTimer = null;
     private JPanel contentPane;
     private JButton buttonOK;
@@ -472,15 +472,6 @@ public class SettingsDialog extends JFrame implements Translatable {
                 recentOpenedFilesPanel);
 
         settingsList.setModel(model);
-
-        if (PreferencesManager.isDarkModeEnabledNow()) {
-            final JColorful colorful = new JColorful(ApplicationConstants.DARK_MODE_THEME);
-            colorful.colorize(mainSetterPanel);
-            colorful.colorize(browserSetterPanel);
-            colorful.colorize(fileProcessingPanel);
-            colorful.colorize(appearanceSetterPanel);
-            colorful.colorize(recentOpenedFilesPanel);
-        }
     }
 
     private void addSettingsPanelToModel(DefaultListModel<IconJList.IconObject<SettingsPanel>> model,
@@ -604,23 +595,21 @@ public class SettingsDialog extends JFrame implements Translatable {
     }
 
     private void updateUIDarkMode() {
-        if (PreferencesManager.isDarkModeEnabledNow()) {
-            try {
-                final JColorful colorful = new JColorful(ApplicationConstants.DARK_MODE_THEME);
-                colorful.colorize(this);
+        CoreUtils.enableLookAndFeel();
+        SwingUtilities.updateComponentTreeUI(this);
+        try {
+            final ListModel<IconJList.IconObject<SettingsPanel>> model = settingsList.getModel();
 
-                final ListModel<IconJList.IconObject<SettingsPanel>> model = settingsList.getModel();
-
-                for (int i = 0; i < model.getSize(); i++) {
-                    final Object o = model.getElementAt(i).getObject();
-                    if (o instanceof Component) {
-                        colorful.colorize(((Component) o));
-                    }
+            for (int i = 0; i < model.getSize(); i++) {
+                final Object o = model.getElementAt(i).getObject();
+                if (o instanceof Component) {
+                    SwingUtilities.updateComponentTreeUI((Component) o);
                 }
-            } catch (final Exception e) {
-                log.warn("Could not colorize component", e);
             }
+        } catch (final Exception e) {
+            log.warn("Could not colorize component", e);
         }
+        //todo: add repaint to settingsList
     }
 
     public void loadSettingsForPanel(Class clazz) {

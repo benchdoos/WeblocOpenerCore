@@ -15,11 +15,9 @@
 
 package com.github.benchdoos.weblocopenercore.gui.unix;
 
-import com.github.benchdoos.jcolorful.core.JColorful;
 import com.github.benchdoos.weblocopenercore.core.Application;
 import com.github.benchdoos.weblocopenercore.core.Translation;
 import com.github.benchdoos.weblocopenercore.core.constants.ApplicationArgument;
-import com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants;
 import com.github.benchdoos.weblocopenercore.core.constants.SettingsConstants;
 import com.github.benchdoos.weblocopenercore.gui.Translatable;
 import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
@@ -76,8 +74,6 @@ public class ModeSelectorDialog extends JFrame implements Translatable {
         setTitle(file.getName());
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/images/balloonIcon256.png")));
 
-        colorizeThis();
-
         getRootPane().setDefaultButton(buttonOK);
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -127,13 +123,6 @@ public class ModeSelectorDialog extends JFrame implements Translatable {
         buttonGroup.add(copyRadioButton);
         buttonGroup.add(generateQrRadioButton);
         buttonGroup.add(copyQrRadioButton);
-    }
-
-    private void colorizeThis() {
-        if (PreferencesManager.isDarkModeEnabledNow()) {
-            final JColorful colorful = new JColorful(ApplicationConstants.DARK_MODE_THEME);
-            colorful.colorize(this);
-        }
     }
 
     private void initActionListeners() {

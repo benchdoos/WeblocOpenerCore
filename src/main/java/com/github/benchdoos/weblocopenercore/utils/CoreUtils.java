@@ -16,6 +16,7 @@
 package com.github.benchdoos.weblocopenercore.utils;
 
 import com.formdev.flatlaf.FlatDarculaLaf;
+import com.formdev.flatlaf.FlatIntelliJLaf;
 import com.github.benchdoos.weblocopenercore.Main;
 import com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants;
 import com.github.benchdoos.weblocopenercore.gui.InfoDialog;
@@ -104,7 +105,8 @@ public class CoreUtils {
                 final BasicLookAndFeel darculaLookAndFeel = new FlatDarculaLaf();
                 UIManager.setLookAndFeel(darculaLookAndFeel);
             } else {
-                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                final BasicLookAndFeel darculaLookAndFeel = new FlatIntelliJLaf();
+                UIManager.setLookAndFeel(darculaLookAndFeel);
             }
 
             log.debug("Look and Feel enabled");

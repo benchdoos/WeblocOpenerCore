@@ -590,7 +590,7 @@ public class EditDialog extends JFrame implements Translatable {
                 if (!PreferencesManager.isDarkModeEnabledNow()) {
                     textField.setForeground(Color.BLACK);
                 } else {
-                    textField.setForeground(ApplicationConstants.DARK_MODE_THEME.getTextComponentElement().getForegroundColor());
+                    textField.setForeground(Color.WHITE);
                 }
             }
         }

@@ -15,7 +15,6 @@
 
 package com.github.benchdoos.weblocopenercore.gui;
 
-import com.github.benchdoos.jcolorful.core.JColorful;
 import com.github.benchdoos.weblocopenercore.core.Translation;
 import com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants;
 import com.github.benchdoos.weblocopenercore.core.constants.PathConstants;
@@ -453,10 +452,6 @@ public class AboutApplicationDialog extends JDialog {
 
     private void createInfoDialog() {
         final InfoDialog infoDialog = new InfoDialog();
-        if (PreferencesManager.isDarkModeEnabledNow()) {
-            final JColorful colorful = new JColorful(ApplicationConstants.DARK_MODE_THEME);
-            colorful.colorize(infoDialog);
-        }
 
         infoDialog.setTitle(Translation.get("AboutApplicationDialogBundle", "librariesLabelToolTip"));
 
