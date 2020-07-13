@@ -21,6 +21,7 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -104,10 +105,10 @@ public class LinkInfoPanel extends JPanel implements Translatable {
         final Spacer spacer1 = new Spacer();
         linkInfoPanel.add(spacer1, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         fileNameLabel = new JLabel();
-        this.$$$loadLabelText$$$(fileNameLabel, ResourceBundle.getBundle("translations/LinkInfoPanelBundle").getString("fileNameLabel"));
+        this.$$$loadLabelText$$$(fileNameLabel, this.$$$getMessageFromBundle$$$("translations/LinkInfoPanelBundle", "fileNameLabel"));
         linkInfoPanel.add(fileNameLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         fullLinkLabel = new JLabel();
-        this.$$$loadLabelText$$$(fullLinkLabel, ResourceBundle.getBundle("translations/LinkInfoPanelBundle").getString("fullLinkLabel"));
+        this.$$$loadLabelText$$$(fullLinkLabel, this.$$$getMessageFromBundle$$$("translations/LinkInfoPanelBundle", "fullLinkLabel"));
         linkInfoPanel.add(fullLinkLabel, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
@@ -115,10 +116,10 @@ public class LinkInfoPanel extends JPanel implements Translatable {
         final Spacer spacer2 = new Spacer();
         panel1.add(spacer2, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         openLinkButton = new JButton();
-        this.$$$loadButtonText$$$(openLinkButton, ResourceBundle.getBundle("translations/LinkInfoPanelBundle").getString("openLinkButtonText"));
+        this.$$$loadButtonText$$$(openLinkButton, this.$$$getMessageFromBundle$$$("translations/LinkInfoPanelBundle", "openLinkButtonText"));
         panel1.add(openLinkButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         openLocationButton = new JButton();
-        this.$$$loadButtonText$$$(openLocationButton, ResourceBundle.getBundle("translations/LinkInfoPanelBundle").getString("openLocationButtonText"));
+        this.$$$loadButtonText$$$(openLocationButton, this.$$$getMessageFromBundle$$$("translations/LinkInfoPanelBundle", "openLocationButtonText"));
         panel1.add(openLocationButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         fileNameTextField = new JTextField();
         fileNameTextField.setEditable(false);
@@ -126,6 +127,23 @@ public class LinkInfoPanel extends JPanel implements Translatable {
         fullLinkTextField = new JTextField();
         fullLinkTextField.setEditable(false);
         linkInfoPanel.add(fullLinkTextField, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+    }
+
+    private static Method $$$cachedGetBundleMethod$$$ = null;
+
+    private String $$$getMessageFromBundle$$$(String path, String key) {
+        ResourceBundle bundle;
+        try {
+            Class<?> thisClass = this.getClass();
+            if ($$$cachedGetBundleMethod$$$ == null) {
+                Class<?> dynamicBundleClass = thisClass.getClassLoader().loadClass("com.intellij.DynamicBundle");
+                $$$cachedGetBundleMethod$$$ = dynamicBundleClass.getMethod("getBundle", String.class, Class.class);
+            }
+            bundle = (ResourceBundle) $$$cachedGetBundleMethod$$$.invoke(null, path, thisClass);
+        } catch (Exception e) {
+            bundle = ResourceBundle.getBundle(path);
+        }
+        return bundle.getString(key);
     }
 
     /**

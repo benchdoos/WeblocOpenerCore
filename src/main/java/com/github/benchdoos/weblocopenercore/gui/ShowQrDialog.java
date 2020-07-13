@@ -50,6 +50,7 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.ResourceBundle;
 
 @Log4j2
@@ -64,7 +65,7 @@ public class ShowQrDialog extends JFrame implements Translatable {
     private JButton copyImageButton;
 
 
-    public ShowQrDialog(File weblocFile)  {
+    public ShowQrDialog(File weblocFile) {
         this.weblocFile = weblocFile;
         try {
 
@@ -100,20 +101,37 @@ public class ShowQrDialog extends JFrame implements Translatable {
         saveImageButton = new JButton();
         saveImageButton.setIcon(new ImageIcon(getClass().getResource("/images/downloadsIcon16.png")));
         saveImageButton.setText("");
-        saveImageButton.setToolTipText(ResourceBundle.getBundle("translations/ShowQrDialogBundle").getString("saveImageButton"));
+        saveImageButton.setToolTipText(this.$$$getMessageFromBundle$$$("translations/ShowQrDialogBundle", "saveImageButton"));
         panel1.add(saveImageButton, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer2 = new Spacer();
         panel1.add(spacer2, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         openButton = new JButton();
-        this.$$$loadButtonText$$$(openButton, ResourceBundle.getBundle("translations/ShowQrDialogBundle").getString("openButton"));
+        this.$$$loadButtonText$$$(openButton, this.$$$getMessageFromBundle$$$("translations/ShowQrDialogBundle", "openButton"));
         panel1.add(openButton, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         copyImageButton = new JButton();
         copyImageButton.setIcon(new ImageIcon(getClass().getResource("/images/copyIcon16.png")));
         copyImageButton.setText("");
-        copyImageButton.setToolTipText(ResourceBundle.getBundle("translations/ShowQrDialogBundle").getString("copyButton"));
+        copyImageButton.setToolTipText(this.$$$getMessageFromBundle$$$("translations/ShowQrDialogBundle", "copyButton"));
         panel1.add(copyImageButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final DonationButton donationButton1 = new DonationButton();
         panel1.add(donationButton1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+    }
+
+    private static Method $$$cachedGetBundleMethod$$$ = null;
+
+    private String $$$getMessageFromBundle$$$(String path, String key) {
+        ResourceBundle bundle;
+        try {
+            Class<?> thisClass = this.getClass();
+            if ($$$cachedGetBundleMethod$$$ == null) {
+                Class<?> dynamicBundleClass = thisClass.getClassLoader().loadClass("com.intellij.DynamicBundle");
+                $$$cachedGetBundleMethod$$$ = dynamicBundleClass.getMethod("getBundle", String.class, Class.class);
+            }
+            bundle = (ResourceBundle) $$$cachedGetBundleMethod$$$.invoke(null, path, thisClass);
+        } catch (Exception e) {
+            bundle = ResourceBundle.getBundle(path);
+        }
+        return bundle.getString(key);
     }
 
     /**

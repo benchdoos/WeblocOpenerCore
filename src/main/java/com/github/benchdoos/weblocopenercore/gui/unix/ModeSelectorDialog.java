@@ -43,6 +43,7 @@ import java.awt.Toolkit;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.ResourceBundle;
@@ -226,10 +227,10 @@ public class ModeSelectorDialog extends JFrame implements Translatable {
         panel2.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1, true, false));
         panel1.add(panel2, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         buttonOK = new JButton();
-        this.$$$loadButtonText$$$(buttonOK, ResourceBundle.getBundle("translations/CommonsBundle").getString("okButton"));
+        this.$$$loadButtonText$$$(buttonOK, this.$$$getMessageFromBundle$$$("translations/CommonsBundle", "okButton"));
         panel2.add(buttonOK, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         buttonCancel = new JButton();
-        this.$$$loadButtonText$$$(buttonCancel, ResourceBundle.getBundle("translations/CommonsBundle").getString("cancelButton"));
+        this.$$$loadButtonText$$$(buttonCancel, this.$$$getMessageFromBundle$$$("translations/CommonsBundle", "cancelButton"));
         panel2.add(buttonCancel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel3 = new JPanel();
         panel3.setLayout(new GridLayoutManager(5, 2, new Insets(0, 0, 0, 0), -1, -1));
@@ -239,32 +240,32 @@ public class ModeSelectorDialog extends JFrame implements Translatable {
         final Spacer spacer3 = new Spacer();
         panel3.add(spacer3, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         saveSelectionCheckBox = new JCheckBox();
-        this.$$$loadButtonText$$$(saveSelectionCheckBox, ResourceBundle.getBundle("translations/ModeSelectorDialogBundle").getString("saveCheckBox"));
-        saveSelectionCheckBox.setToolTipText(ResourceBundle.getBundle("translations/ModeSelectorDialogBundle").getString("saveCheckBoxToolTip"));
+        this.$$$loadButtonText$$$(saveSelectionCheckBox, this.$$$getMessageFromBundle$$$("translations/ModeSelectorDialogBundle", "saveCheckBox"));
+        saveSelectionCheckBox.setToolTipText(this.$$$getMessageFromBundle$$$("translations/ModeSelectorDialogBundle", "saveCheckBoxToolTip"));
         panel3.add(saveSelectionCheckBox, new GridConstraints(4, 0, 1, 2, GridConstraints.ANCHOR_EAST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JSeparator separator1 = new JSeparator();
         panel3.add(separator1, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         windowTitleLabel = new JLabel();
-        this.$$$loadLabelText$$$(windowTitleLabel, ResourceBundle.getBundle("translations/ModeSelectorDialogBundle").getString("windowTitle"));
+        this.$$$loadLabelText$$$(windowTitleLabel, this.$$$getMessageFromBundle$$$("translations/ModeSelectorDialogBundle", "windowTitle"));
         panel3.add(windowTitleLabel, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel4 = new JPanel();
         panel4.setLayout(new GridLayoutManager(5, 1, new Insets(0, 0, 0, 0), -1, -1));
         panel3.add(panel4, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 2, false));
         openRadioButton = new JRadioButton();
         openRadioButton.setSelected(true);
-        this.$$$loadButtonText$$$(openRadioButton, ResourceBundle.getBundle("translations/ModeSelectorDialogBundle").getString("selectionOpen"));
+        this.$$$loadButtonText$$$(openRadioButton, this.$$$getMessageFromBundle$$$("translations/ModeSelectorDialogBundle", "selectionOpen"));
         panel4.add(openRadioButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         editRadioButton = new JRadioButton();
-        this.$$$loadButtonText$$$(editRadioButton, ResourceBundle.getBundle("translations/ModeSelectorDialogBundle").getString("selectionEdit"));
+        this.$$$loadButtonText$$$(editRadioButton, this.$$$getMessageFromBundle$$$("translations/ModeSelectorDialogBundle", "selectionEdit"));
         panel4.add(editRadioButton, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         copyRadioButton = new JRadioButton();
-        this.$$$loadButtonText$$$(copyRadioButton, ResourceBundle.getBundle("translations/ModeSelectorDialogBundle").getString("selectionCopy"));
+        this.$$$loadButtonText$$$(copyRadioButton, this.$$$getMessageFromBundle$$$("translations/ModeSelectorDialogBundle", "selectionCopy"));
         panel4.add(copyRadioButton, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         generateQrRadioButton = new JRadioButton();
-        this.$$$loadButtonText$$$(generateQrRadioButton, ResourceBundle.getBundle("translations/ModeSelectorDialogBundle").getString("selectionQr"));
+        this.$$$loadButtonText$$$(generateQrRadioButton, this.$$$getMessageFromBundle$$$("translations/ModeSelectorDialogBundle", "selectionQr"));
         panel4.add(generateQrRadioButton, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         copyQrRadioButton = new JRadioButton();
-        this.$$$loadButtonText$$$(copyQrRadioButton, ResourceBundle.getBundle("translations/ModeSelectorDialogBundle").getString("selectionCopyQr"));
+        this.$$$loadButtonText$$$(copyQrRadioButton, this.$$$getMessageFromBundle$$$("translations/ModeSelectorDialogBundle", "selectionCopyQr"));
         panel4.add(copyQrRadioButton, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         ButtonGroup buttonGroup;
         buttonGroup = new ButtonGroup();
@@ -274,6 +275,23 @@ public class ModeSelectorDialog extends JFrame implements Translatable {
         buttonGroup.add(editRadioButton);
         buttonGroup.add(copyRadioButton);
         buttonGroup.add(generateQrRadioButton);
+    }
+
+    private static Method $$$cachedGetBundleMethod$$$ = null;
+
+    private String $$$getMessageFromBundle$$$(String path, String key) {
+        ResourceBundle bundle;
+        try {
+            Class<?> thisClass = this.getClass();
+            if ($$$cachedGetBundleMethod$$$ == null) {
+                Class<?> dynamicBundleClass = thisClass.getClassLoader().loadClass("com.intellij.DynamicBundle");
+                $$$cachedGetBundleMethod$$$ = dynamicBundleClass.getMethod("getBundle", String.class, Class.class);
+            }
+            bundle = (ResourceBundle) $$$cachedGetBundleMethod$$$.invoke(null, path, thisClass);
+        } catch (Exception e) {
+            bundle = ResourceBundle.getBundle(path);
+        }
+        return bundle.getString(key);
     }
 
     /**

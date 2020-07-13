@@ -65,6 +65,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.ResourceBundle;
 
 import static javax.swing.BorderFactory.createEmptyBorder;
@@ -148,7 +149,7 @@ public class AboutApplicationDialog extends JDialog {
         panel4.add(scrollPane, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(400, 130), null, 0, false));
         descriptionTextPane.setBackground(new Color(-9923881));
         descriptionTextPane.setCaretColor(new Color(-1118482));
-        descriptionTextPane.setContentType(ResourceBundle.getBundle("spelling").getString("text.html"));
+        descriptionTextPane.setContentType(this.$$$getMessageFromBundle$$$("spelling", "text.html"));
         descriptionTextPane.setDragEnabled(false);
         descriptionTextPane.setEditable(false);
         descriptionTextPane.setEnabled(true);
@@ -156,7 +157,7 @@ public class AboutApplicationDialog extends JDialog {
         descriptionTextPane.setFocusable(false);
         descriptionTextPane.setOpaque(false);
         descriptionTextPane.setRequestFocusEnabled(false);
-        descriptionTextPane.setText(ResourceBundle.getBundle("translations/AboutApplicationDialogBundle").getString("aboutAppInfo"));
+        descriptionTextPane.setText(this.$$$getMessageFromBundle$$$("translations/AboutApplicationDialogBundle", "aboutAppInfo"));
         descriptionTextPane.setVerifyInputWhenFocusTarget(false);
         descriptionTextPane.setVisible(true);
         scrollPane.setViewportView(descriptionTextPane);
@@ -171,13 +172,13 @@ public class AboutApplicationDialog extends JDialog {
         Font label1Font = this.$$$getFont$$$(null, Font.BOLD, 24, label1.getFont());
         if (label1Font != null) label1.setFont(label1Font);
         label1.setForeground(new Color(-1));
-        this.$$$loadLabelText$$$(label1, ResourceBundle.getBundle("spelling").getString("WeblocOpener"));
+        this.$$$loadLabelText$$$(label1, this.$$$getMessageFromBundle$$$("spelling", "WeblocOpener"));
         panel5.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         versionLabel = new JLabel();
         Font versionLabelFont = this.$$$getFont$$$(null, -1, 11, versionLabel.getFont());
         if (versionLabelFont != null) versionLabel.setFont(versionLabelFont);
         versionLabel.setForeground(new Color(-3153931));
-        this.$$$loadLabelText$$$(versionLabel, ResourceBundle.getBundle("translations/AboutApplicationDialogBundle").getString("appVersionLabel"));
+        this.$$$loadLabelText$$$(versionLabel, this.$$$getMessageFromBundle$$$("translations/AboutApplicationDialogBundle", "appVersionLabel"));
         panel5.add(versionLabel, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel6 = new JPanel();
         panel6.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 10), -1, -1));
@@ -196,22 +197,22 @@ public class AboutApplicationDialog extends JDialog {
         siteLinkButton = new JButton();
         siteLinkButton.setBorderPainted(false);
         siteLinkButton.setContentAreaFilled(false);
-        this.$$$loadButtonText$$$(siteLinkButton, ResourceBundle.getBundle("spelling").getString("site"));
+        this.$$$loadButtonText$$$(siteLinkButton, this.$$$getMessageFromBundle$$$("spelling", "site"));
         panel7.add(siteLinkButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         githubLinkButton = new JButton();
         githubLinkButton.setBorderPainted(false);
         githubLinkButton.setContentAreaFilled(false);
-        this.$$$loadButtonText$$$(githubLinkButton, ResourceBundle.getBundle("spelling").getString("github"));
+        this.$$$loadButtonText$$$(githubLinkButton, this.$$$getMessageFromBundle$$$("spelling", "github"));
         panel7.add(githubLinkButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         librariesButton = new JButton();
         librariesButton.setBorderPainted(false);
         librariesButton.setContentAreaFilled(false);
-        this.$$$loadButtonText$$$(librariesButton, ResourceBundle.getBundle("translations/AboutApplicationDialogBundle").getString("librariesLabel"));
+        this.$$$loadButtonText$$$(librariesButton, this.$$$getMessageFromBundle$$$("translations/AboutApplicationDialogBundle", "librariesLabel"));
         panel7.add(librariesButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         logButton = new JButton();
         logButton.setBorderPainted(false);
         logButton.setContentAreaFilled(false);
-        this.$$$loadButtonText$$$(logButton, ResourceBundle.getBundle("translations/AboutApplicationDialogBundle").getString("logLabelTooltip"));
+        this.$$$loadButtonText$$$(logButton, this.$$$getMessageFromBundle$$$("translations/AboutApplicationDialogBundle", "logLabelTooltip"));
         panel7.add(logButton, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel8 = new JPanel();
         panel8.setLayout(new GridLayoutManager(1, 6, new Insets(0, 0, 0, 0), -1, -1));
@@ -224,7 +225,7 @@ public class AboutApplicationDialog extends JDialog {
         feedbackButton.setIconTextGap(0);
         feedbackButton.setOpaque(false);
         feedbackButton.setText("");
-        feedbackButton.setToolTipText(ResourceBundle.getBundle("translations/AboutApplicationDialogBundle").getString("feedbackLabel"));
+        feedbackButton.setToolTipText(this.$$$getMessageFromBundle$$$("translations/AboutApplicationDialogBundle", "feedbackLabel"));
         panel8.add(feedbackButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, new Dimension(20, 20), new Dimension(20, 20), new Dimension(20, 20), 0, false));
         telegramButton = new JButton();
         telegramButton.setBorderPainted(false);
@@ -277,6 +278,23 @@ public class AboutApplicationDialog extends JDialog {
             }
         }
         return new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
+    }
+
+    private static Method $$$cachedGetBundleMethod$$$ = null;
+
+    private String $$$getMessageFromBundle$$$(String path, String key) {
+        ResourceBundle bundle;
+        try {
+            Class<?> thisClass = this.getClass();
+            if ($$$cachedGetBundleMethod$$$ == null) {
+                Class<?> dynamicBundleClass = thisClass.getClassLoader().loadClass("com.intellij.DynamicBundle");
+                $$$cachedGetBundleMethod$$$ = dynamicBundleClass.getMethod("getBundle", String.class, Class.class);
+            }
+            bundle = (ResourceBundle) $$$cachedGetBundleMethod$$$.invoke(null, path, thisClass);
+        } catch (Exception e) {
+            bundle = ResourceBundle.getBundle(path);
+        }
+        return bundle.getString(key);
     }
 
     /**

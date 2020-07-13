@@ -78,6 +78,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
@@ -127,16 +128,16 @@ public class EditDialog extends JFrame implements Translatable {
         panel2.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1, true, false));
         panel1.add(panel2, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         buttonOK = new JButton();
-        this.$$$loadButtonText$$$(buttonOK, ResourceBundle.getBundle("translations/EditDialogBundle").getString("buttonOk"));
+        this.$$$loadButtonText$$$(buttonOK, this.$$$getMessageFromBundle$$$("translations/EditDialogBundle", "buttonOk"));
         buttonOK.putClientProperty("hideActionText", Boolean.FALSE);
         panel2.add(buttonOK, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         buttonCancel = new JButton();
-        this.$$$loadButtonText$$$(buttonCancel, ResourceBundle.getBundle("translations/EditDialogBundle").getString("buttonCancel"));
+        this.$$$loadButtonText$$$(buttonCancel, this.$$$getMessageFromBundle$$$("translations/EditDialogBundle", "buttonCancel"));
         panel2.add(buttonCancel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         autoRenameFileCheckBox = new JCheckBox();
         autoRenameFileCheckBox.setEnabled(false);
-        this.$$$loadButtonText$$$(autoRenameFileCheckBox, ResourceBundle.getBundle("translations/EditDialogBundle").getString("autoRenameFile"));
-        autoRenameFileCheckBox.setToolTipText(ResourceBundle.getBundle("translations/EditDialogBundle").getString("canNotRenameToolTip"));
+        this.$$$loadButtonText$$$(autoRenameFileCheckBox, this.$$$getMessageFromBundle$$$("translations/EditDialogBundle", "autoRenameFile"));
+        autoRenameFileCheckBox.setToolTipText(this.$$$getMessageFromBundle$$$("translations/EditDialogBundle", "canNotRenameToolTip"));
         panel1.add(autoRenameFileCheckBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final DonationButton donationButton1 = new DonationButton();
         panel1.add(donationButton1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
@@ -164,7 +165,7 @@ public class EditDialog extends JFrame implements Translatable {
         clearTextButton.setPressedIcon(new ImageIcon(getClass().getResource("/images/closeButtons/circleRedDarker12.png")));
         clearTextButton.setRolloverIcon(new ImageIcon(getClass().getResource("/images/closeButtons/circleRed12.png")));
         clearTextButton.setText("");
-        clearTextButton.setToolTipText(ResourceBundle.getBundle("translations/EditDialogBundle").getString("clearTextToolTip"));
+        clearTextButton.setToolTipText(this.$$$getMessageFromBundle$$$("translations/EditDialogBundle", "clearTextToolTip"));
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 0;
@@ -178,7 +179,7 @@ public class EditDialog extends JFrame implements Translatable {
         if (editLinkLabelFont != null) editLinkLabel.setFont(editLinkLabelFont);
         editLinkLabel.setOpaque(false);
         editLinkLabel.setRequestFocusEnabled(true);
-        this.$$$loadLabelText$$$(editLinkLabel, ResourceBundle.getBundle("translations/EditDialogBundle").getString("editLink"));
+        this.$$$loadLabelText$$$(editLinkLabel, this.$$$getMessageFromBundle$$$("translations/EditDialogBundle", "editLink"));
         editLinkLabel.setVerifyInputWhenFocusTarget(false);
         editLinkLabel.setVisible(true);
         panel3.add(editLinkLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_VERTICAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
@@ -206,6 +207,23 @@ public class EditDialog extends JFrame implements Translatable {
             }
         }
         return new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
+    }
+
+    private static Method $$$cachedGetBundleMethod$$$ = null;
+
+    private String $$$getMessageFromBundle$$$(String path, String key) {
+        ResourceBundle bundle;
+        try {
+            Class<?> thisClass = this.getClass();
+            if ($$$cachedGetBundleMethod$$$ == null) {
+                Class<?> dynamicBundleClass = thisClass.getClassLoader().loadClass("com.intellij.DynamicBundle");
+                $$$cachedGetBundleMethod$$$ = dynamicBundleClass.getMethod("getBundle", String.class, Class.class);
+            }
+            bundle = (ResourceBundle) $$$cachedGetBundleMethod$$$.invoke(null, path, thisClass);
+        } catch (Exception e) {
+            bundle = ResourceBundle.getBundle(path);
+        }
+        return bundle.getString(key);
     }
 
     /**
@@ -647,7 +665,7 @@ public class EditDialog extends JFrame implements Translatable {
                     link.getLinkProcessor().createLink(url, file);
 
                     manageFileName(link);
-                    log.info("Successfully saved url: {} to file: {}", url,  file);
+                    log.info("Successfully saved url: {} to file: {}", url, file);
                 } else {
                     log.warn("Could not get Link for file: {}", pathToEditingFile);
 

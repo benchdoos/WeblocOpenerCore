@@ -43,6 +43,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.border.TitledBorder;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -54,6 +55,7 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
@@ -104,21 +106,21 @@ public class BrowserSetterPanel extends JPanel implements SettingsPanel, Transla
         final JPanel panel2 = new JPanel();
         panel2.setLayout(new GridLayoutManager(4, 3, new Insets(0, 0, 0, 0), -1, -1));
         panel1.add(panel2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        panel2.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), null));
+        panel2.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         browserComboBox = new JComboBox();
         browserComboBox.setMaximumRowCount(9);
         panel2.add(browserComboBox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         openInLabel = new JLabel();
-        this.$$$loadLabelText$$$(openInLabel, ResourceBundle.getBundle("translations/BrowserSetterPanelBundle").getString("openInBrowser"));
+        this.$$$loadLabelText$$$(openInLabel, this.$$$getMessageFromBundle$$$("translations/BrowserSetterPanelBundle", "openInBrowser"));
         panel2.add(openInLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         callLabel = new JLabel();
-        this.$$$loadLabelText$$$(callLabel, ResourceBundle.getBundle("translations/BrowserSetterPanelBundle").getString("customCallLabel"));
+        this.$$$loadLabelText$$$(callLabel, this.$$$getMessageFromBundle$$$("translations/BrowserSetterPanelBundle", "customCallLabel"));
         callLabel.setVisible(true);
         panel2.add(callLabel, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         incognitoCheckBox = new JCheckBox();
         incognitoCheckBox.setEnabled(false);
         incognitoCheckBox.setText("");
-        incognitoCheckBox.setToolTipText(ResourceBundle.getBundle("translations/SettingsDialogBundle_en_EN").getString("incognitoModeTooltip"));
+        incognitoCheckBox.setToolTipText(this.$$$getMessageFromBundle$$$("translations/SettingsDialogBundle_en_EN", "incognitoModeTooltip"));
         panel2.add(incognitoCheckBox, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer1 = new Spacer();
         panel2.add(spacer1, new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
@@ -132,6 +134,23 @@ public class BrowserSetterPanel extends JPanel implements SettingsPanel, Transla
         final Spacer spacer2 = new Spacer();
         contentPane.add(spacer2, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         openInLabel.setLabelFor(browserComboBox);
+    }
+
+    private static Method $$$cachedGetBundleMethod$$$ = null;
+
+    private String $$$getMessageFromBundle$$$(String path, String key) {
+        ResourceBundle bundle;
+        try {
+            Class<?> thisClass = this.getClass();
+            if ($$$cachedGetBundleMethod$$$ == null) {
+                Class<?> dynamicBundleClass = thisClass.getClassLoader().loadClass("com.intellij.DynamicBundle");
+                $$$cachedGetBundleMethod$$$ = dynamicBundleClass.getMethod("getBundle", String.class, Class.class);
+            }
+            bundle = (ResourceBundle) $$$cachedGetBundleMethod$$$.invoke(null, path, thisClass);
+        } catch (Exception e) {
+            bundle = ResourceBundle.getBundle(path);
+        }
+        return bundle.getString(key);
     }
 
     /**

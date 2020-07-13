@@ -34,6 +34,7 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -323,14 +324,14 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel, Tra
         updateItemsList = new JButton();
         updateItemsList.setIcon(new ImageIcon(getClass().getResource("/images/refresh16.png")));
         updateItemsList.setText("");
-        updateItemsList.setToolTipText(ResourceBundle.getBundle("translations/RecentFilesPanelBundle").getString("updateItemsList"));
+        updateItemsList.setToolTipText(this.$$$getMessageFromBundle$$$("translations/RecentFilesPanelBundle", "updateItemsList"));
         toolBar1.add(updateItemsList);
         removeSelectedItemsButton = new JButton();
         removeSelectedItemsButton.setBorderPainted(false);
         removeSelectedItemsButton.setIcon(new ImageIcon(getClass().getResource("/images/emojiCross16.png")));
         removeSelectedItemsButton.setOpaque(false);
         removeSelectedItemsButton.setText("");
-        removeSelectedItemsButton.setToolTipText(ResourceBundle.getBundle("translations/RecentFilesPanelBundle").getString("removeSelectedItemsButton"));
+        removeSelectedItemsButton.setToolTipText(this.$$$getMessageFromBundle$$$("translations/RecentFilesPanelBundle", "removeSelectedItemsButton"));
         toolBar1.add(removeSelectedItemsButton);
         final Spacer spacer1 = new Spacer();
         panel2.add(spacer1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
@@ -347,6 +348,23 @@ public class ResentOpenedFilesPanel extends JPanel implements SettingsPanel, Tra
         panel1.add(spacer3, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         final Spacer spacer4 = new Spacer();
         panel1.add(spacer4, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+    }
+
+    private static Method $$$cachedGetBundleMethod$$$ = null;
+
+    private String $$$getMessageFromBundle$$$(String path, String key) {
+        ResourceBundle bundle;
+        try {
+            Class<?> thisClass = this.getClass();
+            if ($$$cachedGetBundleMethod$$$ == null) {
+                Class<?> dynamicBundleClass = thisClass.getClassLoader().loadClass("com.intellij.DynamicBundle");
+                $$$cachedGetBundleMethod$$$ = dynamicBundleClass.getMethod("getBundle", String.class, Class.class);
+            }
+            bundle = (ResourceBundle) $$$cachedGetBundleMethod$$$.invoke(null, path, thisClass);
+        } catch (Exception e) {
+            bundle = ResourceBundle.getBundle(path);
+        }
+        return bundle.getString(key);
     }
 
     /**
