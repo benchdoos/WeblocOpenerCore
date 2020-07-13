@@ -19,6 +19,7 @@ import com.github.benchdoos.linksupport.links.Link;
 import com.github.benchdoos.weblocopenercore.core.constants.ApplicationArgument;
 import com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants;
 import com.github.benchdoos.weblocopenercore.core.constants.SettingsConstants;
+import com.github.benchdoos.weblocopenercore.exceptions.UserCanceledSelection;
 import com.github.benchdoos.weblocopenercore.gui.AboutApplicationDialog;
 import com.github.benchdoos.weblocopenercore.gui.ConverterDialog;
 import com.github.benchdoos.weblocopenercore.gui.EditDialog;
@@ -319,6 +320,8 @@ public class Application {
 
                     runEditDialog(file.getAbsolutePath());
                 }
+            } catch (UserCanceledSelection e) {
+                log.debug("User canceled selection. This is normal case.");
             } catch (final Exception e) {
                 log.warn("Could not edit file: {}", path, e);
                 throw new RuntimeException("Can not edit file: " + path, e);

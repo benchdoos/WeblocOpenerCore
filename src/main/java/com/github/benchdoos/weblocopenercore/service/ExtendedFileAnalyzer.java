@@ -3,6 +3,7 @@ package com.github.benchdoos.weblocopenercore.service;
 import com.github.benchdoos.linksupport.links.Link;
 import com.github.benchdoos.weblocopenercore.exceptions.LinkCanNotBeProcessedException;
 import com.github.benchdoos.weblocopenercore.exceptions.UnsupportedFileFormatException;
+import com.github.benchdoos.weblocopenercore.exceptions.UserCanceledSelection;
 import com.github.benchdoos.weblocopenercore.gui.FileChooser;
 import com.github.benchdoos.weblocopenercore.service.links.LinkUtilities;
 import com.github.benchdoos.weblocopenercore.utils.FileUtils;
@@ -83,6 +84,7 @@ public class ExtendedFileAnalyzer implements FileAnalyzer {
                 }
             } else {
                 log.debug("User canceled selection from file list");
+                throw new UserCanceledSelection();
             }
         }
         return null;
