@@ -16,15 +16,7 @@ public abstract class WindowLauncher<Child extends Window> {
     private final Child window;
 
     public WindowLauncher() {
-        if (PreferencesManager.isDarkModeEnabledNow()) {
-            final JColorful colorful = new JColorful(ApplicationConstants.DARK_MODE_THEME);
-            colorful.colorizeGlobal();
-
-            window = initWindow();
-            colorful.colorize(window);
-        } else {
-            window = initWindow();
-        }
+        window = initWindow(); //todo remove window launcher
     }
 
     /**

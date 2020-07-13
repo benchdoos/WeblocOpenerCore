@@ -15,9 +15,11 @@
 
 package com.github.benchdoos.weblocopenercore.utils;
 
+import com.formdev.flatlaf.FlatDarculaLaf;
 import com.github.benchdoos.weblocopenercore.Main;
 import com.github.benchdoos.weblocopenercore.core.constants.ApplicationConstants;
 import com.github.benchdoos.weblocopenercore.gui.InfoDialog;
+import com.github.benchdoos.weblocopenercore.preferences.PreferencesManager;
 import com.github.benchdoos.weblocopenercore.utils.version.ApplicationVersion;
 import com.github.benchdoos.weblocopenercore.utils.version.Beta;
 import lombok.extern.log4j.Log4j2;
@@ -27,6 +29,7 @@ import org.assertj.core.api.Assertions;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.UIManager;
+import javax.swing.plaf.basic.BasicLookAndFeel;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -35,7 +38,6 @@ import java.awt.datatransfer.Transferable;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -98,9 +100,15 @@ public class CoreUtils {
      */
     public static void enableLookAndFeel() {
         try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            if (PreferencesManager.isDarkModeEnabledNow()) {
+                final BasicLookAndFeel darculaLookAndFeel = new FlatDarculaLaf();
+                UIManager.setLookAndFeel(darculaLookAndFeel);
+            } else {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            }
+
             log.debug("Look and Feel enabled");
-        } catch (Exception e) {
+        } catch (final Exception e) {
             log.warn("Could not enable look and feel", e);
         }
     }
