@@ -57,6 +57,7 @@ import javax.swing.Timer;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
@@ -158,6 +159,8 @@ public class SettingsDialog extends JFrame implements Translatable {
         settingsSavedLabel.setToolTipText(this.$$$getMessageFromBundle$$$("translations/SettingsDialogBundle", "settingsSaved"));
         panel1.add(settingsSavedLabel, new GridConstraints(1, 4, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         createNewFileButton = new JButton();
+        Font createNewFileButtonFont = this.$$$getFont$$$("Courier New", Font.BOLD, 18, createNewFileButton.getFont());
+        if (createNewFileButtonFont != null) createNewFileButton.setFont(createNewFileButtonFont);
         createNewFileButton.setMargin(new Insets(0, 5, 0, 5));
         createNewFileButton.setText("+");
         createNewFileButton.setToolTipText(this.$$$getMessageFromBundle$$$("translations/SettingsDialogBundle", "createNewFile"));
@@ -182,6 +185,25 @@ public class SettingsDialog extends JFrame implements Translatable {
         panel3.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         scrollpane.setViewportView(panel3);
         panel3.add(scrollPaneContent, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+    }
+
+    /**
+     * @noinspection ALL
+     */
+    private Font $$$getFont$$$(String fontName, int style, int size, Font currentFont) {
+        if (currentFont == null) return null;
+        String resultName;
+        if (fontName == null) {
+            resultName = currentFont.getName();
+        } else {
+            Font testFont = new Font(fontName, Font.PLAIN, 10);
+            if (testFont.canDisplay('a') && testFont.canDisplay('1')) {
+                resultName = fontName;
+            } else {
+                resultName = currentFont.getName();
+            }
+        }
+        return new Font(resultName, style >= 0 ? style : currentFont.getStyle(), size >= 0 ? size : currentFont.getSize());
     }
 
     private static Method $$$cachedGetBundleMethod$$$ = null;
